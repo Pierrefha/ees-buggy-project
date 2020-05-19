@@ -1,1 +1,1 @@
-# ees-buggy-project
+# EES-Buggy-Project
