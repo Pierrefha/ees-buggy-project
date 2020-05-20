@@ -102,6 +102,16 @@ int main ()
     // wait for oscillator
     std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
-    setPin (9, true);
-    setPin (10, false);
+    int pwm = 8;
+    int pin1 = 9;
+    int pin2 = 10;
+    setChannel (pwm, 0, 100 * 16);
+    setPin (pin1, true);
+    setPin (pin2, false);
+
+    std::this_thread::sleep_for(std::chrono::milliseconds (1000));
+
+    // release the motor after use
+    setPin (pin1, false);
+    setPin (pin2, false);
 }
