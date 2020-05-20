@@ -2,10 +2,10 @@ cmake_minimum_required(VERSION 3.13)
 project(ees_buggy)
 
 file(GLOB_RECURSE buggy_src
-        "src/*.c"
+        "src/*.cpp"
 )
 file(GLOB_RECURSE buggy_inc
-        "inc/*.c"
+        "inc/*.h"
 )
 
 add_executable(ees_buggy main.cpp ${buggy_src} ${buggy_inc})
