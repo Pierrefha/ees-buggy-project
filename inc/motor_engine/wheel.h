@@ -6,6 +6,7 @@
 #define EES_BUGGY_WHEEL_H
 
 #include <cstdint>
+#include "constants.h"
 
 class wheel{
 private:
@@ -14,7 +15,7 @@ private:
     uint8_t in2Pin;
     int fd;
 
-    uint16_t current_speed;
+    uint16_t current_speed = MIN_REGISTER_VALUE;
 
 
 

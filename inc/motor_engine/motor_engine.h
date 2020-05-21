@@ -12,11 +12,11 @@ class motor_engine{
 private:
     int fd;
     wheel left, right;
-    direction cur_direction;
+    direction cur_direction = direction::STOP;
 
     //The value by which the wheel slows down or speeds up
     //by increase / decrease speed
-    uint16_t speed_change;
+    uint16_t speed_change = 20;
 public:
     motor_engine(int fd, const wheel &left, const wheel &right);
 
