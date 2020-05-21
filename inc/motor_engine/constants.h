@@ -9,8 +9,8 @@
 #include <cstdint>
 
 //Max reg value is 12 bits set
-uint16_t MAX_REGISTER_VALUE = 4095;
-uint16_t MIN_REGISTER_VALUE = 0;
+const uint16_t MAX_REGISTER_VALUE = 4096;
+const uint16_t MIN_REGISTER_VALUE = 0;
 
 enum Registers
 {
@@ -30,11 +30,19 @@ enum Registers
     kAllLedOffH  = 0xFD,
 };
 
-inline constexpr uint32_t ON_register_addr_of(uint8_t pin){
+inline constexpr uint32_t ON_L_register_addr_of(uint8_t pin){
     return Registers::kLed0OnL + 4 * pin;
 }
 
-inline constexpr uint32_t OFF_register_addr_off(uint8_t pin){
+inline constexpr uint32_t ON_H_register_addr_of(uint8_t pin){
+    return Registers::kLed0OnH + 4 * pin;
+}
+
+inline constexpr uint32_t OFF_L_register_addr_off(uint8_t pin){
     return Registers::kLed0OffL + 4 * pin;
+}
+
+inline constexpr uint32_t OFF_H_register_addr_off(uint8_t pin){
+    return Registers::kLed0OffH + 4 * pin;
 }
 #endif //EES_BUGGY_CONSTANTS_H

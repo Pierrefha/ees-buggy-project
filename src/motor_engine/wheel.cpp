@@ -5,39 +5,37 @@
 #include <motor_engine/wheel.h>
 #include <motor_engine/constants.h>
 #include <cassert>
+#include <wiringPiI2C.h>
 
 //See the header for more information
 const uint16_t wheel::speed_change = 5;
 
+void set_reg_value(int fd, uint8_t pin, uint16_t on_value, uint16_t off_value){
+    wiringPiI2CWriteReg8(fd, ON_L_register_addr_of(pin) , on_value & 0xFF);
+    wiringPiI2CWriteReg8(fd, ON_H_register_addr_of(pin) , on_value >> 8);
+    wiringPiI2CWriteReg8(fd, OFF_L_register_addr_off(pin) , off_value & 0xFF);
+    wiringPiI2CWriteReg8(fd, ON_H_register_addr_of(pin) , off_value >> 8);
+}
+
 void wheel::set_speed(uint16_t speed_value) {
     assert(speed_value <= MAX_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(pwmPin) , 0);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(pwmPin) , speed_value);
+    set_reg_value(fd, pwmPin, 0, speed_value);
     current_speed = speed_value;
 }
 
 void wheel::forward() {
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(in1Pin) , MAX_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(in1Pin) , MIN_REGISTER_VALUE);
-
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(in2Pin) , MIN_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(in2Pin) , MAX_REGISTER_VALUE);
+    set_reg_value(fd, in1Pin, MAX_REGISTER_VALUE, MIN_REGISTER_VALUE);
+    set_reg_value(fd, in2Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
 }
 
 void wheel::backwards(){
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(in1Pin) , MIN_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(in1Pin) , MAX_REGISTER_VALUE);
-
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(in2Pin) , MAX_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(in2Pin) , MIN_REGISTER_VALUE);
+    set_reg_value(fd, in1Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
+    set_reg_value(fd, in2Pin, MAX_REGISTER_VALUE, MIN_REGISTER_VALUE);
 }
 
 void wheel::stop() {
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(in1Pin) , MIN_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(in1Pin) , MAX_REGISTER_VALUE);
-
-    wiringPiI2CWriteReg16(fd, ON_register_addr_of(in2Pin) , MIN_REGISTER_VALUE);
-    wiringPiI2CWriteReg16(fd, OFF_register_addr_off(in2Pin) , MAX_REGISTER_VALUE);
+    set_reg_value(fd, in1Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
+    set_reg_value(fd, in2Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
 }
 
 wheel::wheel(int fd, uint8_t pwmPin, uint8_t in1Pin, uint8_t in2Pin) : pwmPin(pwmPin), in1Pin(in1Pin), in2Pin(in2Pin),

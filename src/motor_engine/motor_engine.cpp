@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <thread>
 #include <motor_engine/constants.h>
+#include <wiringPiI2C.h>
 
 void motor_engine::decrease_speed() {
     //When decreasing speed we dont do a check like in increase_speed
