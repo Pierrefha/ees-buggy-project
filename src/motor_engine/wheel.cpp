@@ -16,18 +16,21 @@ void set_reg_value(int fd, uint8_t pin, uint16_t on_value, uint16_t off_value){
 
 void wheel::set_speed(uint16_t speed_value) {
     assert(speed_value <= MAX_REGISTER_VALUE);
+    if(speed_value < MIN_SPEED_VALUE){
+        speed_value = 0;
+    }
     set_reg_value(fd, pwmPin, 0, speed_value);
     current_speed = speed_value;
 }
 
 void wheel::forward() {
-    set_reg_value(fd, in1Pin, MAX_REGISTER_VALUE, MIN_REGISTER_VALUE);
-    set_reg_value(fd, in2Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
+    set_reg_value(fd, in1Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
+    set_reg_value(fd, in2Pin, MAX_REGISTER_VALUE, MIN_REGISTER_VALUE);
 }
 
 void wheel::backwards(){
-    set_reg_value(fd, in1Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
-    set_reg_value(fd, in2Pin, MAX_REGISTER_VALUE, MIN_REGISTER_VALUE);
+    set_reg_value(fd, in1Pin, MAX_REGISTER_VALUE, MIN_REGISTER_VALUE);
+    set_reg_value(fd, in2Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
 }
 
 void wheel::stop() {
@@ -56,6 +59,12 @@ void wheel::decrease_speed(uint16_t speed_change) {
 }
 
 void wheel::increase_speed(uint16_t speed_change) {
+    if(stands_still()){
+        //setting cur_speed to min speed will call set_speed with MIN_SPEED_VAL + speed_change
+        //But if speed_change > MIN_SPEED_VALUE, MIN_SPEED_VALUE - speed_change can underflow
+        //So we accept the higher start speed_value in favour of less checks
+        current_speed = MIN_SPEED_VALUE;
+    }
     //check current_speed <= MAX_REG_VALUE to prevent overflow
     uint16_t new_speed = current_speed <= MAX_REGISTER_VALUE - speed_change ? current_speed + speed_change : MAX_REGISTER_VALUE;
     set_speed(new_speed);

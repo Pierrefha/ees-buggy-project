@@ -12,7 +12,7 @@
 const uint16_t MAX_REGISTER_VALUE = 4096;
 const uint16_t MIN_REGISTER_VALUE = 0;
 
-const uint16_t MIN_SPEED_VALUE = 300;
+const uint16_t MIN_SPEED_VALUE = 850;
 
 enum ModeBits
 {
