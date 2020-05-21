@@ -62,11 +62,11 @@ void motor_engine::emergency_stop() {
 }
 
 void motor_engine::turn_right() {
-    std::cout << "turn_right not impl yet" << std::endl;
+    left.increase_speed();
 }
 
 void motor_engine::turn_left() {
-    std::cout << "turn_left not impl yet" << std::endl;
+    right.increase_speed();
 }
 
 int motor_engine::device_fd() {
@@ -78,6 +78,19 @@ void motor_engine::set_speed(uint16_t speed_value) {
     right.set_speed(speed_value);
 }
 
+void motor_engine::turn_in_place_right() {
+    left.forward();
+    right.backwards();
+
+    cur_direction = direction::IN_PLACE_TURN_RIGHT;
+}
+
+void motor_engine::turn_in_place_left() {
+    left.backwards();
+    right.forward();
+
+    cur_direction = direction::IN_PLACE_TURN_LEFT;
+}
 
 motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     int fd = wiringPiI2CSetup (motor_hat_addr) ;
