@@ -17,6 +17,7 @@ void signalHandler(int signum)
         engine->emergency_stop();
         engine->release_engine();
     }
+    endwin();
     // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
     exit(signum);
 }
@@ -127,6 +128,7 @@ int main ()
                             engine->forward();
                             break;
                         case direction::FORWARD:
+                            std::cout << "increasing speed" << std::endl;
                             engine->increase_speed();
                             break;
                     }
@@ -191,5 +193,9 @@ int main ()
             }
 
         }
+
+        engine->smooth_stop();
+        engine->release_engine();
+        endwin();
     }
 }
