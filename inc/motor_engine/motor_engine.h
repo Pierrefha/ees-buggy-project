@@ -34,7 +34,7 @@ public:
 
     int release_engine();
 
-    direction direction();
+    direction get_direction();
     int device_fd();
 };
 

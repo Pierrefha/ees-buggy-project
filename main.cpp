@@ -116,7 +116,7 @@ int main ()
         while((user_cmd = getch()) != 'q'){
             switch (user_cmd){
                 case 'w':{
-                    switch(engine->direction()){
+                    switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
                         case direction::IN_PLACE_TURN_LEFT:
                         case direction::BACKWARDS:
@@ -133,7 +133,7 @@ int main ()
                     break;
                 }
                 case 's':{
-                    switch(engine->direction()){
+                    switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
                         case direction::IN_PLACE_TURN_LEFT:
                         case direction::FORWARD:
@@ -150,7 +150,7 @@ int main ()
                     break;
                 }
                 case 'd':{
-                    switch(engine->direction()){
+                    switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
                             engine->increase_speed();
                             break;
@@ -169,7 +169,7 @@ int main ()
                     break;
                 }
                 case 'a':{
-                    switch(engine->direction()){
+                    switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
                             engine->smooth_stop();
                             engine->turn_in_place_left();

@@ -99,7 +99,7 @@ void motor_engine::turn_in_place_left() {
     cur_direction = direction::IN_PLACE_TURN_LEFT;
 }
 
-direction motor_engine::direction() {
+direction motor_engine::get_direction() {
     return cur_direction;
 }
 
