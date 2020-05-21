@@ -11,7 +11,7 @@ void set_reg_value(int fd, uint8_t pin, uint16_t on_value, uint16_t off_value){
     wiringPiI2CWriteReg8(fd, ON_L_register_addr_of(pin) , on_value & 0xFF);
     wiringPiI2CWriteReg8(fd, ON_H_register_addr_of(pin) , on_value >> 8);
     wiringPiI2CWriteReg8(fd, OFF_L_register_addr_off(pin) , off_value & 0xFF);
-    wiringPiI2CWriteReg8(fd, ON_H_register_addr_of(pin) , off_value >> 8);
+    wiringPiI2CWriteReg8(fd, OFF_H_register_addr_off(pin) , off_value >> 8);
 }
 
 void wheel::set_speed(uint16_t speed_value) {
