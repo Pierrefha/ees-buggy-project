@@ -36,11 +36,11 @@ int motor_engine::release_engine() {
 
 void motor_engine::forward() {
     right.forward();
-    left.forward();
+    left.backwards();
 }
 
 void motor_engine::backwards() {
-    right.backwards();
+    right.forward();
     left.backwards();
 }
 

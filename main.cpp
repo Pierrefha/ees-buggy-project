@@ -91,8 +91,15 @@ int main ()
     // wait for oscillator
     std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
-    engine->set_speed(500);
+    std::cout << "driving forward" << std::endl;
+    engine->set_speed(255);
     engine->forward();
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    engine->smooth_stop();
+
+    std::cout << "driving backwards" << std::endl;
+    engine->set_speed(500);
+    engine->backwards();
     std::this_thread::sleep_for (std::chrono::milliseconds (500));
     engine->smooth_stop();
 
