@@ -58,21 +58,32 @@ int main ()
         initscr();
         cbreak();
         noecho();
-        while((user_cmd = getch()) != 'q'){
+        while((user_cmd = getch()) != 'x'){
             switch (user_cmd){
+                case 'e':{
+                    engine->emergency_stop();
+                    break;
+                }
+                case 'q':{
+                    engine->smooth_stop();
+                    break;
+                }
                 case 'w':{
                     switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
                         case direction::IN_PLACE_TURN_LEFT:
-                        case direction::BACKWARDS:
                             engine->smooth_stop();
                             engine->forward();
+                            engine->increase_speed();
+                            break;
+                        case direction::BACKWARDS:
+                            engine->decrease_speed();
                             break;
                         case direction::STOP:
                             engine->forward();
+                            engine->increase_speed();
                             break;
                         case direction::FORWARD:
-                            std::cout << "increasing speed" << std::endl;
                             engine->increase_speed();
                             break;
                     }
@@ -82,12 +93,16 @@ int main ()
                     switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
                         case direction::IN_PLACE_TURN_LEFT:
-                        case direction::FORWARD:
                             engine->smooth_stop();
                             engine->backwards();
+                            engine->increase_speed();
+                            break;
+                        case direction::FORWARD:
+                            engine->decrease_speed();
                             break;
                         case direction::STOP:
                             engine->backwards();
+                            engine->increase_speed();
                             break;
                         case direction::BACKWARDS:
                             engine->increase_speed();
@@ -101,8 +116,7 @@ int main ()
                             engine->increase_speed();
                             break;
                         case direction::IN_PLACE_TURN_LEFT:
-                            engine->smooth_stop();
-                            engine->turn_in_place_right();
+                            engine->decrease_speed();
                             break;
                         case direction::FORWARD:
                         case direction::BACKWARDS:
@@ -110,6 +124,7 @@ int main ()
                             break;
                         case direction::STOP:
                             engine->turn_in_place_right();
+                            engine->increase_speed();
                             break;
                     }
                     break;
@@ -117,8 +132,7 @@ int main ()
                 case 'a':{
                     switch(engine->get_direction()){
                         case direction::IN_PLACE_TURN_RIGHT:
-                            engine->smooth_stop();
-                            engine->turn_in_place_left();
+                            engine->decrease_speed();
                             break;
                         case direction::IN_PLACE_TURN_LEFT:
                             engine->increase_speed();
@@ -129,6 +143,7 @@ int main ()
                             break;
                         case direction::STOP:
                             engine->turn_in_place_left();
+                            engine->increase_speed();
                             break;
                     }
                     break;
