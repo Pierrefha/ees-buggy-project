@@ -8,8 +8,8 @@
 #include <cmath>
 #include <cstdint>
 
-//Max reg value is 14 bits set
-uint16_t MAX_REGISTER_VALUE = 0x3FFF;
+//Max reg value is 12 bits set
+uint16_t MAX_REGISTER_VALUE = 4095;
 uint16_t MIN_REGISTER_VALUE = 0;
 
 enum Registers

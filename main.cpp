@@ -3,12 +3,18 @@
 #include <signal.h>
 #include <iostream>
 #include <thread>
+#include <motor_engine/constants.h>
+#include <motor_engine/motor_engine.h>
 
 int fd = -1;
+motor_engine* engine = nullptr;
 /// Interrupt Routine for STRG-C
 void signalHandler(int signum)
 {
     std::cout << "Strg-C Programmende" << std::endl;
+    if(engine){
+        engine->release_engine();
+    }
     // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
     exit(signum);
 }
@@ -22,23 +28,6 @@ enum Bits
     kOutDrive    = 0x04,
 };
 
-enum Registers
-{
-    kMode1       = 0x00,
-    kMode2       = 0x01,
-    kSubAddress1 = 0x02,
-    kSubAddress2 = 0x03,
-    kSubAddress3 = 0x04,
-    kPreScale    = 0xFE,
-    kLed0OnL     = 0x06,
-    kLed0OnH     = 0x07,
-    kLed0OffL    = 0x08,
-    kLed0OffH    = 0x09,
-    kAllLedOnL   = 0xFA,
-    kAllLedOnH   = 0xFB,
-    kAllLedOffL  = 0xFC,
-    kAllLedOffH  = 0xFD,
-};
 
 void setChannel (int channel, int on, int off)
 {
@@ -79,15 +68,14 @@ int main ()
     }while(false);
 
 
-    fd = wiringPiI2CSetup (0x60) ;
-    if(fd == -1){
-        std::cout << "setup didnt work" << std::endl;
-        return -1;
-    }
 
-    //Setup
+    engine = new motor_engine{make_motor_engine()};
+    fd = engine->device_fd();
+
+
+//    //Setup
     setAll (0, 0);
-
+//
 //    wiringPiI2CWriteReg8(fd, Registers::kAllLedOnH, on >> 8);
     wiringPiI2CWriteReg8(fd, Registers::kMode2, Bits::kOutDrive);
     wiringPiI2CWriteReg8(fd, Registers::kMode1, Bits::kAllCall);
@@ -102,16 +90,30 @@ int main ()
     // wait for oscillator
     std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
-    int pwm = 8;
-    int pin1 = 9;
-    int pin2 = 10;
-    setChannel (pwm, 0, 100 * 16);
-    setPin (pin1, true);
-    setPin (pin2, false);
+    engine->set_speed(2000);
+    engine->forward();
+    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+    engine->smooth_stop();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds (1000));
-
-    // release the motor after use
-    setPin (pin1, false);
-    setPin (pin2, false);
+    engine->release_engine();
+    delete engine;
+//
+//    //LEFT WHEEL
+//    int pwm = 8;
+//    int pin1 = 9;
+//    int pin2 = 10;
+//    //RIGHT WHEEl
+//    int pwmPin = 13;
+//    int in2Pin = 12;
+//    int in1Pin = 11;
+//
+//    setChannel (pwm, 0, 100 * 16);
+//    setPin (pin1, true);
+//    setPin (pin2, false);
+//
+//    std::this_thread::sleep_for(std::chrono::milliseconds (1000));
+//
+//    // release the motor after use
+//    setPin (pin1, false);
+//    setPin (pin2, false);
 }
