@@ -73,5 +73,9 @@ wheel make_right_wheel(int fd) {
 }
 
 wheel make_left_wheel(int fd) {
-    return {fd, 8, 10, 9};
+    //CAUTION: We change the in1Pin with in2Pin so that every CCW motion becomes a CW motion and vice versa (180 deg rot)
+    //As the left wheel is in model world rotated by 180 deg around the up-axis (y-axis) this pin change makes a 360 deg
+    //rot.
+    //This makes the left wheel forward / backwards function behaves as expected, but not behave (strictly speaking) correctly
+    return {fd, 8, 9, 10};
 }
