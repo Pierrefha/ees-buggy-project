@@ -34,6 +34,7 @@ void wheel::backwards(){
 }
 
 void wheel::stop() {
+    set_speed(MIN_REGISTER_VALUE);
     set_reg_value(fd, in1Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
     set_reg_value(fd, in2Pin, MIN_REGISTER_VALUE, MAX_REGISTER_VALUE);
 }

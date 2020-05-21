@@ -49,7 +49,7 @@ void motor_engine::smooth_stop() {
     while(!(left.stands_still() && right.stands_still())){
         left.decrease_speed();
         right.decrease_speed();
-        std::this_thread::sleep_for (std::chrono::milliseconds (1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     //set wheels into stop mode
     left.stop();

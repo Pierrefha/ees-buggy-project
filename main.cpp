@@ -13,6 +13,7 @@ void signalHandler(int signum)
 {
     std::cout << "Strg-C Programmende" << std::endl;
     if(engine){
+        engine->emergency_stop();
         engine->release_engine();
     }
     // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
@@ -90,7 +91,7 @@ int main ()
     // wait for oscillator
     std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
-    engine->set_speed(2000);
+    engine->set_speed(500);
     engine->forward();
     std::this_thread::sleep_for (std::chrono::milliseconds (500));
     engine->smooth_stop();
