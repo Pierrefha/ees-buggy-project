@@ -13,6 +13,10 @@ private:
     int fd;
     wheel left, right;
     direction cur_direction;
+
+    //The value by which the wheel slows down or speeds up
+    //by increase / decrease speed
+    uint16_t speed_change;
 public:
     motor_engine(int fd, const wheel &left, const wheel &right);
 
@@ -31,6 +35,10 @@ public:
 
     void smooth_stop();
     void emergency_stop();
+
+    void set_frequency(double frequency);
+    void set_speed_change(uint16_t speed_change);
+    void init();
 
     int release_engine();
 

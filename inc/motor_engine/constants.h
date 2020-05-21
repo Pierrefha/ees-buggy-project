@@ -12,6 +12,16 @@
 const uint16_t MAX_REGISTER_VALUE = 4096;
 const uint16_t MIN_REGISTER_VALUE = 0;
 
+const uint16_t MIN_SPEED_VALUE = 300;
+
+enum ModeBits
+{
+    kRestart     = 0x80,
+    kSleep       = 0x10,
+    kAllCall     = 0x01,
+    kInvert      = 0x10,
+    kOutDrive    = 0x04,
+};
 enum Registers
 {
     kMode1       = 0x00,

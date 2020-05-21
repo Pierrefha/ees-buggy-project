@@ -7,57 +7,20 @@
 #include <motor_engine/motor_engine.h>
 #include <curses.h>
 
-int fd = -1;
 motor_engine* engine = nullptr;
 /// Interrupt Routine for STRG-C
 void signalHandler(int signum)
 {
+    endwin();
     std::cout << "Strg-C Programmende" << std::endl;
+    // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
     if(engine){
         engine->emergency_stop();
         engine->release_engine();
     }
-    endwin();
-    // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
     exit(signum);
 }
 
-enum Bits
-{
-    kRestart     = 0x80,
-    kSleep       = 0x10,
-    kAllCall     = 0x01,
-    kInvert      = 0x10,
-    kOutDrive    = 0x04,
-};
-
-
-void setChannel (int channel, int on, int off)
-{
-    wiringPiI2CWriteReg8(fd, Registers::kLed0OnL + 4 * channel , on & 0xFF);
-    wiringPiI2CWriteReg8(fd, Registers::kLed0OnH + 4 * channel, on >> 8);
-    wiringPiI2CWriteReg8(fd, Registers::kLed0OffL + 4 * channel, off & 0xFF);
-    wiringPiI2CWriteReg8(fd, Registers::kLed0OffH + 4 * channel, off >> 8);
-}
-
-void setPin (int pin, bool enabled)
-{
-//    if (pin < 0 || pin > 15)
-//    {
-//        log::error ("Failed to set PWM pin " + std::to_string (pin) + ". Must be between 0 and 15 inclusive.");
-//        return;
-//    }
-
-    setChannel (pin, enabled ? 4096 : 0, enabled ? 0 : 4096);
-}
-
-void setAll (int on, int off)
-{
-    wiringPiI2CWriteReg8(fd, Registers::kAllLedOnL, on & 0xFF);
-    wiringPiI2CWriteReg8(fd, Registers::kAllLedOnH, on >> 8);
-    wiringPiI2CWriteReg8(fd, Registers::kAllLedOffL, off & 0xFF);
-    wiringPiI2CWriteReg8(fd, Registers::kAllLedOffH, off >> 8);
-}
 int main ()
 {
     // Csignal für Abbruch über STRG-C
@@ -71,27 +34,9 @@ int main ()
     }while(false);
 
 
-
     engine = new motor_engine{make_motor_engine()};
-    fd = engine->device_fd();
-
-
-//    //Setup
-    setAll (0, 0);
-//
-//    wiringPiI2CWriteReg8(fd, Registers::kAllLedOnH, on >> 8);
-    wiringPiI2CWriteReg8(fd, Registers::kMode2, Bits::kOutDrive);
-    wiringPiI2CWriteReg8(fd, Registers::kMode1, Bits::kAllCall);
-
-    // wait for oscillator
-    std::this_thread::sleep_for(std::chrono::milliseconds (5));
-    int mode = wiringPiI2CReadReg8(fd, Registers::kMode1);
-    // reset sleep
-    mode = mode & ~Bits::kSleep;
-    wiringPiI2CWriteReg8(fd, Registers::kMode1, mode);
-
-    // wait for oscillator
-    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+    engine->init();
+    engine->set_frequency(1600.);
 
     bool auto_movement = false;
     if(auto_movement){

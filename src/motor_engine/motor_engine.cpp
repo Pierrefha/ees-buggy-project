@@ -103,6 +103,62 @@ direction motor_engine::get_direction() {
     return cur_direction;
 }
 
+void motor_engine::set_frequency(double frequency) {
+    // 25Mhz
+    double preScaleValue = 25000000.0;
+    // to 12-bit
+    preScaleValue /= 4096.0;
+    preScaleValue /= frequency;
+    preScaleValue -= 1.0;
+
+    const int finalPreScale = static_cast<int> (preScaleValue + 0.5);
+
+    int oldMode = wiringPiI2CReadReg8(fd, Registers::kMode1);
+    const int newMode = (oldMode & 0x7F) | ModeBits::kSleep;
+
+    // go to sleep
+    wiringPiI2CWriteReg8(fd, Registers::kMode1, newMode);
+    // set prescale
+    wiringPiI2CWriteReg8(fd, Registers::kPreScale, finalPreScale);
+    // wake up
+    wiringPiI2CWriteReg8(fd, Registers::kMode1, oldMode);
+
+    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+
+    // restart
+    wiringPiI2CWriteReg8(fd, Registers::kMode1, oldMode | ModeBits::kRestart);
+}
+
+void setAll (int fd, int on, int off)
+{
+    wiringPiI2CWriteReg8(fd, Registers::kAllLedOnL, on & 0xFF);
+    wiringPiI2CWriteReg8(fd, Registers::kAllLedOnH, on >> 8);
+    wiringPiI2CWriteReg8(fd, Registers::kAllLedOffL, off & 0xFF);
+    wiringPiI2CWriteReg8(fd, Registers::kAllLedOffH, off >> 8);
+}
+
+void motor_engine::init() {
+    setAll (fd, 0, 0);
+    wiringPiI2CWriteReg8(fd, Registers::kMode2, ModeBits::kOutDrive);
+    wiringPiI2CWriteReg8(fd, Registers::kMode1, ModeBits::kAllCall);
+
+    // wait for oscillator
+    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+
+    int mode = wiringPiI2CReadReg8(fd, Registers::kMode1);
+    // reset sleep
+    mode = mode & ~ModeBits::kSleep;
+    wiringPiI2CWriteReg8(fd, Registers::kMode1, mode);
+
+    // wait for oscillator
+    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+
+}
+
+void motor_engine::set_speed_change(uint16_t speed_change) {
+    this->speed_change = speed_change;
+}
+
 
 motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     int fd = wiringPiI2CSetup (motor_hat_addr) ;
