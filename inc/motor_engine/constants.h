@@ -20,6 +20,7 @@ enum ModeBits
     kSleep       = 0x10,
     kAllCall     = 0x01,
     kInvert      = 0x10,
+    //kOutDrive is bit 2 in mode2 reg. bit 4 is invrt reg. But this is example code so better dont touch it
     kOutDrive    = 0x04,
 };
 enum Registers

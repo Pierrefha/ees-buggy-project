@@ -7,9 +7,6 @@
 #include <cassert>
 #include <wiringPiI2C.h>
 
-//See the header for more information
-const uint16_t wheel::speed_change = 5;
-
 void set_reg_value(int fd, uint8_t pin, uint16_t on_value, uint16_t off_value){
     wiringPiI2CWriteReg8(fd, ON_L_register_addr_of(pin) , on_value & 0xFF);
     wiringPiI2CWriteReg8(fd, ON_H_register_addr_of(pin) , on_value >> 8);
@@ -52,13 +49,13 @@ bool wheel::is_at_max_speed() {
     return current_speed == MAX_REGISTER_VALUE;
 }
 
-void wheel::decrease_speed() {
+void wheel::decrease_speed(uint16_t speed_change) {
     //Check current_speed >= speed_change to prevent underflow
     uint16_t new_speed = current_speed >= speed_change ? current_speed - speed_change : 0;
     set_speed(new_speed);
 }
 
-void wheel::increase_speed() {
+void wheel::increase_speed(uint16_t speed_change) {
     //check current_speed <= MAX_REG_VALUE to prevent overflow
     uint16_t new_speed = current_speed <= MAX_REGISTER_VALUE - speed_change ? current_speed + speed_change : MAX_REGISTER_VALUE;
     set_speed(new_speed);

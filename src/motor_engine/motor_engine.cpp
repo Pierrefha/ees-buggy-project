@@ -13,8 +13,14 @@ void motor_engine::decrease_speed() {
     //When decreasing speed we dont do a check like in increase_speed
     //So that decreasing speed will always stop the robot
     //No matter if the robot drives a curve or not
-    left.decrease_speed();
-    right.decrease_speed();
+    left.decrease_speed(speed_change);
+    right.decrease_speed(speed_change);
+
+    if(left.stands_still() && right.stands_still()){
+        cur_direction = direction::STOP;
+    }
+    //If only one of them stands still and the other drives,
+    //we are turning_in_place. The decrase has no effect on the rotation direction
 }
 
 void motor_engine::increase_speed() {
@@ -24,8 +30,8 @@ void motor_engine::increase_speed() {
     if(left.is_at_max_speed() || right.is_at_max_speed()){
         return;
     }
-    left.increase_speed();
-    right.increase_speed();
+    left.increase_speed(speed_change);
+    right.increase_speed(speed_change);
 }
 
 motor_engine::motor_engine(int fd, const wheel &left, const wheel &right) : fd(fd), left(left), right(right) {}
@@ -49,8 +55,8 @@ void motor_engine::backwards() {
 void motor_engine::smooth_stop() {
     //Decrease speed slowly
     while(!(left.stands_still() && right.stands_still())){
-        left.decrease_speed();
-        right.decrease_speed();
+        left.decrease_speed(speed_change);
+        right.decrease_speed(speed_change);
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     //set wheels into stop mode
@@ -68,11 +74,11 @@ void motor_engine::emergency_stop() {
 }
 
 void motor_engine::turn_right() {
-    left.increase_speed();
+    left.increase_speed(speed_change);
 }
 
 void motor_engine::turn_left() {
-    right.increase_speed();
+    right.increase_speed(speed_change);
 }
 
 
@@ -137,7 +143,19 @@ void setAll (int fd, int on, int off)
     wiringPiI2CWriteReg8(fd, Registers::kAllLedOffH, off >> 8);
 }
 
-void motor_engine::init() {
+void motor_engine::set_speed_change(uint16_t speed_change) {
+    this->speed_change = speed_change;
+}
+
+
+motor_engine make_motor_engine(uint32_t motor_hat_addr) {
+    int fd = wiringPiI2CSetup (motor_hat_addr) ;
+    if(fd == -1){
+        std::cout << "setup didnt work" << std::endl;
+        return motor_engine{-1, wheel(), wheel()};
+    }
+
+    //reset??? mode reg
     setAll (fd, 0, 0);
     wiringPiI2CWriteReg8(fd, Registers::kMode2, ModeBits::kOutDrive);
     wiringPiI2CWriteReg8(fd, Registers::kMode1, ModeBits::kAllCall);
@@ -153,18 +171,5 @@ void motor_engine::init() {
     // wait for oscillator
     std::this_thread::sleep_for (std::chrono::milliseconds (5));
 
-}
-
-void motor_engine::set_speed_change(uint16_t speed_change) {
-    this->speed_change = speed_change;
-}
-
-
-motor_engine make_motor_engine(uint32_t motor_hat_addr) {
-    int fd = wiringPiI2CSetup (motor_hat_addr) ;
-    if(fd == -1){
-        std::cout << "setup didnt work" << std::endl;
-        return motor_engine{-1, wheel(), wheel()};
-    }
     return motor_engine{fd, make_left_wheel(fd), make_right_wheel(fd)};
 }

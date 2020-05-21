@@ -15,9 +15,6 @@ private:
     int fd;
 
     uint16_t current_speed;
-    //The value by which the wheel slows down or speeds up
-    //by increase / decrease speed
-    const static uint16_t speed_change;
 
 
 
@@ -36,8 +33,8 @@ public:
     void backwards();
     void stop();
 
-    void decrease_speed();
-    void increase_speed();
+    void decrease_speed(uint16_t speed_change);
+    void increase_speed(uint16_t speed_change);
 };
 
 wheel make_right_wheel(int fd);

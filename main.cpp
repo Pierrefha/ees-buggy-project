@@ -35,7 +35,6 @@ int main ()
 
 
     engine = new motor_engine{make_motor_engine()};
-    engine->init();
     engine->set_frequency(1600.);
 
     bool auto_movement = false;

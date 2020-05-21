@@ -38,7 +38,6 @@ public:
 
     void set_frequency(double frequency);
     void set_speed_change(uint16_t speed_change);
-    void init();
 
     int release_engine();
 
