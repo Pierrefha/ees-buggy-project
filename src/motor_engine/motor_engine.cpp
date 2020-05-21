@@ -36,12 +36,14 @@ int motor_engine::release_engine() {
 
 void motor_engine::forward() {
     right.forward();
-    left.backwards();
+    left.forward();
+    cur_direction = direction::FORWARD;
 }
 
 void motor_engine::backwards() {
-    right.forward();
+    right.backwards();
     left.backwards();
+    cur_direction = direction::BACKWARDS;
 }
 
 void motor_engine::smooth_stop() {
@@ -54,11 +56,15 @@ void motor_engine::smooth_stop() {
     //set wheels into stop mode
     left.stop();
     right.stop();
+
+    cur_direction = direction::STOP;
 }
 
 void motor_engine::emergency_stop() {
     left.stop();
     right.stop();
+
+    cur_direction = direction::STOP;
 }
 
 void motor_engine::turn_right() {
@@ -68,6 +74,7 @@ void motor_engine::turn_right() {
 void motor_engine::turn_left() {
     right.increase_speed();
 }
+
 
 int motor_engine::device_fd() {
     return fd;
@@ -91,6 +98,11 @@ void motor_engine::turn_in_place_left() {
 
     cur_direction = direction::IN_PLACE_TURN_LEFT;
 }
+
+direction motor_engine::direction() {
+    return cur_direction;
+}
+
 
 motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     int fd = wiringPiI2CSetup (motor_hat_addr) ;

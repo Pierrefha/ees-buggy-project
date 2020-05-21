@@ -6,11 +6,13 @@
 #define EES_BUGGY_MOTOR_ENGINE_H
 
 #include <motor_engine/wheel.h>
+#include <motor_engine/direction.h>
 
 class motor_engine{
 private:
     int fd;
     wheel left, right;
+    direction cur_direction;
 public:
     motor_engine(int fd, const wheel &left, const wheel &right);
 
@@ -24,11 +26,15 @@ public:
     void turn_right();
     void turn_left();
 
+    void turn_in_place_right();
+    void turn_in_place_left();
+
     void smooth_stop();
     void emergency_stop();
 
     int release_engine();
 
+    direction direction();
     int device_fd();
 };
 

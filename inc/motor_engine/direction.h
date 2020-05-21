@@ -8,8 +8,12 @@
 #include <cstdint>
 
 enum class direction : uint8_t{
+    IN_PLACE_TURN_RIGHT,
+    IN_PLACE_TURN_LEFT,
     FORWARD,
-    BACKWARDS
+    BACKWARDS,
+    STOP,
+
 };
 
 #endif //EES_BUGGY_DIRECTION_H
