@@ -1,3 +1,10 @@
+/*
+ * Pierre Dahmani pd1528s 3215892
+ * Jens Peter Dennigmann jd8389s 3190025
+ * Leonhard Kipp lk2149s 3188047 
+ */
+
+
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <signal.h>
