@@ -1,0 +1,4 @@
+# ignore .swp files
+*.swp
+# ignore any objects compiled objects
+objects/*
