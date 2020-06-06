@@ -1,7 +1,3 @@
-//
-// Created by leonhard on 20.05.20.
-//
-
 #ifndef EES_BUGGY_MOTOR_ENGINE_H
 #define EES_BUGGY_MOTOR_ENGINE_H
 
@@ -41,6 +37,12 @@ public:
 
     int release_engine();
 
+    // TODO if we turn left is left wheel full speed and right wheel on zero?
+    //  or how does it work?
+
+    // returns speed of right wheel. 
+    // This is just to test speed when driving in a straight line
+    uint16_t get_speed();
     direction get_direction();
     int device_fd();
 };

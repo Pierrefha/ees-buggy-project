@@ -1,7 +1,3 @@
-//
-// Created by leonhard on 20.05.20.
-//
-
 #include <motor_engine/motor_engine.h>
 #include <iostream>
 #include <unistd.h>
@@ -147,6 +143,13 @@ void motor_engine::set_speed_change(uint16_t speed_change) {
     this->speed_change = speed_change;
 }
 
+/*
+ * @returns the current speed of the right wheel.
+ */
+uint16_t motor_engine::get_speed(){
+	return left.get_speed();
+}
+
 
 motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     int fd = wiringPiI2CSetup (motor_hat_addr) ;
@@ -173,3 +176,5 @@ motor_engine make_motor_engine(uint32_t motor_hat_addr) {
 
     return motor_engine{fd, make_left_wheel(fd), make_right_wheel(fd)};
 }
+
+

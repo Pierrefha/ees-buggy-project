@@ -3,7 +3,7 @@
 
 \usepackage{graphicx}
 \usepackage{subcaption}
-
+\usepackage{siunitx} % for units
 \usepackage[utf8]{inputenc}
 \usepackage[german]{babel}
 
@@ -45,7 +45,7 @@
 
 % TODO Inhaltsverzeichnis
 
-\section{Aufbau des Buggy}
+\begin{section}{Aufbau des Buggy}
 
 \begin{figure}[h!]
   \centering
@@ -74,6 +74,59 @@ Als Ubuntu-Nutzer muss man keine zusätzliche Software installieren um eine SSH-
 
 Für den kompletten Zusammenbau wurden insgesamt 1 Stunden benötigt. Die meiste Zeit nahm die SSH-Verbindung in Anspruch.
 
-% TODO 1.4
+Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhaltenden Corona Phase abgeholt worden ist, wurde der Buggy von einer Person aufgebaut. Im Nachhinein haben wir uns trotzdem Gedanken dazu gemacht, wie wir den Aufbau am besten hätten aufteilen können. Wir sind zu dem Ergebnis gekommen, dass jede Person einen Teil des Buggys aufbauen sollte. Konkret hätte sich einer um das Kugellager und die Motoren gekümmert. Einer um die Abstandhalter und das Anbringen der Plastikplatte und des Raspberry Pi. Der letzte um das Anbringen des Motorhats und um das Anschließen und Fixieren der Powerbank.
+
+\end{section}
+
+\begin{section}{Motorensteuerung}
+
+    TODO Motorensteuerung recap
+
+    TODO Video einfügen von der Rechteckfahrt objects/rectangle.mp4
+
+\end{section}
+
+\begin{section}{Ultraschallsteuerung}
+    \begin{subsection}{Recherche zum Ultraschallsensor}
+        Quellen:
+        http://blog404de.github.io/RasPiUltraschallEntfernungsmesser/
+        https://www.einplatinencomputer.com/raspberry-pi-ultraschallsensor-hc-sr04-ansteuern-entfernung-messen/
+        https://tutorials-raspberrypi.de/entfernung-messen-mit-ultraschallsensor-hc-sr04/
+    \end{subsection}
+    \begin{subsection}{Aufbau}
+        \iffalse
+            TODO: why does the picture always take a whole page and not fit inside the page?
+        \fi
+        \begin{figure}[h!]
+              \includegraphics[width=\linewidth]{lernportfolio_assets/GPIO_Pins}
+              \caption{Pin Mapping WiringPi Motorhat}
+              \label{fig:boat1}
+        \end{figure}
+        Der Ultraschallsensor HC-SR04 hat einen Vcc, einen Gnd, einen Trigger und einen Echo Anschluss.
+        Der Ultraschallsensor benötigt eine Versorungsspannung von 5 Volt , die können wir direkt vom Motorhead nutzen.
+        Der Trigger wird durch den GPIO Pin 5 auf dem Motorhead und damit dem Pin 21 der wiringPi Bibliothek gesetzt.
+        Das Echo Signal würde eine Spannung von 5V betragen. Da der Pi jedoch nur eine Spannung von 3,3V verträgt, muss man hier einen Vorwiderstand von 330$\Omega$ verwenden. Zusätzlich wird ein Pull-Down Widerstand in Höhe von 470$\Omega$ angeschlossen um einen floating state zu verhindern und den Pin gegen Ground zu ziehen.
+        Der Gnd wird direkt an den Gnd vom Motorhat angeschlossen.
+
+        \begin{figure}
+            \centering
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=0.9\textwidth]{lernportfolio_assets/Schaltplan_Ultraschallsensor1} % first figure itself
+                \caption{Auf Papier}
+            \end{minipage}\hfill
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=0.9\textwidth]{lernportfolio_assets/Schaltplan_Ultraschallsensor2} % second figure itself
+                \caption{Auf Papier}
+            \end{minipage}
+        \end{figure}
+    \end{subsection}
+    \begin{subsection}{Distanzberechnung}
+        Die Distanz wird durch den Ultraschallsensor berechnet indem durch den Trigger ein Signal losschickt und die Zeit misst, die das Signal braucht um am Echo anzukommen. 
+        Distanz (in \si\cm)= \( \frac{Signalzeit}{2} \) \si\second $ \cdot $ 34350 \( \frac{\si\cm}{\si\second} \)
+    \end{subsection}
+
+\end{section}
 
 \end{document}

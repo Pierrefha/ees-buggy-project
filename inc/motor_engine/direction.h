@@ -1,7 +1,3 @@
-//
-// Created by leonhard on 21.05.20.
-//
-
 #ifndef EES_BUGGY_DIRECTION_H
 #define EES_BUGGY_DIRECTION_H
 
