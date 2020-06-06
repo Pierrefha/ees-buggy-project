@@ -4,7 +4,6 @@
  * Leonhard Kipp lk2149s 3188047 
  */
 
-
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <signal.h>
@@ -12,7 +11,12 @@
 #include <thread>
 #include <motor_engine/constants.h>
 #include <motor_engine/motor_engine.h>
+#include <ultrasonic_sensor/ultrasonic_sensor.h>
 #include <curses.h>
+
+#define ULTRASONIC_TRIGGER_PIN_WPI 7
+#define ULTRASONIC_ECHO_PIN_WPI 21
+#define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 22 
 
 motor_engine* engine = nullptr;
 /// Interrupt Routine for STRG-C
@@ -43,6 +47,12 @@ int main ()
 
     engine = new motor_engine{make_motor_engine()};
     engine->set_frequency(1600.);
+
+    //create sensor
+    ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
+            ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
+    //init
+    ultrasonic.init();
 
     bool auto_movement = false;
     if(auto_movement){
@@ -155,6 +165,11 @@ int main ()
                     }
                     break;
                 }
+                //check distance
+                case 'c':{
+                             std::cout << ultrasonic.get_distance();
+                         }
+
                 default: break;
             }
 
