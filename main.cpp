@@ -76,6 +76,10 @@ int main ()
         cbreak();
         noecho();
         while((user_cmd = getch()) != 'x'){
+            const int DIST_THRESHOLD = 10;
+            if(ultrasonic.get_distance() < DIST_THRESHOLD && engine->get_direction() == direction::FORWARD){
+                engine->emergency_stop();
+            }
             switch (user_cmd){
                 case 'e':{
                     engine->emergency_stop();
