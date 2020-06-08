@@ -34,9 +34,8 @@ int32_t ultrasonic_sensor::get_distance(){
     digitalWrite(this->trigger_pin,LOW);
 
     //poll echo pin until we receive response
-    while(TRUE){
+    while(true){
         if(digitalRead(this->echo_pin)==HIGH){
-            auto end = std::chrono::system_clock::now();
             break;
         }
     }
