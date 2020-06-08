@@ -29,7 +29,7 @@ int32_t ultrasonic_sensor::get_distance(){
     digitalWrite(this->trigger_pin,HIGH);
     auto start = std::chrono::system_clock::now();
     //sleep for one millisecond
-    std::this->thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME_IN_MILLISECONDS0));
+    std::this_thread::sleep_for(std::chrono::milliseconds(SLEEP_TIME_IN_MILLISECONDS0));
     //set trigger to low
     digitalWrite(this->trigger_pin,LOW);
 
