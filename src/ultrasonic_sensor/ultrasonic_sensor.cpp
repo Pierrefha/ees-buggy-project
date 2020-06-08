@@ -3,6 +3,7 @@
 #include <chrono>
 #include <thread>
 #include <stdio.h>
+#include <iostream>
 
 ultrasonic_sensor::ultrasonic_sensor(int8_t trigger_pin, int8_t echo_pin, int8_t brake_light_pin){    
     this->trigger_pin = trigger_pin;
