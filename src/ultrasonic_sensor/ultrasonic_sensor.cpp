@@ -39,6 +39,7 @@ int32_t ultrasonic_sensor::get_distance(){
             break;
         }
     }
+    auto end = std::chrono::system_clock::now();
     std::chrono::duration<double> time_diff = end-start;
     int32_t distance_in_cm  = (speed_of_sound/2) * time_diff.count(); 
     //DEBUG MESSAGE DISPLAY THE DISTANCE
