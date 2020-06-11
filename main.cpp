@@ -14,9 +14,9 @@
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
 #include <curses.h>
 
-#define ULTRASONIC_TRIGGER_PIN_WPI 7
-#define ULTRASONIC_ECHO_PIN_WPI 21
-#define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 22 
+#define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
+#define ULTRASONIC_ECHO_PIN_WPI 1
+#define ULTRASONIC_TRIGGER_PIN_WPI 2 
 
 motor_engine* engine = nullptr;
 /// Interrupt Routine for STRG-C
@@ -36,14 +36,18 @@ int main ()
 {
     // Csignal für Abbruch über STRG-C
     signal(SIGINT, signalHandler);
+    //init wiringPi
     wiringPiSetup () ;
+
+    //test blink led
+    /*
     pinMode (0, OUTPUT) ;
     do
     {
-        digitalWrite (0, HIGH) ; delay (500) ;
-        digitalWrite (0,  LOW) ; delay (500) ;
-    }while(false);
-
+        digitalWrite (0, HIGH) ; delay (1000) ;
+        digitalWrite (0,  LOW) ; delay (1000) ;
+    }while(true);
+    */
 
     engine = new motor_engine{make_motor_engine()};
     engine->set_frequency(1600.);
@@ -51,7 +55,7 @@ int main ()
     //create sensor
     ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
             ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
-    //init
+    //init sensor
     ultrasonic.init();
 
     bool auto_movement = false;
@@ -77,9 +81,9 @@ int main ()
         noecho();
         while((user_cmd = getch()) != 'x'){
             const int DIST_THRESHOLD = 10;
-            if(ultrasonic.get_distance() < DIST_THRESHOLD && engine->get_direction() == direction::FORWARD){
+            /* TODO uncomment if(ultrasonic.calc_distance() < DIST_THRESHOLD && engine->get_direction() == direction::FORWARD){
                 engine->emergency_stop();
-            }
+            }*/
             switch (user_cmd){
                 case 'e':{
                     engine->emergency_stop();
@@ -171,7 +175,8 @@ int main ()
                 }
                 //check distance
                 case 'c':{
-                             std::cout << ultrasonic.get_distance();
+				 //debug time diff
+				 ultrasonic.calc_distance();
                          }
 
                 default: break;

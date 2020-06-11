@@ -2,8 +2,8 @@
 #define EES_ULTRASONIC_SENSOR_H
 
 //TODO probably move to constants.h
-#define SPEED_OF_SOUND_IN_CM_PER_SECOND 34300
-#define SLEEP_TIME_IN_MILLISECONDS 1
+#define SPEED_OF_SOUND_IN_CM_PER_MILLISECOND 34.3
+#define SLEEP_TIME_IN_MICROSECONDS 10
 #define ON 1
 #define OFF 0
 
@@ -16,6 +16,8 @@ class ultrasonic_sensor{
     int8_t trigger_pin;
     int8_t echo_pin;
     int8_t brake_light_pin;
+    double time_diff;
+    double distance;
 
     public:
         ultrasonic_sensor(int8_t trigger_pin,int8_t echo_pin, int8_t brake_light_pin);
@@ -24,7 +26,11 @@ class ultrasonic_sensor{
          * core functions
          */
         void init();
-        int32_t get_distance();
+	// measures time taken between trigger and echo
+	double measure_time_diff();
+	// calculates distance from time difference
+        double calc_distance();
+	// sets brake light
         void set_brake_light(int8_t mode);
         
         /*
@@ -32,13 +38,5 @@ class ultrasonic_sensor{
          */
         bool turn_around();
     
-}
-
-
-
-
-
-
-
-
+};
 #endif // EES_ULTRASONIC_SENSOR_H
