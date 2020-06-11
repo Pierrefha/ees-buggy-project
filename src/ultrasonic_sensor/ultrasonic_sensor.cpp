@@ -39,6 +39,7 @@ double ultrasonic_sensor::measure_time_diff(){
 	double average_time = 0;
 	double total_time = 0;
 	int32_t measurements = 100; 
+    auto end = std::chrono::steady_clock::now();
 
 	//needed for multiple measures in a row
 	//to avoid infinite loop
@@ -69,14 +70,13 @@ double ultrasonic_sensor::measure_time_diff(){
     //poll echo pin until we receive response
     do {
 	    if(digitalRead(this->echo_pin)==HIGH){
+            end = std::chrono::steady_clock::now();
 		    break;
 	    }
     }
     while (true);
 
-    auto end = std::chrono::steady_clock::now();
     auto diff = end-start;
-
     total_time += std::chrono::duration <double, std::milli> (diff).count();
 
    //sleep so echo pin can reset at next measurement 
@@ -87,8 +87,7 @@ double ultrasonic_sensor::measure_time_diff(){
     average_time = total_time / measurements;
     std::cout << "total time: " << total_time << "ms average time: " << average_time << "ms measurements: " << measurements;
 
-
-    //return time diff in microseconds
+    //return average time in milliseconds
     return average_time;
 }
 
