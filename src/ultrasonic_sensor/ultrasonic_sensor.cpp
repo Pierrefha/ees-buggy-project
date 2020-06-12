@@ -60,7 +60,10 @@ double ultrasonic_sensor::measure_time_diff(){
 
         auto start = std::chrono::steady_clock::now();
         //set high flank for at least 20 microseconds to make sure sensor will trigger
-        std::this_thread::sleep_for(std::chrono::microseconds(20));
+        auto delay = std::chrono::steady_clock::now();
+        while(delay - start < std::chrono::microseconds(20)){
+            delay = std::chrono::steady_clock::now();
+        }
         //set trigger to low
         digitalWrite(this->trigger_pin,LOW);
 
