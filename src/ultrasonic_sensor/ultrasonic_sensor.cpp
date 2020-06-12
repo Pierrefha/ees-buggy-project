@@ -36,53 +36,53 @@ void ultrasonic_sensor::init(){
  */
 double ultrasonic_sensor::measure_time_diff(){
 
-	double average_time = 0;
-	double total_time = 0;
-	int32_t measurements = 100; 
+    double average_time = 0;
+    double total_time = 0;
+    int32_t measurements = 100;
     auto end = std::chrono::steady_clock::now();
 
-	//needed for multiple measures in a row
-	//to avoid infinite loop
-	    digitalWrite(this->trigger_pin,LOW);
-
-	//measure x times and calc average result because of high variance in single results
-    for (int i=0; i<measurements;++i){
-   
-	    //debug
-	   //read value of echo
-	   //std::cout << "0 " << digitalRead(this->echo_pin) << "\t"; 
-
-    //set trigger to high
-    digitalWrite(this->trigger_pin,HIGH);
-	
-    //debug
-    //std::cout << "1 " << digitalRead(this->trigger_pin) << "\t";
-
-    auto start = std::chrono::steady_clock::now();
-    //set high flank for at least 20 microseconds to make sure sensor will trigger
-    std::this_thread::sleep_for(std::chrono::microseconds(20));
-    //set trigger to low
+    //needed for multiple measures in a row
+    //to avoid infinite loop
     digitalWrite(this->trigger_pin,LOW);
 
-    //debug
-    //std::cout << "0 " << digitalRead(this->trigger_pin) << "\t";
+    //measure x times and calc average result because of high variance in single results
+    for (int i=0; i<measurements;++i){
 
-    //poll echo pin until we receive response
-    do {
-	    if(digitalRead(this->echo_pin)==HIGH){
-            end = std::chrono::steady_clock::now();
-		    break;
-	    }
-    }
-    while (true);
+        //debug
+        //read value of echo
+        //std::cout << "0 " << digitalRead(this->echo_pin) << "\t";
 
-    auto diff = end-start;
-    total_time += std::chrono::duration <double, std::milli> (diff).count();
+        //set trigger to high
+        digitalWrite(this->trigger_pin,HIGH);
 
-   //sleep so echo pin can reset at next measurement 
-    std::this_thread::sleep_for(std::chrono::microseconds(50));
+        //debug
+        //std::cout << "1 " << digitalRead(this->trigger_pin) << "\t";
 
-    //debug code std::cout << "difference was " << std::chrono::duration <double, std::milli> (diff).count() << " ms\n"; 
+        auto start = std::chrono::steady_clock::now();
+        //set high flank for at least 20 microseconds to make sure sensor will trigger
+        std::this_thread::sleep_for(std::chrono::microseconds(20));
+        //set trigger to low
+        digitalWrite(this->trigger_pin,LOW);
+
+        //debug
+        //std::cout << "0 " << digitalRead(this->trigger_pin) << "\t";
+
+        //poll echo pin until we receive response
+        do {
+            if(digitalRead(this->echo_pin)==HIGH){
+                end = std::chrono::steady_clock::now();
+                break;
+            }
+        }
+        while (true);
+
+        auto diff = end-start;
+        total_time += std::chrono::duration <double, std::milli> (diff).count();
+
+        //sleep so echo pin can reset at next measurement
+        std::this_thread::sleep_for(std::chrono::microseconds(50));
+
+        //debug code std::cout << "difference was " << std::chrono::duration <double, std::milli> (diff).count() << " ms\n";
     }
     average_time = total_time / measurements;
     std::cout << "total time: " << total_time << "ms average time: " << average_time << "ms measurements: " << measurements;
