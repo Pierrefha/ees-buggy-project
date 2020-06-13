@@ -1,7 +1,3 @@
-//
-// Created by leonhard on 20.05.20.
-//
-
 #include <motor_engine/wheel.h>
 #include <motor_engine/constants.h>
 #include <cassert>
