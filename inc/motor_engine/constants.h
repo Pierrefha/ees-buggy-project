@@ -1,7 +1,3 @@
-//
-// Created by leonhard on 20.05.20.
-//
-
 #ifndef EES_BUGGY_CONSTANTS_H
 #define EES_BUGGY_CONSTANTS_H
 
