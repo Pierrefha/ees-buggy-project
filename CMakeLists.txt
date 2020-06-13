@@ -14,4 +14,4 @@ add_executable(ees_buggy main.cpp ${buggy_src} ${buggy_inc})
 target_include_directories(ees_buggy PRIVATE ${PROJECT_SOURCE_DIR}/inc)
 
 target_compile_options(ees_buggy PUBLIC -Wall)
-target_link_options(ees_buggy PUBLIC -lwiringPi -lncurses)
+target_link_options(ees_buggy PUBLIC -lwiringPi -pthread -lncurses)
