@@ -38,10 +38,10 @@ void signalHandler(int signum)
 /*
  * Periodically checks distance using the ultrasonic sensor.
  */
-void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * engine)
+void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
+        motor_engine * engine)
 {
 
-	// plot current speed
 	double speed = 0;
 	double distance = 0;
 	double safety_threshold= 0;
@@ -58,6 +58,7 @@ void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * en
 
 		distance = sensor->calc_distance();
 		// DEBUG CODE
+        // plot current speed
 		//std::cout << "current distance: " << distance << std::endl;
 		//std::cout << "current speed: " << speed << std::endl;
 
@@ -65,7 +66,7 @@ void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * en
 		// Set stop condition to true if the distance is to the wall 
 		// ois below our safety threshold. 
 		if(distance <= safety_threshold){
-			*end_ptr=true;
+			* stop_condition_ptr=true;
 			sensor->set_brake_light(ON);
 			engine->emergency_stop();
 
@@ -78,7 +79,7 @@ void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * en
 			 * and just quit with a "you shall not pass" message? xd
 			 */
 
-			// after turn routine set *end_ptr to false again
+			// after turn routine set *stop_condition_ptr to false again
 			// mock routine by sleep timer
 			// pause 2000 ms
 			auto start = std::chrono::steady_clock::now();
@@ -86,7 +87,7 @@ void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * en
 			while(delay - start < std::chrono::milliseconds(2000)){
 				delay = std::chrono::steady_clock::now();
 			}
-			*end_ptr=false;
+			* stop_condition_ptr=false;
 
 		}
 		else {
@@ -106,8 +107,8 @@ void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * en
 
 int main ()
 {
-	bool end = false;
-	bool * end_ptr = & end;
+	bool stop_condition = false;
+	bool * stop_condition_ptr = & stop_condition;
 	// Csignal für Abbruch über STRG-C
 	signal(SIGINT, signalHandler);
 	//init wiringPi
@@ -134,13 +135,12 @@ int main ()
 	ultrasonic.init();
 
 	// periodically poll distance
-	std::thread sensor_thread(poll_distance,end_ptr,ultrasonic_ptr,engine);
-
-	//test thread is working
-	//std::thread sensor_thread(fun1,end_ptr);
+	std::thread sensor_thread(poll_distance,stop_condition_ptr,ultrasonic_ptr,engine);
 
 
-
+    /*
+     * Test code for the ultrasonic sensor. 
+     */
 	bool ultrasonic_test = false;
 	if(ultrasonic_test){
 		//debug time diff
@@ -153,6 +153,9 @@ int main ()
 		return 0;
 	};
 
+    /*
+     * Test code for the motor engine.
+     */
 	bool auto_movement = false;
 	if(auto_movement){
 		std::cout << "driving forward" << std::endl;
@@ -172,17 +175,20 @@ int main ()
 		return 0;
 	}
 
-	// control buggy motor engine using wasd keys
+
+    /*
+     * Remote control of the motor engine using wasd keys.
+     */
 	char user_cmd = 0;
 	initscr();
 	cbreak();
 	noecho();
 	while((user_cmd = getch()) != 'x'){
 		/*
-		 * Check if remote control is enabled. Which is the case if our buggy is 
+		 * Check if remote control is stopped. Which is the case if our buggy is 
 		 * not below our safety distance threshold. 
 		 */
-		if(*end_ptr){
+		if(* stop_condition_ptr){
 			std::cout << "remote control disabled while distance is below safety threshold!" << std::endl;
 		}
 		else {
