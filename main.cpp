@@ -58,134 +58,145 @@ int main ()
     //init sensor
     ultrasonic.init();
 
+    bool ultrasonic_test = true;
+    if(ultrasonic_test){
+	    //debug time diff
+	    for(int i=0 ;i<100;i++){
+	    	ultrasonic.calc_distance() ;
+	    }
+	    for(int i=0 ;i<100;i++){
+	    	std::cout << ultrasonic.calc_distance() << std::endl;
+	    }
+	    return 0;
+    };
     bool auto_movement = false;
     if(auto_movement){
-        std::cout << "driving forward" << std::endl;
-        engine->set_speed(850);
-        engine->forward();
-        std::this_thread::sleep_for (std::chrono::milliseconds (500));
-        engine->smooth_stop();
+	    std::cout << "driving forward" << std::endl;
+	    engine->set_speed(850);
+	    engine->forward();
+	    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+	    engine->smooth_stop();
 
-        std::cout << "driving backwards" << std::endl;
-        engine->set_speed(850);
-        engine->backwards();
-        std::this_thread::sleep_for (std::chrono::milliseconds (500));
-        engine->smooth_stop();
+	    std::cout << "driving backwards" << std::endl;
+	    engine->set_speed(850);
+	    engine->backwards();
+	    std::this_thread::sleep_for (std::chrono::milliseconds (500));
+	    engine->smooth_stop();
 
-        engine->release_engine();
-        delete engine;
+	    engine->release_engine();
+	    delete engine;
     }else{
-        char user_cmd = 0;
-        initscr();
-        cbreak();
-        noecho();
-        while((user_cmd = getch()) != 'x'){
-            const int DIST_THRESHOLD = 10;
-            /* TODO uncomment if(ultrasonic.calc_distance() < DIST_THRESHOLD && engine->get_direction() == direction::FORWARD){
-                engine->emergency_stop();
-            }*/
-            switch (user_cmd){
-                case 'e':{
-                    engine->emergency_stop();
-                    break;
-                }
-                case 'q':{
-                    engine->smooth_stop();
-                    break;
-                }
-                case 'w':{
-                    switch(engine->get_direction()){
-                        case direction::IN_PLACE_TURN_RIGHT:
-                        case direction::IN_PLACE_TURN_LEFT:
-                            engine->smooth_stop();
-                            engine->forward();
-                            engine->increase_speed();
-                            break;
-                        case direction::BACKWARDS:
-                            engine->decrease_speed();
-                            break;
-                        case direction::STOP:
-                            engine->forward();
-                            engine->increase_speed();
-                            break;
-                        case direction::FORWARD:
-                            engine->increase_speed();
-                            break;
-                    }
-                    break;
-                }
-                case 's':{
-                    switch(engine->get_direction()){
-                        case direction::IN_PLACE_TURN_RIGHT:
-                        case direction::IN_PLACE_TURN_LEFT:
-                            engine->smooth_stop();
-                            engine->backwards();
-                            engine->increase_speed();
-                            break;
-                        case direction::FORWARD:
-                            engine->decrease_speed();
-                            break;
-                        case direction::STOP:
-                            engine->backwards();
-                            engine->increase_speed();
-                            break;
-                        case direction::BACKWARDS:
-                            engine->increase_speed();
-                            break;
-                    }
-                    break;
-                }
-                case 'd':{
-                    switch(engine->get_direction()){
-                        case direction::IN_PLACE_TURN_RIGHT:
-                            engine->increase_speed();
-                            break;
-                        case direction::IN_PLACE_TURN_LEFT:
-                            engine->decrease_speed();
-                            break;
-                        case direction::FORWARD:
-                        case direction::BACKWARDS:
-                            engine->turn_right();
-                            break;
-                        case direction::STOP:
-                            engine->turn_in_place_right();
-                            engine->increase_speed();
-                            break;
-                    }
-                    break;
-                }
-                case 'a':{
-                    switch(engine->get_direction()){
-                        case direction::IN_PLACE_TURN_RIGHT:
-                            engine->decrease_speed();
-                            break;
-                        case direction::IN_PLACE_TURN_LEFT:
-                            engine->increase_speed();
-                            break;
-                        case direction::FORWARD:
-                        case direction::BACKWARDS:
-                            engine->turn_left();
-                            break;
-                        case direction::STOP:
-                            engine->turn_in_place_left();
-                            engine->increase_speed();
-                            break;
-                    }
-                    break;
-                }
-                //check distance
-                case 'c':{
-				 //debug time diff
-				 ultrasonic.calc_distance();
-                         }
+	    char user_cmd = 0;
+	    initscr();
+	    cbreak();
+	    noecho();
+	    while((user_cmd = getch()) != 'x'){
+		    const int DIST_THRESHOLD = 10;
+		    /* TODO uncomment if(ultrasonic.calc_distance() < DIST_THRESHOLD && engine->get_direction() == direction::FORWARD){
+		       engine->emergency_stop();
+		       }*/
+		    switch (user_cmd){
+			    case 'e':{
+					     engine->emergency_stop();
+					     break;
+				     }
+			    case 'q':{
+					     engine->smooth_stop();
+					     break;
+				     }
+			    case 'w':{
+					     switch(engine->get_direction()){
+						     case direction::IN_PLACE_TURN_RIGHT:
+						     case direction::IN_PLACE_TURN_LEFT:
+							     engine->smooth_stop();
+							     engine->forward();
+							     engine->increase_speed();
+							     break;
+						     case direction::BACKWARDS:
+							     engine->decrease_speed();
+							     break;
+						     case direction::STOP:
+							     engine->forward();
+							     engine->increase_speed();
+							     break;
+						     case direction::FORWARD:
+							     engine->increase_speed();
+							     break;
+					     }
+					     break;
+				     }
+			    case 's':{
+					     switch(engine->get_direction()){
+						     case direction::IN_PLACE_TURN_RIGHT:
+						     case direction::IN_PLACE_TURN_LEFT:
+							     engine->smooth_stop();
+							     engine->backwards();
+							     engine->increase_speed();
+							     break;
+						     case direction::FORWARD:
+							     engine->decrease_speed();
+							     break;
+						     case direction::STOP:
+							     engine->backwards();
+							     engine->increase_speed();
+							     break;
+						     case direction::BACKWARDS:
+							     engine->increase_speed();
+							     break;
+					     }
+					     break;
+				     }
+			    case 'd':{
+					     switch(engine->get_direction()){
+						     case direction::IN_PLACE_TURN_RIGHT:
+							     engine->increase_speed();
+							     break;
+						     case direction::IN_PLACE_TURN_LEFT:
+							     engine->decrease_speed();
+							     break;
+						     case direction::FORWARD:
+						     case direction::BACKWARDS:
+							     engine->turn_right();
+							     break;
+						     case direction::STOP:
+							     engine->turn_in_place_right();
+							     engine->increase_speed();
+							     break;
+					     }
+					     break;
+				     }
+			    case 'a':{
+					     switch(engine->get_direction()){
+						     case direction::IN_PLACE_TURN_RIGHT:
+							     engine->decrease_speed();
+							     break;
+						     case direction::IN_PLACE_TURN_LEFT:
+							     engine->increase_speed();
+							     break;
+						     case direction::FORWARD:
+						     case direction::BACKWARDS:
+							     engine->turn_left();
+							     break;
+						     case direction::STOP:
+							     engine->turn_in_place_left();
+							     engine->increase_speed();
+							     break;
+					     }
+					     break;
+				     }
+				     //check distance
+			    case 'c':{
+					     //debug time diff
+					     ultrasonic.calc_distance();
+				     }
 
-                default: break;
-            }
+			    default: break;
+		    }
 
-        }
+	    }
 
-        engine->smooth_stop();
-        engine->release_engine();
-        endwin();
+	    engine->smooth_stop();
+	    engine->release_engine();
+	    endwin();
     }
 }
