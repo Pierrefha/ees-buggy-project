@@ -46,6 +46,7 @@ void poll_distance(bool * end_ptr, ultrasonic_sensor * sensor, motor_engine * en
 	double distance = 0;
 	double safety_threshold= 0;
 	while(true){
+
 		// Adapt threshold depending on current speed.
 		speed = engine->get_speed();
 		if(speed >= 2000){
