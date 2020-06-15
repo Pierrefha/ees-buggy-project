@@ -3,6 +3,8 @@ import matplotlib.pyplot as plt
 #load dataframe from csv
 df = pd.read_csv("data.csv")
 
+# print(df.to_latex())
+
 print(df.describe().to_latex())
 
 # mean = df.mean()
