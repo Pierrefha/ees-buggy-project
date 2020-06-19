@@ -4,6 +4,7 @@
 #include <thread>
 #include <motor_engine/constants.h>
 #include <wiringPiI2C.h>
+#include <util/time_util.h>
 
 void motor_engine::decrease_speed() {
     //When decreasing speed we dont do a check like in increase_speed
@@ -53,7 +54,7 @@ void motor_engine::smooth_stop() {
     while(!(left.stands_still() && right.stands_still())){
         left.decrease_speed(speed_change);
         right.decrease_speed(speed_change);
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        busy_wait(std::chrono::milliseconds(1));
     }
     //set wheels into stop mode
     left.stop();
@@ -125,7 +126,7 @@ void motor_engine::set_frequency(double frequency) {
     // wake up
     wiringPiI2CWriteReg8(fd, Registers::kMode1, oldMode);
 
-    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+    busy_wait(std::chrono::milliseconds (5));
 
     // restart
     wiringPiI2CWriteReg8(fd, Registers::kMode1, oldMode | ModeBits::kRestart);
@@ -164,7 +165,7 @@ motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     wiringPiI2CWriteReg8(fd, Registers::kMode1, ModeBits::kAllCall);
 
     // wait for oscillator
-    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+    busy_wait(std::chrono::milliseconds (5));
 
     int mode = wiringPiI2CReadReg8(fd, Registers::kMode1);
     // reset sleep
@@ -172,7 +173,7 @@ motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     wiringPiI2CWriteReg8(fd, Registers::kMode1, mode);
 
     // wait for oscillator
-    std::this_thread::sleep_for (std::chrono::milliseconds (5));
+    busy_wait(std::chrono::milliseconds (5));
 
     return motor_engine{fd, make_left_wheel(fd), make_right_wheel(fd)};
 }
