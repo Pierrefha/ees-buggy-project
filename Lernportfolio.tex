@@ -77,8 +77,9 @@ In den meisten Bildern (außer auf Seite IV) ist der Buggy mit roter Platte geze
 
 Als Ubuntu-Nutzer muss man keine zusätzliche Software installieren um eine SSH-Verbindung herzustellen. Eine Ergänzung, dass \href{https://invisible-island.net/xterm/}{XTerm} eine Empfehlung an die Windows-Nutzer ist, wäre daher angebracht. Bei dieser Bemerkung wird davon ausgegangen, dass mit XTerm an dieser Stelle \href{https://mobaxterm.mobatek.net/}{MobaXterm} gemeint ist und nicht der Terminal Emulator XTerm. 
 
-Für den kompletten Zusammenbau wurden insgesamt 1 Stunden benötigt. Die meiste Zeit nahm die SSH-Verbindung in Anspruch.
+Für den kompletten Zusammenbau wurden insgesamt 1,5 Stunden benötigt. Die meiste Zeit nahm die SSH-Verbindung in Anspruch.
 
+%Das meinst du nicht ernst oder ??? Ich bin dafür das kommt raus.
 Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhaltenden Corona Phase abgeholt worden ist, wurde der Buggy von einer Person aufgebaut. Im Nachhinein haben wir uns trotzdem Gedanken dazu gemacht, wie wir den Aufbau am besten hätten aufteilen können. Wir sind zu dem Ergebnis gekommen, dass jede Person einen Teil des Buggys aufbauen sollte. Konkret hätte sich einer um das Kugellager und die Motoren gekümmert. Einer um die Abstandhalter und das Anbringen der Plastikplatte und des Raspberry Pi. Der letzte um das Anbringen des Motorhats und um das Anschließen und Fixieren der Powerbank.
 
 \end{section}
@@ -157,10 +158,16 @@ Referenzcode schreibt 4096 in die Register. Ist das korrekt?
               \label{fig:boat1}
         \end{figure}
         Der Ultraschallsensor HC-SR04 hat einen Vcc, einen Gnd, einen Trigger und einen Echo Anschluss.
-        Der Ultraschallsensor benötigt eine Versorungsspannung von 5 Volt , die können wir direkt vom Motorhead nutzen.
-        Der Trigger wird durch den GPIO Pin 5 auf dem Motorhead und damit dem Pin 21 der wiringPi Bibliothek gesetzt.
-        Das Echo Signal würde eine Spannung von 5V betragen. Da der Pi jedoch nur eine Spannung von 3,3V verträgt, muss man hier einen Vorwiderstand von 330$\Omega$ verwenden. Zusätzlich wird ein Pull-Down Widerstand in Höhe von 470$\Omega$ angeschlossen um einen floating state zu verhindern und den Pin gegen Ground zu ziehen.
-        Der Gnd wird direkt an den Gnd vom Motorhat angeschlossen.
+        Der Ultraschallsensor benötigt eine Versorungsspannung von 5 Volt,
+        welche vom Motorhead bereitgestellt wird.
+        Der Trigger wird mit dem GPIO Pin 5 des Motorhead bzw. mit dem Pin 21 der wiringPi Bibliothek verbunden.
+        %TODO @Pierre Ist das hier korrekt umschrieben Pierre?
+        Das Echo Signal wird vom Motorhead mit einer Spannung von 5V
+        zurückgegeben. Da der RaspberryPi jedoch nur eine Spannung von 3,3V
+        verträgt, ist die Verwendung eines Vorwiderstand von 330$\Omega$ nötig.
+        Zusätzlich wird ein Pull-Down Widerstand in Höhe von 470$\Omega$
+        angeschlossen, welcher den Pin gegen Ground zieht, um so ein floating state zu verhindern.
+        Der GND Anschluss des Ultraschallsensors wird direkt an den GND Pin vom Motorhat angeschlossen.
 
         \begin{figure}
             \centering
@@ -184,12 +191,17 @@ Referenzcode schreibt 4096 in die Register. Ist das korrekt?
 
     \begin{subsection}{Bewertung der Zuverlässigkeit der Entfernungsmessung}
       Die Entfernungsmessung funktioniert für solide Objekte in einer Reichweite
-      von 5 bis 100 cm zuverlässig. Für weniger soliden Objekten, wie z.B. einer
-      Pappierbox, hat der Sensor den Tests Probleme
+      von 5 bis 100 cm zuverlässig. Für weniger solide Objekten, wie z.B. einer
+      Pappierbox, hat der Sensor bei den Tests Probleme
       gehabt, die Entfernung richtig einzuschätzen. Oftmals kam es hierbei zu keinen Rückmeldungen an den Echo-Pin. Dieses
-      Problem wurde durch ein Zeitlimit beim Warten auf den Echo-Pin gelöst.
-      Die relativ hohe Varianz zwischen einzelnen Messungen bei gleicher Distanz zum Objekt
-      wird durch mehrmaliges Messen und ermitteln des Durchschnittes abgefangen.
+      Problem wurde durch ein Zeitlimit beim Warten auf den Echo-Pin gelöst und
+      verwerfen der Messung falls das Zeitlimit überschritten wurde. Das
+      Ermitteln der Entfernung beinhaltet mehrere Entfernungsmessungen. Somit
+      ist das verwerfen einzelner Messungen durch ein überschreiten des
+      Zeitlimits vertretbar. Aus den Messungen wird anschließend ein Mittelwert
+      gebildet und zurückgegeben. Durch mehrmaliges Messen und bilden des
+      Mittelwertes wird zugleich die relativ hohe Varianz zwischen einzelnen
+      Messungen bei gleicher Distanz zum Objekt abgefangen.
     \end{subsection}
     \begin{subsection}{Bewertung der Genauigkeit}
       Die Entfernungsmessung funktioniert mit einer Standardabweichung von unter
