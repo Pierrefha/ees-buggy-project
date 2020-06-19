@@ -15,6 +15,7 @@
 #include <curses.h>
 #include <thread>
 #include <chrono>
+#include <magnetic_sensor/magnetic_sensor.h>
 
 #define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
 #define ULTRASONIC_ECHO_PIN_WPI 1
@@ -136,6 +137,9 @@ int main ()
 
 	// periodically poll distance
 	std::thread sensor_thread(poll_distance,stop_condition_ptr,ultrasonic_ptr,engine);
+	
+	//Magnetic Sensor
+	magnetic_sensor magneticSensor;
 
 
     /*
@@ -184,6 +188,14 @@ int main ()
 	cbreak();
 	noecho();
 	while((user_cmd = getch()) != 'x'){
+		
+		//TEST FOR SENSOR
+		std::cout << magneticSensor.check() << std::endl;
+		
+		
+		
+		
+		//END TEST
 		/*
 		 * Check if remote control is stopped. Which is the case if our buggy is 
 		 * not below our safety distance threshold. 
