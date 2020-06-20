@@ -303,9 +303,16 @@ int main ()
 						 }
 						 break;
 					 }
-				//Test Case for compass / do nothing
+				//Test Case for compass: für das drehen des buggys
 				case 'r':{
-					
+					for(int i = 0; i < 1000; i++){
+						magneticSensor.check();
+						outputData.open("outputData.txt", std::ios_base::app);
+						outputData << magneticSensor.getX() << " " << magneticSensor.getY() << " " << magneticSensor.getZ() << "\n";
+						outputData.close();
+						//etwas warten damit der Kompass neue Daten laden kann
+						std::this_thread::sleep_for(std::chrono::milliseconds(200));
+					}
 				}
 				
 				default: break;
@@ -314,7 +321,7 @@ int main ()
 	}
 	
 	// join thread
-	sensor_thread.join();
+	//sensor_thread.join();
 	engine->smooth_stop();
 	engine->release_engine();
 	endwin();
