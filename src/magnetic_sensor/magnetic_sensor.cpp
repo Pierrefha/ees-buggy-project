@@ -1,6 +1,9 @@
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <iostream>
 #include <wiringPiI2C.h>
+#include <cmath>
+
+#define PI		3.1415926535
 
 magnetic_sensor::magnetic_sensor(){
 	//Setup für den Filehandle für die Funktionen von wiringPiI2C
@@ -27,16 +30,55 @@ int magnetic_sensor::check(){
 	int tmp = wiringPiI2CReadReg8(this->fd, 0x06);
 	// erstes Bit des Statusregisters zeigt an ob neue Daten zur Verfügung stehen
 	//Modulo hier also um einfach nachzuverfolgen ob dieses Bit gesetzt ist.
-	if((tmp % 1) != 0){
+	std::cout << "DRDY: " << tmp << std::endl;
+	if((tmp % 2) != 0){
 		//TO-DO Werte einlesen, für die 3 Achsen kombinieren und dann in die Klasse-attribute übertragen
 		//gerade nur simples auslesen der Daten zum testen
-		std::cout << "Data LBS X" << wiringPiI2CReadReg8(this->fd, X_LSB) << std::endl;
-		std::cout << "Data MBS X" << wiringPiI2CReadReg8(this->fd, X_MSB) << std::endl;
-		std::cout << "Data LBS Y" << wiringPiI2CReadReg8(this->fd, Y_LSB) << std::endl;
-		std::cout << "Data MBS Y" << wiringPiI2CReadReg8(this->fd, Y_MSB) << std::endl;
-		std::cout << "Data LBS Z" << wiringPiI2CReadReg8(this->fd, Z_LSB) << std::endl;
-		std::cout << "Data MBS Z" << wiringPiI2CReadReg8(this->fd, Z_MSB) << std::endl;
+		//Einlese der Register
+		int data[6];
+		data[0] = wiringPiI2CReadReg8(this->fd, X_LSB);
+		data[1] = wiringPiI2CReadReg8(this->fd, X_MSB);
+		data[2] = wiringPiI2CReadReg8(this->fd, Y_LSB);
+		data[3] = wiringPiI2CReadReg8(this->fd, Y_MSB);
+		data[4] = wiringPiI2CReadReg8(this->fd, Z_LSB);
+		data[5] = wiringPiI2CReadReg8(this->fd, Z_MSB);
+		
+		//Kombinieren der Daten (x, y und z sind 16 Bit signed Integers, dadurch wird das zweier Komplement
+		//ohne größere Umstände angewandt
+		this->x = data[0] | (data[1] << 8);
+		this->y = data[2] | (data[3] << 8);
+		this->z = data[4] | (data[5] << 8);
+		
+		return 1;
 	}
 
-	return tmp;
+	return 0;
+}
+
+int magnetic_sensor::getX(){
+	return this->x;
+}
+int magnetic_sensor::getY(){
+	return this->y;
+}
+int magnetic_sensor::getZ(){
+	return this->z;
+}
+
+double magnetic_sensor::testDirection(){
+	double dX = this->x;
+	double dY = this->y;
+	std::cout << atan((dX/dY)) << std::endl;
+	std::cout << atan(5)*180/PI << std::endl;
+	if(this->y > 0){
+		return 90 - atan(dX/dY)*180/PI;
+	} else if(this->y < 0){
+		return 270 - atan(dX/dY)*180/PI;
+	} else{
+		if(this->x < 0){
+			return 180;	
+		} else {
+			return 0;
+		}
+	}
 }
