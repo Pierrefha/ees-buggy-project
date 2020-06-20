@@ -56,7 +56,7 @@ void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
 			safety_threshold = 10;
 		}
 
-		distance = sensor->calc_distance();
+		distance = *sensor->calc_distance();
 		// DEBUG CODE
         // plot current speed
 		//std::cout << "current distance: " << distance << std::endl;
@@ -134,8 +134,6 @@ int main ()
 	ultrasonic_sensor * ultrasonic_ptr = & ultrasonic;
 	ultrasonic.init();
 
-	// periodically poll distance
-	std::thread sensor_thread(poll_distance,stop_condition_ptr,ultrasonic_ptr,engine);
 
 
     /*
@@ -148,7 +146,7 @@ int main ()
 			ultrasonic.calc_distance() ;
 		}
 		for(int i=0 ;i<100;i++){
-			std::cout << ultrasonic.calc_distance() << std::endl;
+			std::cout << *ultrasonic.calc_distance() << std::endl;
 		}
 		return 0;
 	};
@@ -183,6 +181,9 @@ int main ()
 	initscr();
 	cbreak();
 	noecho();
+
+    // periodically poll distance
+    std::thread sensor_thread(poll_distance,stop_condition_ptr,ultrasonic_ptr,engine);
 	while((user_cmd = getch()) != 'x'){
 		/*
 		 * Check if remote control is stopped. Which is the case if our buggy is 

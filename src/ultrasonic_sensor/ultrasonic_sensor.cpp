@@ -1,7 +1,7 @@
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
 #include <wiringPi.h>
 #include <chrono>
-#include <thread>
+#include <optional>
 #include <stdio.h>
 #include <iostream>
 #include <util/time_util.h>
@@ -11,8 +11,8 @@ ultrasonic_sensor::ultrasonic_sensor(int8_t trigger_pin, int8_t echo_pin, int8_t
     this->trigger_pin = trigger_pin;
     this->echo_pin = echo_pin;
     this->brake_light_pin = brake_light_pin;
-    this->time_diff=0;
-    this->distance=0;
+    this->time_diff = std::nullopt;
+    this->distance = std::nullopt;
 }
 
 
@@ -33,9 +33,9 @@ void ultrasonic_sensor::init(){
 
 /*
  * Measures the time between trigger and echo
- * @returns time difference in microseconds
+ * @returns time difference in microseconds if
  */
-double ultrasonic_sensor::measure_time_diff(){
+std::optional<double> ultrasonic_sensor::measure_time_diff(){
 
 	double total_time = 0;
 	const int32_t measurements = 30;
@@ -73,12 +73,9 @@ double ultrasonic_sensor::measure_time_diff(){
 		total_time += std::chrono::duration <double, std::milli> (time_taken).count();
 
 	}
-	//Shouldnt this be something huge?
-	//Small value means: obstacle in front
-	//Huge value means: no obstacle
+
 	if(succeeded_measurements == 0){
-		//return pi minus 3 :)
-		return 3.14 - 3;
+	    return std::nullopt;
 	}
 	const auto average_time = total_time / succeeded_measurements;
 	//return average time in milliseconds
@@ -86,12 +83,13 @@ double ultrasonic_sensor::measure_time_diff(){
 }
 
 /*
- * Calculates distance between buggy and wall.
+ * Calculates distance between buggy and wall if a wall is present
  * @returns distance in cm
  */
-double ultrasonic_sensor::calc_distance(){
-	double time_diff = measure_time_diff();
-	return (SPEED_OF_SOUND_IN_CM_PER_MILLISECOND/2) * time_diff; 
+std::optional<double> ultrasonic_sensor::calc_distance(){
+	if(!(time_diff = measure_time_diff())) return std::nullopt;
+	distance = (SPEED_OF_SOUND_IN_CM_PER_MILLISECOND/2) * time_diff.value();
+	return distance;
 }
 
 
