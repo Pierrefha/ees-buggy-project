@@ -18,6 +18,10 @@
 
 \urlstyle{same}
 
+% CONSTANTS BEGIN
+\newcommand{\github_repo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
+\newcommand{\referenz_code}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
+
 \begin{document}
 \begin{titlepage}
     \begin{center}
@@ -73,15 +77,65 @@ In den meisten Bildern (außer auf Seite IV) ist der Buggy mit roter Platte geze
 
 Als Ubuntu-Nutzer muss man keine zusätzliche Software installieren um eine SSH-Verbindung herzustellen. Eine Ergänzung, dass \href{https://invisible-island.net/xterm/}{XTerm} eine Empfehlung an die Windows-Nutzer ist, wäre daher angebracht. Bei dieser Bemerkung wird davon ausgegangen, dass mit XTerm an dieser Stelle \href{https://mobaxterm.mobatek.net/}{MobaXterm} gemeint ist und nicht der Terminal Emulator XTerm. 
 
-Für den kompletten Zusammenbau wurden insgesamt 1 Stunden benötigt. Die meiste Zeit nahm die SSH-Verbindung in Anspruch.
+Für den kompletten Zusammenbau wurden insgesamt 1,5 Stunden benötigt. Die meiste Zeit nahm die SSH-Verbindung in Anspruch.
 
+%Das meinst du nicht ernst oder ??? Ich bin dafür das kommt raus.
 Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhaltenden Corona Phase abgeholt worden ist, wurde der Buggy von einer Person aufgebaut. Im Nachhinein haben wir uns trotzdem Gedanken dazu gemacht, wie wir den Aufbau am besten hätten aufteilen können. Wir sind zu dem Ergebnis gekommen, dass jede Person einen Teil des Buggys aufbauen sollte. Konkret hätte sich einer um das Kugellager und die Motoren gekümmert. Einer um die Abstandhalter und das Anbringen der Plastikplatte und des Raspberry Pi. Der letzte um das Anbringen des Motorhats und um das Anschließen und Fixieren der Powerbank.
 
 \end{section}
 
 \begin{section}{Motorensteuerung}
 
-    TODO Motorensteuerung recap
+  Videos zu den Tests der Motorensteuerung sind unter: TODO LINK EINFÜGEN
+  Der Quelltext kann unter \github_repo{} eingesehen werden.
+
+  Herausforderungen bei der Programmierung waren vor allem 3 Punkte: 1. Finden der wichtigen
+  Dokumentation, 2. Verstehen der Dokumentation und 3. Extraktion der relevanten
+  Informationen.
+  Durch die Schematas unter
+  \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+  konnte die Verknüpfung der GPIO's des Raspberry Pi's mit dem Motorhat entnommen
+  werden. Durch die Datenblätter wurde die Funktionsweise des '\referenz-code's
+  verständlich.
+  In den ersten Testläufen hat sich der Buggy beim Forwärtsfahren im Kreis
+  gedreht. Die Motoren haben in unterschiedliche Richtungen gedreht. Dieses
+  Verhalten war verständlich, da beide Motoren auf forwärts gestellt waren, was
+  synonym für eine rechtsläufige Bewegung war. Für das rechte Rad bedeutet
+  'rechtsläufig' forwärts. Für das linke Rad, welches durch den Anbau 
+  \ang{180} um die Z-Achse gedreht ist, bedeutet dies rückwärts.
+  Das Problem konnte behoben werden, indem die beiden Pins, welche für die Richtung
+  zuständig sind, vertauscht wurden. So wurde jede rechtsläufige Bewegung zu einer
+  linksläufigen und vice versa. Ein Forwärts-Kommando an das linke Rad wurde nun
+  korrekterweise automatisch in eine linksläufige Bewegung übersetzt.
+  Weiterhin war es ein Problem den Buggy konsistent losfahren zu lassen. Niedrige 
+  Geschwindigkeit sind beim Start zu gering, um die Motoren drehen zu
+  lassen. Das hat dazu geführt, dass der Buggy oft nicht losfuhr, trotz eines
+  forwärts Kommandos. Dieses Problem konnte behoben werden, indem eine Mindestgeschwindigkeit
+  eingestellt worden ist, sodass der Buggy nicht mit niedrigen Geschwindigkeiten
+  konfigurierbar ist.
+
+  Neben den technischen Herausforderungen war auch das Testen des Codes auf dem
+  Raspberry Pi eine Umgewöhnung. Der Code konnte nicht lokal (auf dem eigenen
+  Rechner) getestet werden, da die WiringPi Bibliothek nur auf einem Raspberry Pi funktioniert.
+  Als Workflow hat sich durchgesetzt, dass auf dem eigenen Rechner entwickelt
+  wurde, die Änderungen commitet und in das \github_repo gepusht worden sind.
+  Danach wurde der neue Code auf dem Raspberry Pi runtergeladen, die Binary
+  durch ``cmake . && make'' gebaut und schließlich getestet. Kleine Änderungen
+  wurden auf dem Raspberry Pi durch den Texteditor Vim vollzogen.
+
+
+Fragen Support Termin
+1. kOutDrive ist laut dem Datenblatt PCA9685 Pin 2. Pin 4 ist das invrt Register. Der
+Beispiel Code hat diese Definition. Stimmt das?
+kOutDrive    = 0x04,
+2. Der Buggy fährt bei niedrigen Werten im pwm Register nicht an. Welche Werte
+sind gute Mindestgeschwindigkeiten? Hängt die Mindestgeschwindigkeit von der
+verbleibenden Restenergie im Akku ab?
+3. Der Referenzcode lädt nur Werte in das pwm Register, die Vielfache von 16
+sind. Hat das technische Gründe?
+4. In der Dokumentation steht, dass die Werte im LED_ON / LED_OFF Register
+zwischen 0 und 4095 variieren. Der
+Referenzcode schreibt 4096 in die Register. Ist das korrekt?
 
     TODO Video einfügen von der Rechteckfahrt objects/rectangle.mp4
 
@@ -104,10 +158,16 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
               \label{fig:boat1}
         \end{figure}
         Der Ultraschallsensor HC-SR04 hat einen Vcc, einen Gnd, einen Trigger und einen Echo Anschluss.
-        Der Ultraschallsensor benötigt eine Versorungsspannung von 5 Volt , die können wir direkt vom Motorhead nutzen.
-        Der Trigger wird durch den GPIO Pin 5 auf dem Motorhead und damit dem Pin 21 der wiringPi Bibliothek gesetzt.
-        Das Echo Signal würde eine Spannung von 5V betragen. Da der Pi jedoch nur eine Spannung von 3,3V verträgt, muss man hier einen Vorwiderstand von 330$\Omega$ verwenden. Zusätzlich wird ein Pull-Down Widerstand in Höhe von 470$\Omega$ angeschlossen um einen floating state zu verhindern und den Pin gegen Ground zu ziehen.
-        Der Gnd wird direkt an den Gnd vom Motorhat angeschlossen.
+        Der Ultraschallsensor benötigt eine Versorungsspannung von 5 Volt,
+        welche vom Motorhead bereitgestellt wird.
+        Der Trigger wird mit dem GPIO Pin 5 des Motorhead bzw. mit dem Pin 21 der wiringPi Bibliothek verbunden.
+        %TODO @Pierre Ist das hier korrekt umschrieben Pierre?
+        Das Echo Signal wird vom Motorhead mit einer Spannung von 5V
+        zurückgegeben. Da der RaspberryPi jedoch nur eine Spannung von 3,3V
+        verträgt, ist die Verwendung eines Vorwiderstand von 330$\Omega$ nötig.
+        Zusätzlich wird ein Pull-Down Widerstand in Höhe von 470$\Omega$
+        angeschlossen, welcher den Pin gegen Ground zieht, um so ein floating state zu verhindern.
+        Der GND Anschluss des Ultraschallsensors wird direkt an den GND Pin vom Motorhat angeschlossen.
 
         \begin{figure}
             \centering
@@ -131,12 +191,17 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
     \begin{subsection}{Bewertung der Zuverlässigkeit der Entfernungsmessung}
       Die Entfernungsmessung funktioniert für solide Objekte in einer Reichweite
-      von 5 bis 100 cm zuverlässig. Für weniger soliden Objekten, wie z.B. einer
-      Pappierbox, hat der Sensor den Tests Probleme
+      von 5 bis 100 cm zuverlässig. Für weniger solide Objekten, wie z.B. einer
+      Pappierbox, hat der Sensor bei den Tests Probleme
       gehabt, die Entfernung richtig einzuschätzen. Oftmals kam es hierbei zu keinen Rückmeldungen an den Echo-Pin. Dieses
-      Problem wurde durch ein Zeitlimit beim Warten auf den Echo-Pin gelöst.
-      Die relativ hohe Varianz zwischen einzelnen Messungen bei gleicher Distanz zum Objekt
-      wird durch mehrmaliges Messen und ermitteln des Durchschnittes abgefangen.
+      Problem wurde durch ein Zeitlimit beim Warten auf den Echo-Pin gelöst und
+      verwerfen der Messung falls das Zeitlimit überschritten wurde. Das
+      Ermitteln der Entfernung beinhaltet mehrere Entfernungsmessungen. Somit
+      ist das verwerfen einzelner Messungen durch ein überschreiten des
+      Zeitlimits vertretbar. Aus den Messungen wird anschließend ein Mittelwert
+      gebildet und zurückgegeben. Durch mehrmaliges Messen und bilden des
+      Mittelwertes wird zugleich die relativ hohe Varianz zwischen einzelnen
+      Messungen bei gleicher Distanz zum Objekt abgefangen.
     \end{subsection}
     \begin{subsection}{Bewertung der Genauigkeit}
       Die Entfernungsmessung funktioniert mit einer Standardabweichung von unter
