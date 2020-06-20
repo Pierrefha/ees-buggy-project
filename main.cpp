@@ -16,6 +16,7 @@
 #include <thread>
 #include <chrono>
 #include <magnetic_sensor/magnetic_sensor.h>
+#include <fstream>
 
 #define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
 #define ULTRASONIC_ECHO_PIN_WPI 1
@@ -25,6 +26,7 @@ motor_engine* engine = nullptr;
 /// Interrupt Routine for STRG-C
 void signalHandler(int signum)
 {
+	
     endwin();
     std::cout << "Strg-C Programmende" << std::endl;
     // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
@@ -140,6 +142,7 @@ int main ()
 	
 	//Magnetic Sensor
 	magnetic_sensor magneticSensor;
+	std::ofstream outputData;
 
 
     /*
@@ -190,9 +193,15 @@ int main ()
 	while((user_cmd = getch()) != 'x'){
 		
 		//TEST FOR SENSOR
-		std::cout << magneticSensor.check() << std::endl;
-		
-		
+		if(magneticSensor.check()==1){
+			outputData.open("outputData.txt", std::ios_base::app);
+			outputData << magneticSensor.getX() << " " << magneticSensor.getY() << " " << magneticSensor.getZ() << "\n";
+			//Output magnetic test
+			outputData.close();
+			//std::cout << "Direction: " << magneticSensor.testDirection() << std::endl;
+		} else {
+			std::cout << "No new Data" << std::endl;
+		}
 		
 		
 		//END TEST
@@ -294,11 +303,16 @@ int main ()
 						 }
 						 break;
 					 }
+				//Test Case for compass / do nothing
+				case 'r':{
+					
+				}
+				
 				default: break;
 			}
 		}
 	}
-
+	
 	// join thread
 	sensor_thread.join();
 	engine->smooth_stop();
