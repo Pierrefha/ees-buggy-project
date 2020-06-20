@@ -8,6 +8,8 @@
 #define OFF 0
 
 #include <cstdint>
+#include <util/strong_type_defs.h>
+
 /*
  * Class used to calculate distance with the ultrasonic sensor.
  */
@@ -29,7 +31,7 @@ public:
     // measures time taken between trigger and echo
     double measure_time_diff();
     // calculates distance from time difference
-    double calc_distance();
+    cm calc_distance();
     // sets brake light
     void set_brake_light(int8_t mode);
 

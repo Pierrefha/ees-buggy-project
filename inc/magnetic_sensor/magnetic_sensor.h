@@ -1,3 +1,6 @@
+#include <util/vertex2D.h>
+#include <util/degree.h>
+
 #define sensor_address	0x0d
 #define SET_RESET_REG	0x0b
 #define SETUP_REG		0x09
@@ -18,6 +21,8 @@ private:
 	int z;
 		
 public:
+    degree<float> get_rotation();
+    vertex2D<float> get_direction();
 	magnetic_sensor();
 	
 	//void setup();

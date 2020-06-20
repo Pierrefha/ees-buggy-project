@@ -152,6 +152,7 @@ uint16_t motor_engine::get_speed(){
 }
 
 
+
 motor_engine make_motor_engine(uint32_t motor_hat_addr) {
     int fd = wiringPiI2CSetup (motor_hat_addr) ;
     if(fd == -1){

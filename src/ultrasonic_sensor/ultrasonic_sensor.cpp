@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <util/time_util.h>
+#include <util/strong_type_defs.h>
 
 
 ultrasonic_sensor::ultrasonic_sensor(int8_t trigger_pin, int8_t echo_pin, int8_t brake_light_pin){    
@@ -89,9 +90,9 @@ double ultrasonic_sensor::measure_time_diff(){
  * Calculates distance between buggy and wall.
  * @returns distance in cm
  */
-double ultrasonic_sensor::calc_distance(){
-	double time_diff = measure_time_diff();
-	return (SPEED_OF_SOUND_IN_CM_PER_MILLISECOND/2) * time_diff; 
+cm ultrasonic_sensor::calc_distance(){
+	time_diff = measure_time_diff();
+	return cm{(SPEED_OF_SOUND_IN_CM_PER_MILLISECOND/2) * time_diff};
 }
 
 
