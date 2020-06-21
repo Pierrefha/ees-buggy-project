@@ -1,4 +1,5 @@
-#include <cstdint>
+#include <util/vertex2D.h>
+#include <util/degree.h>
 
 #define sensor_address	0x0d
 #define SET_RESET_REG	0x0b
@@ -20,7 +21,8 @@ private:
 	int16_t z;
 		
 public:
-	//Konstruktor
+    degree<float> get_rotation();
+    vertex2D<float> get_direction();
 	magnetic_sensor();
 	//Getter für die Daten
 	int getX();

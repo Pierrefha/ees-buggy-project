@@ -4,6 +4,8 @@
 #include <thread>
 #include <stdio.h>
 #include <iostream>
+#include <util/time_util.h>
+#include <util/strong_type_defs.h>
 
 
 ultrasonic_sensor::ultrasonic_sensor(int8_t trigger_pin, int8_t echo_pin, int8_t brake_light_pin){    
@@ -25,12 +27,8 @@ void ultrasonic_sensor::init(){
     pinMode(this->brake_light_pin,OUTPUT);
     digitalWrite(this->brake_light_pin,LOW);
 
-    // make sure pins are initialized before continuing    
-    auto start = std::chrono::steady_clock::now();
-    auto delay = std::chrono::steady_clock::now();
-    while(delay - start < std::chrono::microseconds(50)){
-	    delay = std::chrono::steady_clock::now();
-    }
+    // make sure pins are initialized before continuing
+    busy_wait(std::chrono::microseconds(50));
 }
 
 
@@ -48,55 +46,37 @@ double ultrasonic_sensor::measure_time_diff(){
 	for (int i=0; i<measurements;++i){
 
 		//sleep so echo pin can reset at next measurement
-		auto start = std::chrono::steady_clock::now();
-		auto delay = std::chrono::steady_clock::now();
-		while(delay - start < std::chrono::microseconds(1000)){
-			delay = std::chrono::steady_clock::now();
-		}
+		busy_wait(std::chrono::microseconds(1000));
 		// send ultrasonic signal
 		digitalWrite(this->trigger_pin, HIGH);
-		start = std::chrono::steady_clock::now();
-		delay = std::chrono::steady_clock::now();
-
-		while(delay - start < std::chrono::microseconds(20)){
-			delay = std::chrono::steady_clock::now();
-		}
+		busy_wait(std::chrono::microseconds(20));
 		digitalWrite(this->trigger_pin, LOW);
 
-		start = std::chrono::steady_clock::now();
-		delay = std::chrono::steady_clock::now();
-		auto timeout = std::chrono::milliseconds(50);
-
-		// wait until echo pin is high
-		// wait until response received
-		while (digitalRead(this->echo_pin) == LOW && delay -start<timeout){
-			delay = std::chrono::steady_clock::now();
-		}
-
-		// if timeout / no wave received, skip this measurement
-		if(delay - start >= timeout){
-			// skip bad measurement
-			continue;
-		}
+        // wait until echo pin is high
+	    busy_wait_until(
+		        [&]() -> bool { return digitalRead(this->echo_pin) == HIGH; },
+		        std::chrono::milliseconds(50));
+		    //We received an anwer on the echo pin
 
 		// wait until echo pin resets, will be high as long as wave travelled
-		start = std::chrono::steady_clock::now();
-		while ( digitalRead(this->echo_pin) == HIGH );
-		auto end = std::chrono::steady_clock::now();
-
-		auto diff = end-start;
+		auto time_taken = busy_wait_until(
+		        [&]() -> bool {return digitalRead(this->echo_pin) == LOW; }
+		        );
 		//if trash value (e.G. something interfered), we skip it.
 		//34.3 cm / millisec * .2 millisec / 2= 3.5 cm 
 		//The winimal distance the transmitter can measure correctly is 4 cm.
 		//So anything below .2 millisec is trash
-		if(diff < std::chrono::microseconds(200)){
+		if(time_taken < std::chrono::microseconds(200)){
 			continue;
 		}
 
 		succeeded_measurements++;
-		total_time += std::chrono::duration <double, std::milli> (diff).count();
+		total_time += std::chrono::duration <double, std::milli> (time_taken).count();
 
 	}
+	//Shouldnt this be something huge?
+	//Small value means: obstacle in front
+	//Huge value means: no obstacle
 	if(succeeded_measurements == 0){
 		//return pi minus 3 :)
 		return 3.14 - 3;
@@ -106,15 +86,13 @@ double ultrasonic_sensor::measure_time_diff(){
 	return average_time;
 }
 
-
-
 /*
  * Calculates distance between buggy and wall.
  * @returns distance in cm
  */
-double ultrasonic_sensor::calc_distance(){
-	double time_diff = measure_time_diff();
-	return (SPEED_OF_SOUND_IN_CM_PER_MILLISECOND/2) * time_diff; 
+cm ultrasonic_sensor::calc_distance(){
+	time_diff = measure_time_diff();
+	return cm{(SPEED_OF_SOUND_IN_CM_PER_MILLISECOND/2) * time_diff};
 }
 
 
