@@ -37,12 +37,13 @@ public:
     /**
      * Moves the buggy forward by distance_cm
      * If a wall appears, the buggy stops.
-     * The line will be held. The buggy tries to go straight.
      * @param distance_cm
      */
     void move_forward(cm forward_dist);
 
     void move_to_point(vertex2D<float> finish);
+
+    vertex2D<float> move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish);
 
 };
 

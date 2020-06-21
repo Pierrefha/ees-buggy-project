@@ -38,7 +38,7 @@ struct vertex2D{
         return std::sqrt(x * x + y * y);
     }
 
-    double distance(const vertex2D<float>& point)const{
+    double distance_to(const vertex2D<float>& point)const{
         return (*this - point).length();
     }
 

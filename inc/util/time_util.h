@@ -35,7 +35,7 @@ auto busy_wait_until(predicate p, chrono_time timeout = std::chrono::hours{100'0
     while (now - start < timeout && !p()) {
         now = std::chrono::steady_clock::now();
     }
-    return start - now;
+    return now - start;
 }
 
 /**
@@ -45,18 +45,21 @@ auto busy_wait_until(predicate p, chrono_time timeout = std::chrono::hours{100'0
  * To continue execution until the time t is over,
  * the functor must return anything convertible to true;
  *
+ * In each iteration the functor gets the passed time
+ * since start of this function
+ *
  * @return time the function ran
  */
 template<typename functor, typename chrono_time>
 auto exec_functor_for(functor f, chrono_time t){
     auto start = std::chrono::steady_clock::now();
     auto now = std::chrono::steady_clock::now();
-    while(now < start + t){
-        auto shall_continue = f();
+    while(now - start < t){
+        auto shall_continue = f(now - start);
         if(!shall_continue) return now - start;
         now = std::chrono::steady_clock::now();
     }
-    return start - now;
+    return now - start;
 }
 
 #endif //EES_BUGGY_TIME_UTIL_H

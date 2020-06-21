@@ -10,7 +10,7 @@ const uint16_t MIN_REGISTER_VALUE = 0;
 
 const uint16_t MIN_SPEED_VALUE = 850;
 
-const double MIN_SPEED_IN_CM_PER_SEC = 5;
+const double MIN_SPEED_IN_CM_PER_SEC = 5.;
 
 enum ModeBits
 {
