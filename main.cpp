@@ -193,16 +193,7 @@ int main ()
 	while((user_cmd = getch()) != 'x'){
 		
 		//TEST FOR SENSOR
-		if(magneticSensor.check()==1){
-			outputData.open("outputData.txt", std::ios_base::app);
-			outputData << magneticSensor.getX() << " " << magneticSensor.getY() << " " << magneticSensor.getZ() << "\n";
-			//Output magnetic test
-			outputData.close();
-			//std::cout << "Direction: " << magneticSensor.testDirection() << std::endl;
-		} else {
-			std::cout << "No new Data" << std::endl;
-		}
-		
+		std::cout << magneticSensor.get_rotation().value << "\n";
 		
 		//END TEST
 		/*
@@ -307,8 +298,8 @@ int main ()
 				case 'r':{
 					for(int i = 0; i < 1000; i++){
 						magneticSensor.check();
-						outputData.open("outputData.txt", std::ios_base::app);
-						outputData << magneticSensor.getX() << " " << magneticSensor.getY() << " " << magneticSensor.getZ() << "\n";
+						outputData.open("outputDataRotation.txt", std::ios_base::app);
+						
 						outputData.close();
 						//etwas warten damit der Kompass neue Daten laden kann
 						std::this_thread::sleep_for(std::chrono::milliseconds(200));
@@ -321,7 +312,7 @@ int main ()
 	}
 	
 	// join thread
-	//sensor_thread.join();
+	sensor_thread.join();
 	engine->smooth_stop();
 	engine->release_engine();
 	endwin();
