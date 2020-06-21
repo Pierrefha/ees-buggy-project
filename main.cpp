@@ -77,7 +77,7 @@ void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
 			 */
 
 			// mock turning routine by a sleep timer
-            buy_wait(std::chrono::milliseconds(2000));
+            busy_wait(std::chrono::milliseconds(2000));
             sensor->set_brake_light(OFF);
 			* stop_condition_ptr=false;
 		}
