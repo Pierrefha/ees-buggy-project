@@ -82,3 +82,28 @@ double magnetic_sensor::testDirection(){
 		}
 	}
 }
+
+degree<float> magnetic_sensor::get_rotation() {
+    return vertex2D<float>{1., 0.}.angle_to(get_direction());
+}
+
+vertex2D<float> magnetic_sensor::get_direction() {
+//The given data is a ellipse
+//To transform it the following parameters are needed
+//They are calculated in magnetic_sensor_analysis.py
+    const vertex2D<float> ellipse_center{-576.9119840046621, -738.0477416737527};
+    const float width = 804.4517031652929;
+    const float height = 549.1679710793408;
+    const float phi = -0.721345733186768;
+    const float c = std::cos(phi);
+    const float s = std::sin(phi);
+
+    //TODO this could be one matrix * vector operation
+    vertex2D<float> measurement{static_cast<float>(x), static_cast<float>(y)};
+    measurement = measurement - ellipse_center;
+    measurement.x = measurement.x * c - measurement.y * s;
+    measurement.y = measurement.y * c + measurement.x * s;
+    measurement.x = measurement.x * width / height;
+
+    return measurement;
+}

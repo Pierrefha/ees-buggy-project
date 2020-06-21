@@ -1,5 +1,6 @@
 #include <util/vertex2D.h>
 #include <util/degree.h>
+#include <cstdint>
 
 #define sensor_address	0x0d
 #define SET_RESET_REG	0x0b
