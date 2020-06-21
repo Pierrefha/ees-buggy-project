@@ -1,3 +1,6 @@
+#ifndef EES_MAGNETIC_SENSOR_H
+#define EES_MAGNETIC_SENSOR_H
+
 #include <util/vertex2D.h>
 #include <util/degree.h>
 #include <cstdint>
@@ -36,3 +39,5 @@ public:
 	
 	double testDirection();
 };
+
+#endif //EES_MAGNETIC_SENSOR_H
