@@ -14,6 +14,7 @@ df.columns = ["x", "y", "z"]
 X = np.array(list(zip(df["x"], df["y"])))
 reg = el.LsqEllipse().fit(X)
 center, width, height, phi = reg.as_parameters()
+print(center, width, height, phi)
 
 plt.close('all')
 fig = plt.figure(figsize=(6,6))
@@ -27,10 +28,13 @@ ax.add_patch(ellipse)
 plt.legend()
 plt.show()
 
-print(phi * 180 / math.pi)
 circ = df.copy()
-phi = phi
+c, s = math.cos(phi), math.sin(phi)
+circ["x"] -= center[0]
+circ["y"] -= center[1]
 for i,row in circ.iterrows():
+    # circ.iloc[i,0] = row["x"].copy() - center[0]
+    # circ.iloc[i,1] = row["y"].copy() - center[1]
     circ.iloc[i,0] = row["x"].copy() * math.cos(phi) - row["y"].copy() * math.sin(phi)
     circ.iloc[i,1] = row["y"].copy() * math.cos(phi) + row["x"].copy() * math.sin(phi)
 
