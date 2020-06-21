@@ -17,6 +17,7 @@
 #include <chrono>
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <fstream>
+#include <util/time_util.h>
 
 #define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
 #define ULTRASONIC_ECHO_PIN_WPI 1
@@ -40,9 +41,10 @@ void signalHandler(int signum)
 
 /*
  * Periodically checks distance using the ultrasonic sensor.
+ * Will enable the emergency break if obstacle is to close.
  */
 void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
-        motor_engine * engine)
+                   motor_engine * engine)
 {
 
 	double speed = 0;
@@ -60,49 +62,27 @@ void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
 		}
 
 		distance = sensor->calc_distance()->get();
-		// DEBUG CODE
-        // plot current speed
-		//std::cout << "current distance: " << distance << std::endl;
-		//std::cout << "current speed: " << speed << std::endl;
 
-
-		// Set stop condition to true if the distance is to the wall 
-		// ois below our safety threshold. 
+		// Set stop condition to true if the distance to
+        // the obstacle is below our safety threshold.
 		if(distance <= safety_threshold){
 			* stop_condition_ptr=true;
-			sensor->set_brake_light(ON);
 			engine->emergency_stop();
-
+			sensor->set_brake_light(ON);
 			/*
-			 * TURN ROUTINE HERE
-			 * TODO TURN 45 degrees for a maximum of 4 times (maybe some cat just ran by)
-			 * If distance will be <=10 after one iteration we disable the brake light
-			 * and enable remote wasd control again.
-			 * otherwise we are stuck inside 4 walls.
-			 * and just quit with a "you shall not pass" message? xd
+			 * TODO TURN ROUTINE HERE
+			 * TODO TURN 45 degrees for a maximum of 4 times
+			 * If the measured distance will be <=4cm after one iteration
+             * we can enable the remote control again.
 			 */
 
-			// after turn routine set *stop_condition_ptr to false again
-			// mock routine by sleep timer
-			// pause 2000 ms
-			auto start = std::chrono::steady_clock::now();
-			auto delay = std::chrono::steady_clock::now();
-			while(delay - start < std::chrono::milliseconds(2000)){
-				delay = std::chrono::steady_clock::now();
-			}
+			// mock turning routine by a sleep timer
+            busy_wait(std::chrono::milliseconds(2000));
+            sensor->set_brake_light(OFF);
 			* stop_condition_ptr=false;
-
 		}
-		else {
-			//TODO find better solution than turning on every iteration
-			sensor->set_brake_light(OFF);
-		}
-
-		// pause 100 ms
-		auto start = std::chrono::steady_clock::now();
-		auto delay = std::chrono::steady_clock::now();
-		while(delay - start < std::chrono::milliseconds(100)){
-			delay = std::chrono::steady_clock::now();
+		// check every 100 ms
+        busy_wait(std::chrono:milliseconds(100));
 		}
 	}
 }
@@ -132,8 +112,9 @@ int main ()
 	engine->set_frequency(1600.);
 
 	// init sensor
-	ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
-			ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
+	ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI
+                                 ULTRASONIC_ECHO_PIN_WPI
+                                 ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
 	ultrasonic_sensor * ultrasonic_ptr = & ultrasonic;
 	ultrasonic.init();
 
@@ -210,10 +191,10 @@ int main ()
 		 * not below our safety distance threshold. 
 		 */
 		if(* stop_condition_ptr){
-			std::cout << "remote control disabled while distance is below safety threshold!" << std::endl;
+			std::cout << "Remote control is disabled while distance is below"
+                      << " safety threshold!" << std::endl;
 		}
 		else {
-
 			switch (user_cmd){
 				case 'e':{
 						 engine->emergency_stop();
@@ -320,10 +301,8 @@ int main ()
 		}
 	}
 	
-	// join thread
-	//sensor_thread.join();
+    ultrasonic.set_brake_light(OFF);
 	engine->smooth_stop();
 	engine->release_engine();
 	endwin();
 }
-
