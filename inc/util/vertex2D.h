@@ -6,6 +6,7 @@
 #define EES_BUGGY_VERTEX2D_H
 
 #include <util/degree.h>
+#include <math.h>
 
 template<typename T>
 struct vertex2D{
