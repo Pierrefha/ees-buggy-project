@@ -5,6 +5,8 @@
 #ifndef EES_BUGGY_DEGREE_H
 #define EES_BUGGY_DEGREE_H
 
+#include <stdlib.h>
+
 template<typename T>
 struct degree{
 public:
