@@ -25,19 +25,26 @@ private:
 	int16_t z;
 		
 public:
+	/*
+	get_rotation() und get_direction() arbeiten mit den Werten die mit check()
+	gesetzt werden. Also vor der Benutzung sicherstellen das es Werte / neue Werte gibt Bsp:
+	if(magneticSensor.check()==1){
+			std::cout << magneticSensor.get_rotation().value << "\n";
+		}
+	*/
     degree<float> get_rotation();
     vertex2D<float> get_direction();
+	
+	//Konstruktor
 	magnetic_sensor();
 	//Getter für die Daten
 	int getX();
 	int getY();
 	int getZ();
 	
-	//void setup();
 	//Überprüft nach neuen Daten und fügt sie, wenn gegeben, in die Attribute ein
 	int check();
 	
-	double testDirection();
 };
 
 #endif //EES_MAGNETIC_SENSOR_H
