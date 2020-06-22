@@ -30,7 +30,9 @@ int magnetic_sensor::check(){
 	int tmp = wiringPiI2CReadReg8(this->fd, 0x06);
 	// erstes Bit des Statusregisters zeigt an ob neue Daten zur Verfügung stehen
 	//Modulo hier also um einfach nachzuverfolgen ob dieses Bit gesetzt ist.
-	if((tmp % 2) != 0){
+	std::cout << "handle: " << fd << std::endl;
+	std::cout << "Update: " << (tmp % 1) << std::endl;
+	if((tmp % 2) == 0){
 		//TO-DO Werte einlesen, für die 3 Achsen kombinieren und dann in die Klasse-attribute übertragen
 		//gerade nur simples auslesen der Daten zum testen
 		//Einlese der Register

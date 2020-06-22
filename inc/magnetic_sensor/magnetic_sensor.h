@@ -17,7 +17,7 @@
 
 
 class magnetic_sensor{
-private:
+public:
 	//Filehandle für das Benutzen der WiringI2CLibrary
 	int fd;
 	int16_t x;
