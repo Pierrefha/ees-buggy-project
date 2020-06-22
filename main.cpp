@@ -152,7 +152,7 @@ int main ()
     /*
      * Test code for the ultrasonic sensor. 
      */
-	bool ultrasonic_test = false;
+	bool ultrasonic_test = true;
 	if(ultrasonic_test){
 		//debug time diff
 		for(int i=0 ;i<100;i++){
