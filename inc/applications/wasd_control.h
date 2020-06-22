@@ -12,11 +12,17 @@
 class wasd_control{
 private:
     bool init();
-    void print_info(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass);
+    void print_info(std::tuple<float, float> speed_perc, std::optional<cm> obst_dist, degree<float> rot, vertex2D<float> dir);
 public:
 
     void run(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass);
     void release_resources();
+
+    void print_warning();
+
+    void print_no_forward_movement();
+
+    bool check_forward_movement_possible(std::optional<cm> obst_dist);
 };
 
 #endif //EES_BUGGY_WASD_CONTROL_H

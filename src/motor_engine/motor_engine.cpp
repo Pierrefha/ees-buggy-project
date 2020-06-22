@@ -157,8 +157,8 @@ uint16_t motor_engine::get_speed_left() {
 
 std::tuple<float, float> motor_engine::get_speed_perc() {
     return std::tuple<float, float>(
-            left.get_speed() / MAX_SPEED_VALUE,
-            right.get_speed() / MAX_SPEED_VALUE
+            left.get_speed() / float(MAX_SPEED_VALUE),
+            right.get_speed() / float(MAX_SPEED_VALUE)
             );
 }
 

@@ -20,11 +20,11 @@ bool wasd_control::init() {
     return true;
 }
 
-void wasd_control::print_info(motor_engine *engine, ultrasonic_sensor *dist_sensor, magnetic_sensor *compass) {
-    auto rot = compass->get_rotation();
-    auto dir = compass->get_direction().normalize();
-    auto obst_dist = dist_sensor->calc_distance();
-    auto[left_speed, right_speed]  = engine->get_speed_perc();
+void wasd_control::print_info(std::tuple<float, float> speed_perc,
+                              std::optional<cm> obst_dist,
+                              degree<float> rot,
+                              vertex2D<float> dir) {
+    auto[left_speed, right_speed]  = speed_perc;
 
     mvprintw(0, 0, "Speed left: %.2f   |   Speed right: %.2f", left_speed, right_speed);
     if(!obst_dist){
@@ -46,12 +46,16 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
     char user_cmd = 0;
     while((user_cmd = getch()) != 'x'){
 //        clear(); //clear screen
-        print_info(engine, dist_sensor, compass);
+        auto obst_dist = dist_sensor->calc_distance();
+        print_info(engine->get_speed_perc(), obst_dist, compass->get_rotation(), compass->get_direction());
+
+        bool forward_movement_possible = check_forward_movement_possible(obst_dist);
+        if(!forward_movement_possible && engine->get_direction() == direction::FORWARD){
+            engine->smooth_stop();
+        }
+
         refresh();
-        /*
-         * Check if remote control is stopped. Which is the case if our buggy is
-         * not below our safety distance threshold.
-         */
+
         switch (user_cmd){
             case 'e':{
                 engine->emergency_stop();
@@ -62,6 +66,9 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
                 break;
             }
             case 'w':{
+                if(!forward_movement_possible){
+                    continue;
+                }
                 switch(engine->get_direction()){
                     case direction::IN_PLACE_TURN_RIGHT:
                     case direction::IN_PLACE_TURN_LEFT:
@@ -150,6 +157,28 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
 void wasd_control::release_resources() {
     endwin();
 
+}
+
+void wasd_control::print_warning() {
+    mvprintw(4, 0, "Obstacle in front! Slow down!");
+}
+
+void wasd_control::print_no_forward_movement() {
+    mvprintw(4,0, "Obstacle in front! Forward movement disabled");
+}
+
+bool wasd_control::check_forward_movement_possible(std::optional<cm> obst_dist) {
+    if(!obst_dist){
+        return true;
+    }
+    if(obst_dist->get() < 20){
+        print_no_forward_movement();
+        return false;
+    }
+    if(obst_dist->get() < 40){
+        print_warning();
+        return true;
+    }
 }
 
 
