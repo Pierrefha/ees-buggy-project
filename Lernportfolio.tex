@@ -77,9 +77,9 @@ Der Zusammenbau des Buggies verlief problemlos. Der Text ist insgesamt verständ
 % kontraintuitive - Genetiv ``des Buggys''.
 In den meisten Bildern (außer auf Seite IV) ist der Buggy mit roter Platte gezeigt, wenngleich die Anleitung hier den weißen Winkel vorsieht. Eine Anmerkung, dass der Buggy im Folgendem mit roter Platte statt Winkel gezeigt wird, hätte eine kurze Verwirrung meinerseits verhindert.
 
-Als Ubuntu-Nutzer muss man keine zusätzliche Software installieren um eine SSH-Verbindung herzustellen. Eine Ergänzung, dass \href{https://invisible-island.net/xterm/}{XTerm} eine Empfehlung an die Windows-Nutzer ist, wäre daher angebracht. Bei dieser Bemerkung wird davon ausgegangen, dass mit XTerm an dieser Stelle \href{https://mobaxterm.mobatek.net/}{MobaXterm} gemeint ist und nicht der Terminal Emulator XTerm. 
+Als Ubuntu-Nutzer bzw. Linux-Nutzer muss man keine zusätzliche Software installieren um eine SSH-Verbindung herzustellen. Eine Ergänzung, dass \href{https://invisible-island.net/xterm/}{XTerm} eine Empfehlung an die Windows-Nutzer ist, wäre daher angebracht. Bei dieser Bemerkung wird davon ausgegangen, dass mit XTerm an dieser Stelle \href{https://mobaxterm.mobatek.net/}{MobaXterm} gemeint ist und nicht der Terminal Emulator XTerm. 
 
-Für den kompletten Zusammenbau wurden insgesamt 1,5 Stunden benötigt. Die meiste Zeit nahm die SSH-Verbindung in Anspruch.
+Für den kompletten Zusammenbau wurden insgesamt 1,5 Stunden benötigt.
 
 %Das meinst du nicht ernst oder ??? Ich bin dafür das kommt raus.
 Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhaltenden Corona Phase abgeholt worden ist, wurde der Buggy von einer Person aufgebaut. Im Nachhinein haben wir uns trotzdem Gedanken dazu gemacht, wie wir den Aufbau am besten hätten aufteilen können. Wir sind zu dem Ergebnis gekommen, dass jede Person einen Teil des Buggys aufbauen sollte. Konkret hätte sich einer um das Kugellager und die Motoren gekümmert. Einer um die Abstandhalter und das Anbringen der Plastikplatte und des Raspberry Pi. Der letzte um das Anbringen des Motorhats und um das Anschließen und Fixieren der Powerbank.
@@ -91,14 +91,31 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Videos zu den Tests der Motorensteuerung sind unter: TODO LINK EINFÜGEN
   Der Quelltext kann unter \githubrepo{} eingesehen werden.
 
-  Herausforderungen bei der Programmierung waren vor allem 3 Punkte: 1. Finden der wichtigen
-  Dokumentation, 2. Verstehen der Dokumentation und 3. Extraktion der relevanten
-  Informationen.
+  Die Aufgabenstellung wurde so verstanden, dass man die Motorensteuerung
+  selbst implementieren sollte. Das Lösen der Aufgabe geschah vor Erscheinen des
+  erklärenden Forenposts. Daher wird im Folgendem auch über das Erstellen des
+  Motorentreibers reflektiert.
+
+  Herausforderungen bei der Programmierung waren vor allem 4 Punkte: 1. Finden der wichtigen
+  Dokumentation, 2. Verstehen der Dokumentation, 3. Extraktion der relevanten
+  Informationen und 4. Analyse des Beispielcodes.
+
+  Der Motorhat ist mit dem RaspberryPi über I<sup>2</sup>C verbunden. Die
+  Wiring Pi Bibliothek ermöglicht das Verbinden, Schreiben und Lesen von
+  Registern über dieses Protokoll auf komfortablem und leicht verständlichem Wege.
+  Bei der Benutzung dieser Bibliothek kam es zu keinen Problemen.
+  
   Durch die Schematas unter
   \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
-  konnte die Verknüpfung der GPIO's des Raspberry Pi's mit dem Motorhat entnommen
-  werden. Durch die Datenblätter wurde die Funktionsweise des '\referenzcode's
-  verständlich.
+  konnte die Verknüpfung der Pins des PCA9685 PWM LED Controllers mit den beiden
+  TB6612FNG Motorsteuerungschips nachvollzogen werden.
+  Durch die Datenblätter wurde die Funktionsweise des '\referenzcode's
+  verständlich, wenngleich hierbei eine Frage offengeblieben ist:
+  Der Referenzcode schreibt den Wert 4096 in ein LED On bzw. Off Register um den
+  jeweiligen Motor an bzw. auszuschalten. In der Dokumentation des PCA9685 PWM LED
+  Controllers heißt es jedoch unter Punkt 7.3.4 : ``The LEDn_ON and LEDn_OFF
+  counts can vary from 0 to 4095.''.
+
   In den ersten Testläufen hat sich der Buggy beim Forwärtsfahren im Kreis
   gedreht. Die Motoren haben in unterschiedliche Richtungen gedreht. Dieses
   Verhalten war verständlich, da beide Motoren auf forwärts gestellt waren, was
@@ -125,19 +142,11 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   durch ``cmake . \&\& make'' gebaut und schließlich getestet. Kleine Änderungen
   wurden auf dem Raspberry Pi durch den Texteditor Vim vollzogen.
 
-
-% Fragen Support Termin
-% 1. kOutDrive ist laut dem Datenblatt PCA9685 Pin 2. Pin 4 ist das invrt Register. Der
-% Beispiel Code hat diese Definition. Stimmt das?
-% kOutDrive    = 0x04,
-% 2. Der Buggy fährt bei niedrigen Werten im pwm Register nicht an. Welche Werte
-% sind gute Mindestgeschwindigkeiten? Hängt die Mindestgeschwindigkeit von der
-% verbleibenden Restenergie im Akku ab?
-% 3. Der Referenzcode lädt nur Werte in das pwm Register, die Vielfache von 16
-% sind. Hat das technische Gründe?
-% 4. In der Dokumentation steht, dass die Werte im LED_ON / LED_OFF Register
-% zwischen 0 und 4095 variieren. Der
-% Referenzcode schreibt 4096 in die Register. Ist das korrekt?
+  Besonders hilfreich war zur Lösung dieser Aufgabe, die Vertrautheit im Umgang
+  mit Datenblättern, die man aus der Vorlesung bzw. Praktikum mitgenommen hat.
+  Das Verstehen der Registertabellen fiel deutlich einfacher als beim ersten
+  mal und das Unterscheiden zwischen wichtigen und unwichtigen Informationen
+  ging schneller.
 
     TODO Video einfügen von der Rechteckfahrt objects/rectangle.mp4
 
@@ -245,7 +254,14 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   \end{subsection}
 
+
 \end{section}
+
+\begin{section}{Kompass}
+  \begin{subsection}{Analyse der Genauigkeit}
+  \end{subsection}
+\end{section}
+
 
 \begin{section}{Anhang}
   \begin{subsection}{Rohdaten Ultraschallsensor} \label{ultraschallsensorRohdaten}
