@@ -159,16 +159,10 @@ void wasd_control::release_resources() {
 
 }
 
-void wasd_control::print_warning() {
-    mvprintw(4, 0, "Obstacle in front! Slow down!");
-}
-
-void wasd_control::print_no_forward_movement() {
-    mvprintw(4,0, "Obstacle in front! Forward movement disabled");
-}
 
 bool wasd_control::check_forward_movement_possible(std::optional<cm> obst_dist) {
     if(!obst_dist){
+        clear_obstacle_warnings();
         return true;
     }
     if(obst_dist->get() < 20){
@@ -181,5 +175,17 @@ bool wasd_control::check_forward_movement_possible(std::optional<cm> obst_dist) 
     }
 }
 
+void wasd_control::clear_obstacle_warnings() {
+    move(4,0);
+    clrtoeol();
+}
+
+void wasd_control::print_warning() {
+    mvprintw(4, 0, "Obstacle in front! Slow down!");
+}
+
+void wasd_control::print_no_forward_movement() {
+    mvprintw(4,0, "Obstacle in front! Forward movement disabled");
+}
 
 

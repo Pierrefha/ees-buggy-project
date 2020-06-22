@@ -23,6 +23,8 @@ public:
     void print_no_forward_movement();
 
     bool check_forward_movement_possible(std::optional<cm> obst_dist);
+
+    void clear_obstacle_warnings();
 };
 
 #endif //EES_BUGGY_WASD_CONTROL_H
