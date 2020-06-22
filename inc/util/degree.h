@@ -56,6 +56,7 @@ private:
         while(value <= -360){
             value += 360;
         }
+        return value;
     }
 };
 

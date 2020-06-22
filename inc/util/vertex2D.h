@@ -50,9 +50,9 @@ struct vertex2D{
     degree<float> angle_to(const vertex2D<float>& other)const{
 //        https://math.stackexchange.com/questions/2584451/how-to-get-the-direction-of-the-angle-from-a-dot-product-of-two-vectors
         return degree<float>{
-            std::acos(
+            float(std::acos(
                     (x * other.y - other.x * y) / std::sqrt(squared_length() * other.squared_length())
-                    ) * 180 / M_PI
+                    ) * 180 / M_PI)
         };
     }
 
