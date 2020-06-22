@@ -12,7 +12,6 @@
 #include <motor_engine/constants.h>
 #include <motor_engine/motor_engine.h>
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
-#include <thread>
 #include <chrono>
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <applications/wasd_control.h>
@@ -198,6 +197,7 @@ int main () {
             std::cout << magneticSensor.get_rotation().value << std::endl;
             auto dir = magneticSensor.get_direction();
             std::cout << dir.x << " " << dir.y << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
 
