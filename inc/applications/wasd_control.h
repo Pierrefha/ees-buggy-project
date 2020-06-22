@@ -25,6 +25,8 @@ public:
     bool check_forward_movement_possible(std::optional<cm> obst_dist);
 
     void clear_obstacle_warnings();
+
+    void print_user_input(int cmd);
 };
 
 #endif //EES_BUGGY_WASD_CONTROL_H

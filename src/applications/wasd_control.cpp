@@ -45,7 +45,8 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
      * Remote control of the motor engine using wasd keys.
      */
     while(true){
-	flushinp();
+        //Remove all old user inputs. New user inputs will accumulate till getch()
+        flushinp();
         auto obst_dist = dist_sensor->calc_distance();
         print_info(engine->get_speed_perc(), obst_dist, compass->get_rotation(), compass->get_direction());
 
@@ -54,16 +55,13 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
             engine->smooth_stop();
         }
 
-    	int user_cmd = getch();
-	if(user_cmd == 'x'){
-		break;
-	}
-	if(user_cmd == ERR){
-		mvprintw(5,0,"No user input");
-	}else{
-		mvprintw(5,0,"Your input %c", user_cmd);
-	}
+        int user_cmd = getch();
+        if(user_cmd == 'x'){
+            break;
+        }
+        print_user_input(user_cmd);
 
+        //Commit changes to screen
         refresh();
 
         switch (user_cmd){
@@ -197,6 +195,16 @@ void wasd_control::print_warning() {
 
 void wasd_control::print_no_forward_movement() {
     mvprintw(4,0, "Obstacle in front! Forward movement disabled");
+}
+
+void wasd_control::print_user_input(int cmd) {
+    move(5,0);
+    clrtoeol();
+    if(cmd == ERR){
+        mvprintw(5,0,"No user input");
+    }else{
+        mvprintw(5,0,"Your input %c", cmd);
+    }
 }
 
 
