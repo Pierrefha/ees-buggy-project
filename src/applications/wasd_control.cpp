@@ -10,11 +10,10 @@ bool wasd_control::init() {
     initscr();
     int row, col;
     getmaxyx(stdscr,row,col);		/* get the number of rows and columns of window*/
-    if(row < 3 || col < 20){
+    if(row < 5 || col < 20){
         std::cout << "Window to small" << std::endl;
         return false;
     }
-    //Return ERR if the user didnt type something in after 1 millisec
     cbreak();
     nodelay(stdscr,true);
     noecho();
