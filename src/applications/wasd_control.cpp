@@ -15,7 +15,8 @@ bool wasd_control::init() {
         return false;
     }
     //Return ERR if the user didnt type something in after 1 millisec
-    halfdelay(1);
+    cbreak();
+    nodelay(stdscr,true);
     noecho();
     return true;
 }
@@ -43,9 +44,8 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
     /*
      * Remote control of the motor engine using wasd keys.
      */
-    char user_cmd = 0;
-    while((user_cmd = getch()) != 'x'){
-//        clear(); //clear screen
+    while(true){
+	flushinp();
         auto obst_dist = dist_sensor->calc_distance();
         print_info(engine->get_speed_perc(), obst_dist, compass->get_rotation(), compass->get_direction());
 
@@ -53,6 +53,16 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
         if(!forward_movement_possible && engine->get_direction() == direction::FORWARD){
             engine->smooth_stop();
         }
+
+    	int user_cmd = getch();
+	if(user_cmd == 'x'){
+		break;
+	}
+	if(user_cmd == ERR){
+		mvprintw(5,0,"No user input");
+	}else{
+		mvprintw(5,0,"Your input %c", user_cmd);
+	}
 
         refresh();
 
@@ -173,6 +183,7 @@ bool wasd_control::check_forward_movement_possible(std::optional<cm> obst_dist) 
         print_warning();
         return true;
     }
+    return true;
 }
 
 void wasd_control::clear_obstacle_warnings() {
