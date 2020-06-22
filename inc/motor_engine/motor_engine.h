@@ -1,6 +1,7 @@
 #ifndef EES_BUGGY_MOTOR_ENGINE_H
 #define EES_BUGGY_MOTOR_ENGINE_H
 
+#include <tuple>
 #include <motor_engine/wheel.h>
 #include <motor_engine/direction.h>
 #include <magnetic_sensor/magnetic_sensor.h>
@@ -44,7 +45,12 @@ public:
 
     // returns speed of right wheel. 
     // This is just to test speed when driving in a straight line
-    uint16_t get_speed();
+    uint16_t get_speed_right();
+    uint16_t get_speed_left();
+    /**
+     * @return Speed of left and right wheels in percent
+     */
+    std::tuple<float, float> get_speed_perc();
     direction get_direction();
     int device_fd();
 };

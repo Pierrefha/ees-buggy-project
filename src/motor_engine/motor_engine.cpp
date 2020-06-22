@@ -147,10 +147,20 @@ void motor_engine::set_speed_change(uint16_t speed_change) {
 /*
  * @returns the current speed of the right wheel.
  */
-uint16_t motor_engine::get_speed(){
-	return left.get_speed();
+uint16_t motor_engine::get_speed_right(){
+	return right.get_speed();
 }
 
+uint16_t motor_engine::get_speed_left() {
+    return left.get_speed();
+}
+
+std::tuple<float, float> motor_engine::get_speed_perc() {
+    return std::tuple<float, float>(
+            left.get_speed() / MAX_SPEED_VALUE,
+            right.get_speed() / MAX_SPEED_VALUE
+            );
+}
 
 
 motor_engine make_motor_engine(uint32_t motor_hat_addr) {

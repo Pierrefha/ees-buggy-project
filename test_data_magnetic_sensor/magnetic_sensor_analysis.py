@@ -29,6 +29,8 @@ plt.legend()
 plt.show()
 
 circ = df.copy()
+#append north
+circ = circ.append({'x': -1060., 'y': -245., 'z': 0.}, ignore_index=True)
 c, s = math.cos(phi), math.sin(phi)
 circ["x"] -= center[0]
 circ["y"] -= center[1]
@@ -40,6 +42,8 @@ for i,row in circ.iterrows():
 
 for i,row in circ.iterrows():
     circ.iloc[i,0] = row["x"].copy() * width / height
+#print north
+print("north: \n", circ.iloc[-1,:])
 
 X = np.array(list(zip(circ["x"], circ["y"])))
 reg = el.LsqEllipse().fit(X)

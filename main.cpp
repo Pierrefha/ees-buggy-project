@@ -12,11 +12,10 @@
 #include <motor_engine/constants.h>
 #include <motor_engine/motor_engine.h>
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
-#include <curses.h>
 #include <thread>
 #include <chrono>
 #include <magnetic_sensor/magnetic_sensor.h>
-#include <fstream>
+#include <applications/wasd_control.h>
 
 #define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
 #define ULTRASONIC_ECHO_PIN_WPI 1
@@ -24,16 +23,18 @@
 
 motor_engine* engine = nullptr;
 /// Interrupt Routine for STRG-C
-void signalHandler(int signum)
-{
-	
+void release_resources(){
     endwin();
-    std::cout << "Strg-C Programmende" << std::endl;
-    // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
     if(engine){
         engine->emergency_stop();
         engine->release_engine();
     }
+}
+void signalHandler(int signum)
+{
+    release_resources();
+    std::cout << "Strg-C Programmende" << std::endl;
+    // Beenden Sie hier bitte alle Verbindung zu den Sensoren etc.
     exit(signum);
 }
 
@@ -51,7 +52,7 @@ void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
 	while(true){
 
 		// Adapt threshold depending on current speed.
-		speed = engine->get_speed();
+		speed = engine->get_speed_right();
 		if(speed >= 2000){
 			safety_threshold = 20;
 		}
@@ -190,143 +191,13 @@ int main ()
 		return 0;
 	}
 
+	wasd_control wasd_controller;
+	wasd_controller.run(engine, &ultrasonic, &magneticSensor);
 
-    /*
-     * Remote control of the motor engine using wasd keys.
-     */
-	char user_cmd = 0;
-	initscr();
-	cbreak();
-	noecho();
 
-    // periodically poll distance
-    std::thread sensor_thread(poll_distance,stop_condition_ptr,ultrasonic_ptr,engine);
-	while((user_cmd = getch()) != 'x'){
-		
-		//TEST FOR SENSOR
-		std::cout << magneticSensor.get_rotation().value << "\n";
-		
-		//END TEST
-		/*
-		 * Check if remote control is stopped. Which is the case if our buggy is 
-		 * not below our safety distance threshold. 
-		 */
-		if(* stop_condition_ptr){
-		    engine->emergency_stop();
-			std::cout << "remote control disabled while distance is below safety threshold!" << std::endl;
-		}
-		else {
 
-			switch (user_cmd){
-				case 'e':{
-						 engine->emergency_stop();
-						 break;
-					 }
-				case 'q':{
-						 engine->smooth_stop();
-						 break;
-					 }
-				case 'w':{
-						 switch(engine->get_direction()){
-							 case direction::IN_PLACE_TURN_RIGHT:
-							 case direction::IN_PLACE_TURN_LEFT:
-								 engine->smooth_stop();
-								 engine->forward();
-								 engine->increase_speed();
-								 break;
-							 case direction::BACKWARDS:
-								 engine->decrease_speed();
-								 break;
-							 case direction::STOP:
-								 engine->forward();
-								 engine->increase_speed();
-								 break;
-							 case direction::FORWARD:
-								 engine->increase_speed();
-								 break;
-						 }
-						 break;
-					 }
-				case 's':{
-						 switch(engine->get_direction()){
-							 case direction::IN_PLACE_TURN_RIGHT:
-							 case direction::IN_PLACE_TURN_LEFT:
-								 engine->smooth_stop();
-								 engine->backwards();
-								 engine->increase_speed();
-								 break;
-							 case direction::FORWARD:
-								 engine->decrease_speed();
-								 break;
-							 case direction::STOP:
-								 engine->backwards();
-								 engine->increase_speed();
-								 break;
-							 case direction::BACKWARDS:
-								 engine->increase_speed();
-								 break;
-						 }
-						 break;
-					 }
-				case 'd':{
-						 switch(engine->get_direction()){
-							 case direction::IN_PLACE_TURN_RIGHT:
-								 engine->increase_speed();
-								 break;
-							 case direction::IN_PLACE_TURN_LEFT:
-								 engine->decrease_speed();
-								 break;
-							 case direction::FORWARD:
-							 case direction::BACKWARDS:
-								 engine->turn_right();
-								 break;
-							 case direction::STOP:
-								 engine->turn_in_place_right();
-								 engine->increase_speed();
-								 break;
-						 }
-						 break;
-					 }
-				case 'a':{
-						 switch(engine->get_direction()){
-							 case direction::IN_PLACE_TURN_RIGHT:
-								 engine->decrease_speed();
-								 break;
-							 case direction::IN_PLACE_TURN_LEFT:
-								 engine->increase_speed();
-								 break;
-							 case direction::FORWARD:
-							 case direction::BACKWARDS:
-								 engine->turn_left();
-								 break;
-							 case direction::STOP:
-								 engine->turn_in_place_left();
-								 engine->increase_speed();
-								 break;
-						 }
-						 break;
-					 }
-				//Test Case for compass: für das drehen des buggys
-				case 'r':{
-					for(int i = 0; i < 1000; i++){
-						magneticSensor.check();
-						outputData.open("outputDataRotation.txt", std::ios_base::app);
-						
-						outputData.close();
-						//etwas warten damit der Kompass neue Daten laden kann
-						std::this_thread::sleep_for(std::chrono::milliseconds(200));
-					}
-				}
-				
-				default: break;
-			}
-		}
-	}
-	
 	// join thread
-	sensor_thread.join();
-	engine->smooth_stop();
-	engine->release_engine();
-	endwin();
+//	sensor_thread.join();
+    release_resources();
 }
 
