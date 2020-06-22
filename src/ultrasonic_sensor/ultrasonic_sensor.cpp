@@ -53,13 +53,17 @@ std::optional<double> ultrasonic_sensor::measure_time_diff(){
 		digitalWrite(this->trigger_pin, LOW);
 
         // wait until echo pin is high
-	    busy_wait_until(
+	    auto time_taken = busy_wait_until(
 		        [&]() -> bool { return digitalRead(this->echo_pin) == HIGH; },
 		        std::chrono::milliseconds(50));
+	    if(time_taken >= std::chrono::milliseconds(50)){
+	        continue; //Skip bad measurement
+	    }
 		    //We received an anwer on the echo pin
 
+
 		// wait until echo pin resets, will be high as long as wave travelled
-		auto time_taken = busy_wait_until(
+		time_taken = busy_wait_until(
 		        [&]() -> bool {return digitalRead(this->echo_pin) == LOW; }
 		        );
 		//if trash value (e.G. something interfered), we skip it.

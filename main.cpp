@@ -59,7 +59,13 @@ void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
 			safety_threshold = 10;
 		}
 
-		distance = sensor->calc_distance()->get();
+		auto dist = sensor->calc_distance();
+		if(!dist){
+		    *stop_condition_ptr = false;
+            continue;
+		}
+
+		distance = dist->get();
 		// DEBUG CODE
         // plot current speed
 		//std::cout << "current distance: " << distance << std::endl;
@@ -152,7 +158,12 @@ int main ()
 			ultrasonic.calc_distance() ;
 		}
 		for(int i=0 ;i<100;i++){
-			std::cout << ultrasonic.calc_distance()->get() << std::endl;
+            auto dist = ultrasonic.calc_distance();
+		    if(!dist){
+		        std::cout << "No obstacle in front" << std::endl;
+		    }else{
+		        std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
+		    }
 		}
 		return 0;
 	};
@@ -210,6 +221,7 @@ int main ()
 		 * not below our safety distance threshold. 
 		 */
 		if(* stop_condition_ptr){
+		    engine->emergency_stop();
 			std::cout << "remote control disabled while distance is below safety threshold!" << std::endl;
 		}
 		else {
