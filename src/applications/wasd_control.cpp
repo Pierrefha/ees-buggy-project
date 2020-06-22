@@ -198,12 +198,12 @@ void wasd_control::print_no_forward_movement() {
 }
 
 void wasd_control::print_user_input(int cmd) {
-    move(5,0);
-    clrtoeol();
     if(cmd == ERR){
         mvprintw(5,0,"No user input");
     }else{
         mvprintw(5,0,"Your input %c", cmd);
+        //Clear the t of input if there was cmd == ERR before
+        clrtoeol();
     }
 }
 
