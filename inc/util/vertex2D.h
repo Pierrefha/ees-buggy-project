@@ -35,6 +35,10 @@ struct vertex2D{
         return vertex2D<T>(x / v_length, y / v_length);
     }
 
+    double squared_length()const{
+        return x * x + y * y;
+    }
+
     double length()const{
         return std::sqrt(x * x + y * y);
     }
@@ -46,8 +50,8 @@ struct vertex2D{
     degree<float> angle_to(const vertex2D<float>& other)const{
 //        https://math.stackexchange.com/questions/2584451/how-to-get-the-direction-of-the-angle-from-a-dot-product-of-two-vectors
         return degree<float>{
-            std::asin(
-                    (x * other.y - other.x * y) / std::sqrt((length() * other.length()))
+            std::acos(
+                    (x * other.y - other.x * y) / std::sqrt(squared_length() * other.squared_length())
                     ) * 180 / M_PI
         };
     }
