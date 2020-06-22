@@ -194,10 +194,10 @@ int main () {
     if (test_magnetic_sensor) {
         for (int i = 0; i < 10000; i++) {
             magneticSensor.check();
-            std::cout << magneticSensor.x << " " << magneticSensor.y << std::endl;
-            std::cout << magneticSensor.get_rotation().value << std::endl;
+            std::cout << "x,y regs: " << magneticSensor.x << " " << magneticSensor.y << std::endl;
+            std::cout << "rot: " << magneticSensor.get_rotation().value << std::endl;
             auto dir = magneticSensor.get_direction();
-            std::cout << dir.x << " " << dir.y << std::endl;
+            std::cout << "dir : " << dir.x << " " << dir.y << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
