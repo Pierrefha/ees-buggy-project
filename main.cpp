@@ -191,7 +191,7 @@ int main () {
     }
 
     //Test Case for compass: für das drehen des bugg
-    bool test_magnetic_sensor = true;
+    bool test_magnetic_sensor = false;
     if (test_magnetic_sensor) {
         for (int i = 0; i < 10000; i++) {
             magneticSensor.check();
