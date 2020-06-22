@@ -204,7 +204,10 @@ int main ()
 	while((user_cmd = getch()) != 'x'){
 		
 		//TEST FOR SENSOR
-		std::cout << magneticSensor.get_rotation().value << "\n";
+		if(magneticSensor.check()==1){
+			std::cout << magneticSensor.get_rotation().value << "\n";
+		}
+
 		
 		//END TEST
 		/*
@@ -311,7 +314,7 @@ int main ()
 					for(int i = 0; i < 1000; i++){
 						magneticSensor.check();
 						outputData.open("outputDataRotation.txt", std::ios_base::app);
-						
+						outputData << magneticSensor.getX() << " " << magneticSensor.getY() << " " << magneticSensor.getZ() << "\n";
 						outputData.close();
 						//etwas warten damit der Kompass neue Daten laden kann
 						std::this_thread::sleep_for(std::chrono::milliseconds(200));
