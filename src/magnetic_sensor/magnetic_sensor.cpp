@@ -18,22 +18,20 @@ magnetic_sensor::magnetic_sensor(){
 		std::cout << "I2CSetup for Magnetic Sensor didn't work" << std::endl;
 	}
 	else {
-		//Testweise einstellen des Sensors für erste Werte
 		//Empfolende Werte für das SET/RESET Register
-		wiringPiI2CWriteReg8(this->fd, 0x0b, 0x01);
-		//Hier erstmal ein Beispiel Setup aus dem Datenblatt
-		wiringPiI2CWriteReg8(this->fd, 0x09, 0x1d);
+		wiringPiI2CWriteReg8(this->fd, SET_RESET_REG, 0x01);
+		wiringPiI2CWriteReg8(this->fd, SETUP_REG, 0x1d);
 	}
 }
 
+/**
+ * @return gibt bei neuen Daten 1 zurück ansonsten 0
+ */
 int magnetic_sensor::check(){
 	int tmp = wiringPiI2CReadReg8(this->fd, 0x06);
 	// erstes Bit des Statusregisters zeigt an ob neue Daten zur Verfügung stehen
 	//Modulo hier also um einfach nachzuverfolgen ob dieses Bit gesetzt ist.
-	std::cout << "DRDY: " << tmp << std::endl;
 	if((tmp % 2) != 0){
-		//TO-DO Werte einlesen, für die 3 Achsen kombinieren und dann in die Klasse-attribute übertragen
-		//gerade nur simples auslesen der Daten zum testen
 		//Einlese der Register
 		int data[6];
 		data[0] = wiringPiI2CReadReg8(this->fd, X_LSB);
@@ -65,23 +63,6 @@ int magnetic_sensor::getZ(){
 	return this->z;
 }
 
-double magnetic_sensor::testDirection(){
-	double dX = this->x;
-	double dY = this->y;
-	std::cout << atan((dX/dY)) << std::endl;
-	std::cout << atan(5)*180/PI << std::endl;
-	if(this->y > 0){
-		return 90 - atan(dX/dY)*180/PI;
-	} else if(this->y < 0){
-		return 270 - atan(dX/dY)*180/PI;
-	} else{
-		if(this->x < 0){
-			return 180;	
-		} else {
-			return 0;
-		}
-	}
-}
 
 /**
  * @return The rotation of the buggy relative to north
