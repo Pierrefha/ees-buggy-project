@@ -137,7 +137,7 @@ int main () {
 
     // init engine
     engine = new motor_engine{make_motor_engine()};
-    engine->set_frequency(1600.);
+    engine->set_frequency(500.);
 
     // init sensor
     ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
@@ -151,21 +151,21 @@ int main () {
      * Test code for the ultrasonic sensor. 
      */
     bool ultrasonic_test = false;
-//	if(ultrasonic_test){
-//		//debug time diff
-//		for(int i=0 ;i<100;i++){
-//			ultrasonic.calc_distance() ;
-//		}
-//		for(int i=0 ;i<100;i++){
-//            auto dist = ultrasonic.calc_distance();
-//		    if(!dist){
-//		        std::cout << "No obstacle in front" << std::endl;
-//		    }else{
-//		        std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
-//		    }
-//		}
-//		return 0;
-//	};
+	if(ultrasonic_test){
+		//debug time diff
+		for(int i=0 ;i<100;i++){
+			ultrasonic.calc_distance() ;
+		}
+		for(int i=0 ;i<100;i++){
+            auto dist = ultrasonic.calc_distance();
+		    if(!dist){
+		        std::cout << "No obstacle in front" << std::endl;
+		    }else{
+		        std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
+		    }
+		}
+		return 0;
+	};
 
     /*
      * Test code for the motor engine.

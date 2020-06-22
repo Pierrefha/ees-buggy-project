@@ -15,7 +15,7 @@ bool wasd_control::init() {
         return false;
     }
     //Return ERR if the user didnt type something in after 1 millisec
-    halfdelay(100);
+    halfdelay(1);
     noecho();
     return true;
 }
@@ -30,7 +30,7 @@ void wasd_control::print_info(motor_engine *engine, ultrasonic_sensor *dist_sens
     if(!obst_dist){
         mvprintw(1, 0, "No obstacle in front");
     }else{
-        mvprintw(1, 0, "Next obstacle in: %.2d", obst_dist->get());
+        mvprintw(1, 0, "Next obstacle in: %.2f", obst_dist->get());
     }
     mvprintw(2, 0, "Rotation: %.2f   |   Direction (%.2f , %.2f)", rot.value, dir.x, dir.y);
 
@@ -45,8 +45,9 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
      */
     char user_cmd = 0;
     while((user_cmd = getch()) != 'x'){
-        clear(); //clear screen
+//        clear(); //clear screen
         print_info(engine, dist_sensor, compass);
+        refresh();
         /*
          * Check if remote control is stopped. Which is the case if our buggy is
          * not below our safety distance threshold.
