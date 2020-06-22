@@ -57,7 +57,9 @@ std::optional<double> ultrasonic_sensor::measure_time_diff(){
 		        [&]() -> bool { return digitalRead(this->echo_pin) == HIGH; },
 		        std::chrono::milliseconds(50));
 	    if(time_taken >= std::chrono::milliseconds(50)){
+#ifdef DEBUG_ULTRASONIC_SENSOR
 	    	std::cout << "Timeout happend" << std::endl;
+#endif
 	        continue; //Skip bad measurement
 	    }
 		    //We received an anwer on the echo pin
@@ -72,7 +74,9 @@ std::optional<double> ultrasonic_sensor::measure_time_diff(){
 		//The winimal distance the transmitter can measure correctly is 4 cm.
 		//So anything below .2 millisec is trash
 		if(time_taken < std::chrono::microseconds(200)){
+#ifdef DEBUG_ULTRASONIC_SENSOR
 			std::cout << "trash value" << std::endl;
+#endif
 			continue;
 		}
 
@@ -82,12 +86,16 @@ std::optional<double> ultrasonic_sensor::measure_time_diff(){
 	}
 
 	if(succeeded_measurements == 0){
+#ifdef DEBUG_ULTRASONIC_SENSOR
 		std::cout << "no measurements" << std::endl;
+#endif
 	    return std::nullopt;
 	}
 	const auto average_time = total_time / succeeded_measurements;
 	//return average time in milliseconds
+#ifdef DEBUG_ULTRASONIC_SENSOR
 	std::cout << average_time << std::endl;
+#endif
 	return average_time;
 }
 

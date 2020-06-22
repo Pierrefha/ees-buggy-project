@@ -29,7 +29,7 @@ void busy_wait(chrono_time delay){
  * @return duration representing how long the function ran
  */
 template<typename predicate, typename chrono_time = std::chrono::hours>
-auto busy_wait_until(predicate p, chrono_time timeout = std::chrono::hours{100'000'000}){
+auto busy_wait_until(predicate p, chrono_time timeout = std::chrono::hours{100'000}){
     auto start = std::chrono::steady_clock::now();
     auto now = std::chrono::steady_clock::now();
     while (now - start < timeout && !p()) {

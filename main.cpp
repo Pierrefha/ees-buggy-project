@@ -152,22 +152,22 @@ int main ()
     /*
      * Test code for the ultrasonic sensor. 
      */
-	bool ultrasonic_test = true;
-	if(ultrasonic_test){
-		//debug time diff
-		for(int i=0 ;i<100;i++){
-			ultrasonic.calc_distance() ;
-		}
-		for(int i=0 ;i<100;i++){
-            auto dist = ultrasonic.calc_distance();
-		    if(!dist){
-		        std::cout << "No obstacle in front" << std::endl;
-		    }else{
-		        std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
-		    }
-		}
-		return 0;
-	};
+	bool ultrasonic_test = false;
+//	if(ultrasonic_test){
+//		//debug time diff
+//		for(int i=0 ;i<100;i++){
+//			ultrasonic.calc_distance() ;
+//		}
+//		for(int i=0 ;i<100;i++){
+//            auto dist = ultrasonic.calc_distance();
+//		    if(!dist){
+//		        std::cout << "No obstacle in front" << std::endl;
+//		    }else{
+//		        std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
+//		    }
+//		}
+//		return 0;
+//	};
 
     /*
      * Test code for the motor engine.
