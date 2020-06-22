@@ -22,12 +22,15 @@
 #define ULTRASONIC_TRIGGER_PIN_WPI 2 
 
 motor_engine* engine = nullptr;
+wasd_control* wasd_controller = nullptr;
 /// Interrupt Routine for STRG-C
 void release_resources(){
-    endwin();
     if(engine){
         engine->emergency_stop();
         engine->release_engine();
+    }
+    if(wasd_controller){
+        wasd_controller->release_resources();
     }
 }
 void signalHandler(int signum)
@@ -146,9 +149,6 @@ int main ()
 
 	//Magnetic Sensor
 	magnetic_sensor magneticSensor;
-	std::ofstream outputData;
-
-
     /*
      * Test code for the ultrasonic sensor. 
      */
@@ -191,8 +191,8 @@ int main ()
 		return 0;
 	}
 
-	wasd_control wasd_controller;
-	wasd_controller.run(engine, &ultrasonic, &magneticSensor);
+	wasd_controller = new wasd_control{};
+	wasd_controller->run(engine, &ultrasonic, &magneticSensor);
 
 
 
