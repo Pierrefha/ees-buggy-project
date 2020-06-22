@@ -118,41 +118,40 @@ void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
 }
 
 
-int main ()
-{
-	bool stop_condition = false;
-	bool * stop_condition_ptr = & stop_condition;
-	// Csignal für Abbruch über STRG-C
-	signal(SIGINT, signalHandler);
-	//init wiringPi
-	wiringPiSetup () ;
+int main () {
+    bool stop_condition = false;
+    bool *stop_condition_ptr = &stop_condition;
+    // Csignal für Abbruch über STRG-C
+    signal(SIGINT, signalHandler);
+    //init wiringPi
+    wiringPiSetup();
 
-	//test blink led
-	/*
-	   pinMode (0, OUTPUT) ;
-	   do
-	   {
-	   digitalWrite (0, HIGH) ; delay (1000) ;
-	   digitalWrite (0,  LOW) ; delay (1000) ;
-	   }while(true);
-	   */
+    //test blink led
+    /*
+       pinMode (0, OUTPUT) ;
+       do
+       {
+       digitalWrite (0, HIGH) ; delay (1000) ;
+       digitalWrite (0,  LOW) ; delay (1000) ;
+       }while(true);
+       */
 
-	// init engine
-	engine = new motor_engine{make_motor_engine()};
-	engine->set_frequency(1600.);
+    // init engine
+    engine = new motor_engine{make_motor_engine()};
+    engine->set_frequency(1600.);
 
-	// init sensor
-	ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
-			ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
-	ultrasonic_sensor * ultrasonic_ptr = & ultrasonic;
-	ultrasonic.init();
+    // init sensor
+    ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
+                                 ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
+    ultrasonic_sensor *ultrasonic_ptr = &ultrasonic;
+    ultrasonic.init();
 
-	//Magnetic Sensor
-	magnetic_sensor magneticSensor;
+    //Magnetic Sensor
+    magnetic_sensor magneticSensor;
     /*
      * Test code for the ultrasonic sensor. 
      */
-	bool ultrasonic_test = false;
+    bool ultrasonic_test = false;
 //	if(ultrasonic_test){
 //		//debug time diff
 //		for(int i=0 ;i<100;i++){
@@ -172,24 +171,35 @@ int main ()
     /*
      * Test code for the motor engine.
      */
-	bool auto_movement = false;
-	if(auto_movement){
-		std::cout << "driving forward" << std::endl;
-		engine->set_speed(850);
-		engine->forward();
-		std::this_thread::sleep_for (std::chrono::milliseconds (500));
-		engine->smooth_stop();
+    bool auto_movement = false;
+    if (auto_movement) {
+        std::cout << "driving forward" << std::endl;
+        engine->set_speed(850);
+        engine->forward();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        engine->smooth_stop();
 
-		std::cout << "driving backwards" << std::endl;
-		engine->set_speed(850);
-		engine->backwards();
-		std::this_thread::sleep_for (std::chrono::milliseconds (500));
-		engine->smooth_stop();
+        std::cout << "driving backwards" << std::endl;
+        engine->set_speed(850);
+        engine->backwards();
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        engine->smooth_stop();
 
-		engine->release_engine();
-		delete engine;
-		return 0;
-	}
+        engine->release_engine();
+        delete engine;
+        return 0;
+    }
+
+    //Test Case for compass: für das drehen des bugg
+    bool test_magnetic_sensor = true;
+    if (test_magnetic_sensor) {
+        for (int i = 0; i < 10000; i++) {
+            magneticSensor.check();
+            std::cout << magneticSensor.get_rotation().value << std::endl;
+            auto dir = magneticSensor.get_direction();
+            std::cout << dir.x << " " << dir.y << std::endl;
+        }
+    }
 
 	wasd_controller = new wasd_control{};
 	wasd_controller->run(engine, &ultrasonic, &magneticSensor);

@@ -140,17 +140,6 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
                 }
                 break;
             }
-//                //Test Case for compass: für das drehen des buggys
-//            case 'r':{
-//                for(int i = 0; i < 1000; i++){
-//                    magneticSensor.check();
-//                    outputData.open("outputDataRotation.txt", std::ios_base::app);
-//
-//                    outputData.close();
-//                    //etwas warten damit der Kompass neue Daten laden kann
-//                    std::this_thread::sleep_for(std::chrono::milliseconds(200));
-//                }
-//            }
             default: break;
         }
     }

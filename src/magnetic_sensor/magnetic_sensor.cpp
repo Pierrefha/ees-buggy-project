@@ -91,6 +91,8 @@ degree<float> magnetic_sensor::get_rotation() {
 }
 
 vertex2D<float> magnetic_sensor::get_direction() {
+	//update measurements
+	check();
 //The given data is a ellipse
 //To transform it the following parameters are needed
 //They are calculated in magnetic_sensor_analysis.py
