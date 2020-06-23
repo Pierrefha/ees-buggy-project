@@ -27,8 +27,10 @@ private:
 	int16_t z;
 		
 public:
-
+	//Standardkonstruktor, Default Einstellung: 0x1d
     magnetic_sensor();
+	//Konstruktor für eigene Einstellungen
+	magnetic_sensor(int mode, int odr, int rng, int osr);
 
 	//Getter für die Daten
 	int getX();
