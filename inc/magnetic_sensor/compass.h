@@ -15,6 +15,8 @@ class compass{
 private:
     magnetic_sensor sensor;
     std::thread update_thread;
+    bool join_update_thread = false;
+
     vertex2D<float> base_dir{-54.42, 394.77};
     float base_rot_angle_radians{0.};
 
@@ -25,6 +27,7 @@ private:
     degree<float> get_newest_rot_value();
     degree<float> get_current_rotation();
     vertex2D<float> get_current_direction();
+
     void calc_floating_average();
 public:
     compass();

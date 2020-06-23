@@ -51,16 +51,22 @@ compass::compass() {
     calc_floating_average();
 
     update_thread = std::thread{[&](){
-        std::this_thread::sleep_for(std::chrono::milliseconds{UPDATE_RATE_IN_MILLIS});
-        saved_rotations[oldest_rot_value] = get_current_rotation();
-        //Advance oldest value pointer
-        if(oldest_rot_value == COMPASS_FLOATING_AVERAGE_SIZE - 1){
-            oldest_rot_value = 0;
-        }else{
-            ++oldest_rot_value;
-        }
+        while(true){
+            //End execution when the thread shall join
+            if(join_update_thread){
+                break;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds{UPDATE_RATE_IN_MILLIS});
+            saved_rotations[oldest_rot_value] = get_current_rotation();
+            //Advance oldest value pointer
+            if(oldest_rot_value == COMPASS_FLOATING_AVERAGE_SIZE - 1){
+                oldest_rot_value = 0;
+            }else{
+                ++oldest_rot_value;
+            }
 
-        calc_floating_average();
+            calc_floating_average();
+        }
     }};
 }
 
@@ -74,9 +80,9 @@ void compass::calc_floating_average() {
         total_rot += rot.value;
     }
     //Add newest trice so it has more influence
-    total_rot += 2 * get_newest_rot_value().value;
+    total_rot += 4 * get_newest_rot_value().value;
 
-    calculated_rot_averg = degree<float>{total_rot / 7};
+    calculated_rot_averg = degree<float>{total_rot / 9};
 }
 
 degree<float> compass::get_newest_rot_value() {
@@ -88,6 +94,7 @@ degree<float> compass::get_newest_rot_value() {
 }
 
 int compass::release_resources() {
+    join_update_thread = true;
     if(update_thread.joinable()){
         update_thread.join();
     }

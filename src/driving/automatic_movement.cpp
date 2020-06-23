@@ -13,27 +13,28 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
     const auto epsilon = degree<float>{5.};
     auto current_rot = cmpass->get_rotation_360();
     auto end_rot = (current_rot + angle).to_positive();
-    std::cout << "Current rot: " << current_rot.value << std::endl;
-    std::cout << "End rot: " << end_rot.value << std::endl;
     if(current_rot - end_rot <= epsilon){
         return;
     }
 
+    std::cout << "Rotating in place" << std::endl;
+    std::cout << "Current rot: " << current_rot.value << std::endl;
+    std::cout << "End rot: " << end_rot.value << std::endl;
     if(angle.value >= 0){
         engine->turn_in_place_left();
     }else{
         engine->turn_in_place_right();
     }
     engine->set_speed(MIN_SPEED_VALUE);
-    int i = 0;
+//    int i = 0;
     while(current_rot - end_rot > epsilon){
         current_rot = cmpass->get_rotation_360();
-        if(i == 100){
-            std::cout << current_rot.value << std::endl;
-            i = 0;
-        }else{
-            i++;
-        }
+//        if(i == 100){
+//            std::cout << current_rot.value << std::endl;
+//            i = 0;
+//        }else{
+//            i++;
+//        }
     }
     engine->smooth_stop();
 }
@@ -64,6 +65,7 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
                         (std::chrono::duration_cast<std::chrono::milliseconds>(dt).count()
                          * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
         if(current_point.distance_to(finish) >= obst_dist.get()){
+            std::cout << "Couldn't reach finish" << std::endl;
             engine->smooth_stop();
             //Stop execution
             return false;
@@ -88,11 +90,14 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
 }
 
 void automatic_movement::move_to_point(vertex2D<float> finish_point) {
-
     auto current_point = vertex2D<float>{0., 0.};
 
     //While we are not closer than 3 cm to the goal
-    while((current_point - finish_point).length() < 3) {
+    while(true) {
+        if((current_point - finish_point).length() < 3){
+            std::cout << "Finish reached" << std::endl;
+            return;
+        }
         current_point = move_to_point_if_possible(current_point, finish_point);
         if (current_point.distance_to(finish_point) < 3) {
             //We are at the finish
@@ -104,6 +109,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
         // if we can go right, do so for 20 cm. Then move to point again
         // if we hit a wall before finding path to the right, we turn 180 deg and try on left side.
         // if no open wall before wall in front end unsuccessfull
+        std::cout << "Checking leftside for a way around the obstacle" << std::endl;
         bool open_area_found = false;
         int checks_done = 0;
         rotate_in_place_by(degree<float>{90});
@@ -123,9 +129,11 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
             obst_dist = dist_sensor->calc_distance();
         }
         if(open_area_found){
+            std::cout << "Found a way around on left side! Retrying:" << std::endl;
             continue;
         }
 
+        std::cout << "Found no way on left side. Retrying on right side" << std::endl;
         //no open wall on left side of obstacle, now try on right side
         rotate_in_place_by(degree<float>{180.});
         move_forward(cm{checks_done * 20.});
@@ -147,8 +155,11 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
 
         if(!open_area_found){
             //neither on left nor right side open area, cant reach point. return
+            std::cout << "No way left or right. Ending unsuccessfull" << std::endl;
             return;
         }
+
+        std::cout << "Found a way around on right side! Retrying:" << std::endl;
     }
 }
 
