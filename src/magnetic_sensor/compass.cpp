@@ -102,6 +102,5 @@ int compass::release_resources() {
 }
 
 vertex2D<float> compass::get_direction() {
-    auto[x, y] = get_rotation().to_vec();
-    return vertex2D<float>{x, y}.rotate_by(base_rot_angle_radians);
+    return base_dir.rotate_by(get_rotation().to_radian()).normalize();
 }

@@ -136,7 +136,7 @@ int main () {
 
 
 
-    test_rectangle(engine, &ultrasonic, _compass);
+    //test_rectangle(engine, &ultrasonic, _compass);
     test_move_to_point(engine, &ultrasonic, _compass);
 //    test_turns(engine, &ultrasonic, magnet_sensor);
 
