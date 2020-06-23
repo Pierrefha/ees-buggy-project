@@ -29,6 +29,8 @@ private:
 public:
 
     magnetic_sensor();
+	//Konstruktor für eigene Einstellungen
+	magnetic_sensor(int mode, int odr, int rng, int osr);
 
 	//Getter für die Daten
 	int getX();
