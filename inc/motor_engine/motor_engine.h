@@ -4,7 +4,6 @@
 #include <tuple>
 #include <motor_engine/wheel.h>
 #include <motor_engine/direction.h>
-#include <magnetic_sensor/magnetic_sensor.h>
 #include <util/degree.h>
 
 class motor_engine{

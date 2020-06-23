@@ -8,6 +8,7 @@
 #include <motor_engine/motor_engine.h>
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
 #include <util/strong_type_defs.h>
+#include <magnetic_sensor/magnetic_sensor.h>
 
 class automatic_movement{
 private:
@@ -25,7 +26,7 @@ public:
      * @param dir either turn_in_place_left or turn_in_place_right
      * @param angle angle the buggy shall rotate
      */
-    void rotate_in_place_by(direction dir, degree<float> angle);
+    void rotate_in_place_by(degree<float> angle);
 
     /**
      * Turn in place to the specified angle

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <wiringPiI2C.h>
 #include <cmath>
+#include <unistd.h>
 
 #define PI		3.1415926535
 
@@ -109,9 +110,15 @@ vertex2D<float> magnetic_sensor::get_direction() {
     //TODO this could be one matrix * vector operation
     vertex2D<float> measurement{static_cast<float>(x), static_cast<float>(y)};
     measurement = measurement - ellipse_center;
-    measurement.x = measurement.x * c - measurement.y * s;
-    measurement.y = measurement.y * c + measurement.x * s;
+    const float meas_x = measurement.x;
+    const float meas_y = measurement.y;
+    measurement.x = meas_x * c - meas_y * s;
+    measurement.y = meas_y * c + meas_x * s;
     measurement.x = measurement.x * width / height;
 
     return measurement;
+}
+
+int magnetic_sensor::release_resources() {
+    return close(fd);
 }

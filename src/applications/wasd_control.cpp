@@ -5,6 +5,7 @@
 #include <applications/wasd_control.h>
 #include <curses.h>
 #include <iostream>
+#include <driving/automatic_movement.h>
 
 bool wasd_control::init() {
     initscr();
@@ -29,6 +30,8 @@ void wasd_control::print_info(std::tuple<float, float> speed_perc,
     mvprintw(0, 0, "Speed left: %.2f   |   Speed right: %.2f", left_speed, right_speed);
     if(!obst_dist){
         mvprintw(1, 0, "No obstacle in front");
+        //Clear next obstacle dist
+        clrtoeol();
     }else{
         mvprintw(1, 0, "Next obstacle in: %.2f", obst_dist->get());
     }
@@ -163,7 +166,6 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, mag
 
 void wasd_control::release_resources() {
     endwin();
-
 }
 
 

@@ -6,19 +6,22 @@
 #include <cassert>
 #include <chrono>
 #include <util/time_util.h>
+#include <magnetic_sensor/magnetic_sensor.h>
 
-void automatic_movement::rotate_in_place_by(direction dir, degree<float> angle) {
-    assert(dir == direction::IN_PLACE_TURN_LEFT || dir == direction::IN_PLACE_TURN_RIGHT);
+void automatic_movement::rotate_in_place_by(degree<float> angle) {
+    const auto epsilon = degree<float>{3.};
     auto current_rot = compass->get_rotation();
     auto end_rot = current_rot + angle;
+    if(current_rot - end_rot <= epsilon){
+        return;
+    }
 
-    if(dir == direction::IN_PLACE_TURN_LEFT){
+    if(angle.value < 0){
         engine->turn_in_place_left();
     }else{
         engine->turn_in_place_right();
     }
     engine->set_speed(MIN_SPEED_VALUE);
-    const auto epsilon = degree<float>{1.};
     while(current_rot - end_rot > epsilon){
         current_rot = compass->get_rotation();
     }
@@ -93,12 +96,12 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
         // if no open wall before wall in front end unsuccessfull
         bool open_area_found = false;
         int checks_done = 0;
-        rotate_in_place_by(direction::IN_PLACE_TURN_LEFT, degree<float>{90});
+        rotate_in_place_by(degree<float>{90});
         auto obst_dist = dist_sensor->calc_distance();
         while(!obst_dist || obst_dist->get() >= 30){
             ++checks_done;
             this->move_forward(cm{20});
-            rotate_in_place_by(direction::IN_PLACE_TURN_RIGHT, degree<float>{90});
+            rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
             if(!obst_dist || obst_dist->get() < 40){
                 //if no obstacle or obstacle so far away there might be path on right
@@ -106,7 +109,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
                 move_forward(cm{30});
                 break;
             }
-            rotate_in_place_by(direction::IN_PLACE_TURN_LEFT, degree<float>{90});
+            rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
         }
         if(open_area_found){
@@ -114,13 +117,13 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
         }
 
         //no open wall on left side of obstacle, now try on right side
-        rotate_in_place_by(direction::IN_PLACE_TURN_RIGHT, degree<float>{180.});
+        rotate_in_place_by(degree<float>{180.});
         move_forward(cm{checks_done * 20});
 
         obst_dist = dist_sensor->calc_distance();
         while(!obst_dist || obst_dist->get() >= 30){
             this->move_forward(cm{20});
-            rotate_in_place_by(direction::IN_PLACE_TURN_LEFT, degree<float>{90});
+            rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
             if(!obst_dist || obst_dist->get() < 40){
                 //if no obstacle or obstacle so far away there might be path on right
@@ -128,7 +131,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
                 move_forward(cm{30});
                 break;
             }
-            rotate_in_place_by(direction::IN_PLACE_TURN_RIGHT, degree<float>{90});
+            rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
         }
 

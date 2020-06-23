@@ -16,17 +16,25 @@
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <applications/wasd_control.h>
 
+
+//Test files
+#include "test_inc/driving/test_automatic_movement.h"
+
 #define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
 #define ULTRASONIC_ECHO_PIN_WPI 1
 #define ULTRASONIC_TRIGGER_PIN_WPI 2 
 
 motor_engine* engine = nullptr;
 wasd_control* wasd_controller = nullptr;
+magnetic_sensor* magnet_sensor = nullptr;
 /// Interrupt Routine for STRG-C
 void release_resources(){
     if(engine){
         engine->emergency_stop();
         engine->release_engine();
+    }
+    if(magnet_sensor){
+        magnet_sensor->release_resources();
     }
     if(wasd_controller){
         wasd_controller->release_resources();
@@ -146,26 +154,28 @@ int main () {
     ultrasonic.init();
 
     //Magnetic Sensor
-    magnetic_sensor magneticSensor;
+    magnet_sensor = new magnetic_sensor{};
     /*
      * Test code for the ultrasonic sensor. 
      */
+
+#ifdef TEST_ON
     bool ultrasonic_test = false;
-	if(ultrasonic_test){
-		//debug time diff
-		for(int i=0 ;i<100;i++){
-			ultrasonic.calc_distance() ;
-		}
-		for(int i=0 ;i<100;i++){
+    if(ultrasonic_test){
+        //debug time diff
+        for(int i=0 ;i<100;i++){
+            ultrasonic.calc_distance() ;
+        }
+        for(int i=0 ;i<100;i++){
             auto dist = ultrasonic.calc_distance();
-		    if(!dist){
-		        std::cout << "No obstacle in front" << std::endl;
-		    }else{
-		        std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
-		    }
-		}
-		return 0;
-	};
+            if(!dist){
+                std::cout << "No obstacle in front" << std::endl;
+            }else{
+                std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
+            }
+        }
+        return 0;
+    };
 
     /*
      * Test code for the motor engine.
@@ -193,17 +203,24 @@ int main () {
     bool test_magnetic_sensor = false;
     if (test_magnetic_sensor) {
         for (int i = 0; i < 10000; i++) {
-            magneticSensor.check();
-            std::cout << "x,y regs: " << magneticSensor.x << " " << magneticSensor.y << std::endl;
-            std::cout << "rot: " << magneticSensor.get_rotation().value << std::endl;
-            auto dir = magneticSensor.get_direction();
+            magnet_sensor->check();
+            std::cout << "x,y regs: " << magnet_sensor->x << " " << magnet_sensor->y << std::endl;
+            std::cout << "rot: " << magnet_sensor->get_rotation().value << std::endl;
+            auto dir = magnet_sensor->get_direction();
             std::cout << "dir : " << dir.x << " " << dir.y << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
     }
 
+    bool test_turning = true;
+    if(test_turning){
+       test_turns(engine, &ultrasonic, magnet_sensor);
+    }
+
+#endif //TEST_ON
+
 	wasd_controller = new wasd_control{};
-	wasd_controller->run(engine, &ultrasonic, &magneticSensor);
+	wasd_controller->run(engine, &ultrasonic, magnetic_sensor);
 
 
 

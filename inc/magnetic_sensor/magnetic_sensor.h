@@ -38,6 +38,8 @@ public:
 	int check();
 	
 	double testDirection();
+
+	int release_resources();
 };
 
 #endif //EES_MAGNETIC_SENSOR_H
