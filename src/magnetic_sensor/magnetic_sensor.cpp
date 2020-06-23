@@ -32,41 +32,6 @@ magnetic_sensor::magnetic_sensor(){
 	}
 }
 
-/**
- * @param mode Modus des Sensors, 1 für Continuos, 0 für Standby
- * @param odr Output Data Rate, 0: 10Hz, 1: 50Hz, 2: 100Hz, 3: 200Hz
- * @param rng Field range, 0: 2G, 1: 8G
- * @param osr Over sample Rate, 0: 512, 1: 256, 2: 128, 3: 64
- * Der Kompass ist auf rng = 1 (8G) und osr = 0 (512) kalibriert, ein Setup mit anderen Werten
- * könnte zu Fehlern in der Gradberechnung führen
- * Bsp. vom Standardkonstruktor (0x1d): mode = 1, odr = 3, rng = 1, osr = 0
- */
-magnetic_sensor::magnetic_sensor(int mode, int odr, int rng, int osr){
-	//Setup für den Filehandle für die Funktionen von wiringPiI2C
-	this->fd = wiringPiI2CSetup(sensor_address);
-	
-	//Werte erstmals auf Null setzten
-	this->x = 0;
-	this->y = 0;
-	this->z = 0;
-	
-	// Settings zusammenfügen
-	int settings = mode | (odr << 2) | (rng << 4) | (osr << 6);
-	
-	if(this->fd == -1){
-		std::cout << "I2CSetup for Magnetic Sensor didn't work" << std::endl;
-	}
-	else {
-        wiringPiI2CWriteReg8(this->fd, 0x0a, 0x80);
-        busy_wait(std::chrono::milliseconds{1});
-		//Empfolende Werte für das SET/RESET Register
-		wiringPiI2CWriteReg8(this->fd, 0x0b, 0x01);
-		//Settings in das Control Register schreiben
-		wiringPiI2CWriteReg8(this->fd, 0x09, settings);
-        busy_wait(std::chrono::milliseconds{1});
-	}
-}
-
 int magnetic_sensor::check(){
 	int tmp = wiringPiI2CReadReg8(this->fd, 0x06);
 	// erstes Bit des Statusregisters zeigt an ob neue Daten zur Verfügung stehen
