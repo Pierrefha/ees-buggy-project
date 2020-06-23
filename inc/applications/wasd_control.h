@@ -8,6 +8,8 @@
 
 #include <motor_engine/motor_engine.h>
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
+#include <magnetic_sensor/magnetic_sensor.h>
+#include <util/vertex2D.h>
 
 class wasd_control{
 private:

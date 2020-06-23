@@ -9,7 +9,7 @@
 #include <magnetic_sensor/magnetic_sensor.h>
 
 void automatic_movement::rotate_in_place_by(degree<float> angle) {
-    const auto epsilon = degree<float>{3.};
+    const auto epsilon = degree<float>{10.};
     auto current_rot = compass->get_rotation();
     auto end_rot = current_rot + angle;
     if(current_rot - end_rot <= epsilon){
