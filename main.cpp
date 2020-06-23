@@ -220,7 +220,7 @@ int main () {
 #endif //TEST_ON
 
 	wasd_controller = new wasd_control{};
-	wasd_controller->run(engine, &ultrasonic, magnetic_sensor);
+	wasd_controller->run(engine, &ultrasonic, magnet_sensor);
 
 
 

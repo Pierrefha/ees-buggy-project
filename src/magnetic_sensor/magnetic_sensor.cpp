@@ -3,6 +3,8 @@
 #include <wiringPiI2C.h>
 #include <cmath>
 #include <unistd.h>
+#include <chrono>
+#include <util/time_util.h>
 
 #define PI		3.1415926535
 
@@ -19,11 +21,14 @@ magnetic_sensor::magnetic_sensor(){
 		std::cout << "I2CSetup for Magnetic Sensor didn't work" << std::endl;
 	}
 	else {
+        wiringPiI2CWriteReg8(this->fd, 0x0a, 0x80);
+        busy_wait(std::chrono::milliseconds{1});
 		//Testweise einstellen des Sensors für erste Werte
 		//Empfolende Werte für das SET/RESET Register
 		wiringPiI2CWriteReg8(this->fd, 0x0b, 0x01);
 		//Hier erstmal ein Beispiel Setup aus dem Datenblatt
 		wiringPiI2CWriteReg8(this->fd, 0x09, 0x1d);
+        busy_wait(std::chrono::milliseconds{1});
 	}
 }
 
@@ -120,5 +125,6 @@ vertex2D<float> magnetic_sensor::get_direction() {
 }
 
 int magnetic_sensor::release_resources() {
+    wiringPiI2CWriteReg8(this->fd, 0x09, 0x00);
     return close(fd);
 }

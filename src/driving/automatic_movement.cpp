@@ -7,11 +7,14 @@
 #include <chrono>
 #include <util/time_util.h>
 #include <magnetic_sensor/magnetic_sensor.h>
+#include <iostream>
 
 void automatic_movement::rotate_in_place_by(degree<float> angle) {
     const auto epsilon = degree<float>{10.};
     auto current_rot = compass->get_rotation();
     auto end_rot = current_rot + angle;
+    std::cout << "Current rot: " << current_rot.value << std::endl;
+    std::cout << "End rot: " << end_rot.value << std::endl;
     if(current_rot - end_rot <= epsilon){
         return;
     }
@@ -24,6 +27,7 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
     engine->set_speed(MIN_SPEED_VALUE);
     while(current_rot - end_rot > epsilon){
         current_rot = compass->get_rotation();
+        std::cout << current_rot.value << std::endl;
     }
     engine->smooth_stop();
 }
