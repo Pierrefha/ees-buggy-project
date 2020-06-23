@@ -43,7 +43,14 @@ public:
      */
     cm move_forward(cm forward_dist);
 
-    void move_to_point_with_retry(vertex2D<float> finish_point);
+    /**
+     *
+     * @param finish_point where to go to
+     * @return the current point
+     */
+    vertex2D<float> move_to_point_with_retry(vertex2D<float> finish_point);
+
+    vertex2D<float> move_to_point_with_retry(vertex2D<float> current_point, vertex2D<float> finish_point);
 
     vertex2D<float> move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish);
 

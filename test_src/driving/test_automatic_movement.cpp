@@ -68,3 +68,23 @@ void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, co
     auto_control.move_to_point_with_retry(finish);
     continue_on_click();
 }
+
+void test_move_rectangle_with_points(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass){
+    automatic_movement auto_control{compass, engine, dist_sensor};
+    compass->set_current_dir_as(vertex2D<float>{0,1});
+    vertex2D<float> finish{0, 20};
+    //Give compass small time to adjust
+    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+    std::cout << "rotation: " << compass->get_rotation().value << " | Direction" << compass->get_direction() << std::endl;
+    auto current_point = auto_control.move_to_point_with_retry(finish);
+    auto_control.rotate_in_place_by(degree<float>{90});
+    current_point = auto_control.move_to_point_with_retry(current_point, vertex2D<float>{-20, 20});
+    auto_control.rotate_in_place_by(degree<float>{90});
+    current_point = auto_control.move_to_point_with_retry(current_point, vertex2D<float>{-20, 0});
+    auto_control.rotate_in_place_by(degree<float>{90});
+    current_point = auto_control.move_to_point_with_retry(current_point, vertex2D<float>{0, 0});
+    auto_control.rotate_in_place_by(degree<float>{90});
+
+
+    continue_on_click();
+}

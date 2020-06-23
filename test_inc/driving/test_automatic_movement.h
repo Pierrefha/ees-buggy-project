@@ -11,4 +11,6 @@ void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, compas
 
 void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass);
 
+void test_move_rectangle_with_points(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass);
+
 #endif //EES_BUGGY_TEST_AUTOMATIC_MOVEMENT_H

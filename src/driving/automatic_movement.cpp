@@ -87,8 +87,11 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
              * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
 }
 
-void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) {
-    auto current_point = vertex2D<float>{0., 0.};
+vertex2D<float> automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) {
+    return move_to_point_with_retry(vertex2D<float>{0., 0.}, finish_point);
+}
+
+vertex2D<float> automatic_movement::move_to_point_with_retry(vertex2D<float> current_point, vertex2D<float> finish_point) {
     std::cout << "Moving to point" << std::endl;
     std::cout << "Current: " << current_point
         << "Finish: " << finish_point << std::endl;
@@ -96,14 +99,11 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
     //While we are not closer than 3 cm to the goal
     while(true) {
 	    std::cout << "Current point: " << current_point << std::endl;
-        if((current_point - finish_point).length() < 3){
-            std::cout << "Finish reached" << std::endl;
-            return;
-        }
         current_point = move_to_point_if_possible(current_point, finish_point);
         if (current_point.distance_to(finish_point) < 3) {
             //We are at the finish
-            return;
+            std::cout << "Finish reached" << std::endl;
+            return current_point;
         }
 
         //An obstacle was in front
@@ -163,10 +163,10 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
 
         if(!open_area_found){
             //neither on left nor right side open area, cant reach point. return
-            return;
+            std::cout << "No way left or right. Ending unsuccessfull" << std::endl;
+            return current_point;
         }
 
-        std::cout << "No way left or right. Ending unsuccessfull" << std::endl;
     }
 }
 
