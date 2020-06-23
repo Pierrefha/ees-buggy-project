@@ -18,18 +18,31 @@
 
 class magnetic_sensor{
 public:
-	//Filehandle für das Benutzen der WiringI2CLibrary
+    /**
+     * Default base_dir is north
+     */
+	vertex2D<float> base_dir{-54.42, 394.77};
+	float base_rot_angle_radians{0.};
+    //Filehandle für das Benutzen der WiringI2CLibrary
 	int fd;
 	int16_t x;
 	int16_t y;
 	int16_t z;
 		
 public:
-    degree<float> get_rotation();
-    vertex2D<float> get_direction();
 
+    magnetic_sensor();
+    /**
+     * @return The rotation of the buggy relative to base_dir from [-180; 180] deg
+     */
+    degree<float> get_rotation();
+
+    /**
+     * @return The rotation of the buggy relative to base_dir from [0; 360[ deg
+     */
     degree<float> get_rotation_360();
-	magnetic_sensor();
+
+    vertex2D<float> get_direction();
 	//Getter für die Daten
 	int getX();
 	int getY();
@@ -38,6 +51,9 @@ public:
 	//void setup();
 	//Überprüft nach neuen Daten und fügt sie, wenn gegeben, in die Attribute ein
 	int check();
+
+	void set_current_dir_as(vertex2D<float> as_dir);
+	void set_current_dir_as_base_dir();
 	
 	double testDirection();
 

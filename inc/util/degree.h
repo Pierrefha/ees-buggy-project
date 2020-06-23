@@ -16,6 +16,9 @@ public:
         this->value = check_value(value);
     }
 
+    T to_radian()const{
+        return value * M_PI / 180.;
+    }
     /**
      * @return this rotation with positive value
      */

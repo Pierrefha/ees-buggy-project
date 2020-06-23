@@ -92,18 +92,12 @@ double magnetic_sensor::testDirection(){
 	}
 }
 
-/**
- * @return The rotation of the buggy relative to north from [0; 360[ deg
- */
 degree<float> magnetic_sensor::get_rotation_360() {
     return get_rotation().to_positive();
 }
 
-/**
- * @return The rotation of the buggy relative to north from [-90; 90] deg
- */
 degree<float> magnetic_sensor::get_rotation() {
-    return get_direction().angle_to(vertex2D<float>{-54.42, 394.77});
+    return get_direction().angle_to(base_dir);
 //    return .angle_to(get_direction());
 }
 
@@ -117,22 +111,26 @@ vertex2D<float> magnetic_sensor::get_direction() {
     const float width = 804.4517031652929;
     const float height = 549.1679710793408;
     const float phi = -0.721345733186768;
-    const float c = std::cos(phi);
-    const float s = std::sin(phi);
 
-    //TODO this could be one matrix * vector operation
     vertex2D<float> measurement{static_cast<float>(x), static_cast<float>(y)};
     measurement = measurement - ellipse_center;
-    const float meas_x = measurement.x;
-    const float meas_y = measurement.y;
-    measurement.x = meas_x * c - meas_y * s;
-    measurement.y = meas_y * c + meas_x * s;
+    measurement = measurement.rotate_by(phi);
     measurement.x = measurement.x * width / height;
-
+    measurement = measurement.rotate_by(base_rot_angle_radians);
     return measurement;
 }
 
 int magnetic_sensor::release_resources() {
     wiringPiI2CWriteReg8(this->fd, 0x09, 0x00);
     return close(fd);
+}
+
+void magnetic_sensor::set_current_dir_as(vertex2D<float> as_dir) {
+    this->base_dir = as_dir;
+    base_rot_angle_radians = get_direction().angle_to(as_dir).to_radian();
+}
+
+void magnetic_sensor::set_current_dir_as_base_dir() {
+    this->base_dir = get_direction();
+    base_rot_angle_radians = 0;
 }

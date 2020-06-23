@@ -49,85 +49,7 @@ void signalHandler(int signum)
 }
 
 
-/*
- * Periodically checks distance using the ultrasonic sensor.
- */
-void poll_distance(bool *  stop_condition_ptr, ultrasonic_sensor * sensor,
-        motor_engine * engine)
-{
-
-	double speed = 0;
-	double distance = 0;
-	double safety_threshold= 0;
-	while(true){
-
-		// Adapt threshold depending on current speed.
-		speed = engine->get_speed_right();
-		if(speed >= 2000){
-			safety_threshold = 20;
-		}
-		else {
-			safety_threshold = 10;
-		}
-
-		auto dist = sensor->calc_distance();
-		if(!dist){
-		    *stop_condition_ptr = false;
-            continue;
-		}
-
-		distance = dist->get();
-		// DEBUG CODE
-        // plot current speed
-		//std::cout << "current distance: " << distance << std::endl;
-		//std::cout << "current speed: " << speed << std::endl;
-
-
-		// Set stop condition to true if the distance is to the wall 
-		// ois below our safety threshold. 
-		if(distance <= safety_threshold){
-			* stop_condition_ptr=true;
-			sensor->set_brake_light(ON);
-			engine->emergency_stop();
-
-			/*
-			 * TURN ROUTINE HERE
-			 * TODO TURN 45 degrees for a maximum of 4 times (maybe some cat just ran by)
-			 * If distance will be <=10 after one iteration we disable the brake light
-			 * and enable remote wasd control again.
-			 * otherwise we are stuck inside 4 walls.
-			 * and just quit with a "you shall not pass" message? xd
-			 */
-
-			// after turn routine set *stop_condition_ptr to false again
-			// mock routine by sleep timer
-			// pause 2000 ms
-			auto start = std::chrono::steady_clock::now();
-			auto delay = std::chrono::steady_clock::now();
-			while(delay - start < std::chrono::milliseconds(2000)){
-				delay = std::chrono::steady_clock::now();
-			}
-			* stop_condition_ptr=false;
-
-		}
-		else {
-			//TODO find better solution than turning on every iteration
-			sensor->set_brake_light(OFF);
-		}
-
-		// pause 100 ms
-		auto start = std::chrono::steady_clock::now();
-		auto delay = std::chrono::steady_clock::now();
-		while(delay - start < std::chrono::milliseconds(100)){
-			delay = std::chrono::steady_clock::now();
-		}
-	}
-}
-
-
 int main () {
-    bool stop_condition = false;
-    bool *stop_condition_ptr = &stop_condition;
     // Csignal für Abbruch über STRG-C
     signal(SIGINT, signalHandler);
     //init wiringPi
@@ -212,10 +134,11 @@ int main () {
         }
     }
 
-    bool test_turning = true;
-    if(test_turning){
-       test_turns(engine, &ultrasonic, magnet_sensor);
-    }
+
+
+    test_rectangle(engine, &ultrasonic, magnet_sensor);
+    test_move_to_point(engine, &ultrasonic, magnet_sensor);
+//    test_turns(engine, &ultrasonic, magnet_sensor);
 
 #endif //TEST_ON
 

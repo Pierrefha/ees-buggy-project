@@ -7,4 +7,8 @@
 
 void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass);
 
+void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass);
+
+void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass);
+
 #endif //EES_BUGGY_TEST_AUTOMATIC_MOVEMENT_H

@@ -31,4 +31,34 @@ void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_s
     std::cout << "Turning -90 deg" << std::endl;
     auto_control.rotate_in_place_by(degree<float>{-90});
     continue_on_click();
+
+
+}
+
+void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass){
+    automatic_movement auto_control{compass, engine, dist_sensor};
+    std::cout << "Driving Rectangle !" << std::endl;
+    auto_control.move_forward(cm{20});
+    auto_control.rotate_in_place_by(degree<float>{90});
+    auto_control.move_forward(cm{20});
+    auto_control.rotate_in_place_by(degree<float>{90});
+    auto_control.move_forward(cm{20});
+    auto_control.rotate_in_place_by(degree<float>{90});
+    continue_on_click();
+}
+
+void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass){
+    automatic_movement auto_control{compass, engine, dist_sensor};
+    std::cout << "Driving Rectangle !" << std::endl;
+    std::cout << "Setting current dir as (0, 1)" << std::endl;
+    std::cout << "input finish pos as: <x> <y>"<< std::endl;
+    std::cout << "values in cm"<< std::endl;
+    std::string x, y;
+    std::cin >> x;
+    std::cin >> y;
+    std::cout << "read: " << x << " " << y << std::endl;
+    vertex2D<float> finish{std::stof(x), std::stof(y)};
+    compass->set_current_dir_as(vertex2D<float>{0,1});
+    auto_control.move_to_point(finish);
+    continue_on_click();
 }

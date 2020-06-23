@@ -91,7 +91,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
 
     auto current_point = vertex2D<float>{0., 0.};
 
-    //While we are not closer than 5 cm to the goal
+    //While we are not closer than 3 cm to the goal
     while((current_point - finish_point).length() < 3) {
         current_point = move_to_point_if_possible(current_point, finish_point);
         if (current_point.distance_to(finish_point) < 3) {
@@ -111,7 +111,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
         while(!obst_dist || obst_dist->get() >= 30){
             ++checks_done;
             this->move_forward(cm{20});
-            rotate_in_place_by(degree<float>{90});
+            rotate_in_place_by(degree<float>{-90});
             obst_dist = dist_sensor->calc_distance();
             if(!obst_dist || obst_dist->get() < 40){
                 //if no obstacle or obstacle so far away there might be path on right
@@ -128,7 +128,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
 
         //no open wall on left side of obstacle, now try on right side
         rotate_in_place_by(degree<float>{180.});
-        move_forward(cm{checks_done * 20});
+        move_forward(cm{checks_done * 20.});
 
         obst_dist = dist_sensor->calc_distance();
         while(!obst_dist || obst_dist->get() >= 30){
@@ -141,7 +141,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
                 move_forward(cm{30});
                 break;
             }
-            rotate_in_place_by(degree<float>{90});
+            rotate_in_place_by(degree<float>{-90});
             obst_dist = dist_sensor->calc_distance();
         }
 
@@ -159,25 +159,6 @@ void automatic_movement::move_forward(cm forward_dist) {
 
 
 void automatic_movement::rotate_in_place_to(vertex2D<float> direction) {
-    const auto epsilon = degree<float>{1};
-    auto current_dir = compass->get_direction();
-
-    auto angle = current_dir.angle_to(direction);
-    if(angle < epsilon){
-        return;
-    }
-
-    if(angle.value > 0){
-        engine->turn_in_place_left();
-    }else{
-        engine->turn_in_place_right();
-    }
-    engine->set_speed(MIN_SPEED_VALUE);
-
-    while(current_dir.angle_to(direction) > epsilon){
-        current_dir = compass->get_direction();
-    }
-
-    engine->smooth_stop();
+    rotate_in_place_by(compass->get_direction().angle_to(direction));
 }
 

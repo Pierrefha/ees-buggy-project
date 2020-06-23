@@ -47,6 +47,17 @@ struct vertex2D{
         return (*this - point).length();
     }
 
+    vertex2D<T> rotate_by(T radians){
+        const float c = std::cos(radians);
+        const float s = std::sin(radians);
+        const float x_copy = x;
+        const float y_copy = y;
+        vertex2D<T> result;
+        result.x = x_copy * c - y_copy * s;
+        result.y = y_copy * c + x_copy * s;
+        return result;
+    }
+
     degree<float> angle_to(const vertex2D<float>& other)const{
 //        https://math.stackexchange.com/questions/2584451/how-to-get-the-direction-of-the-angle-from-a-dot-product-of-two-vectors
         int min = 1;
