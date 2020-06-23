@@ -7,7 +7,6 @@
 
 #include <stdlib.h>
 #include <math.h>
-#include <util/vertex2D.h>
 
 template<typename T>
 struct degree{
@@ -24,9 +23,9 @@ public:
         return value * M_PI / 180.;
     }
 
-    vertex2D<T> to_vec()const{
+    std::tuple<T, T> to_vec()const{
         const auto radians = to_radian();
-        return vertex2D<T>{std::cos(radians), std::sin(radians)};
+        return std::tuple<T, T>{std::cos(radians), std::sin(radians)};
     }
     /**
      * @return this rotation with positive value
