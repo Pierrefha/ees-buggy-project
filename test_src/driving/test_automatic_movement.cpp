@@ -65,6 +65,6 @@ void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, co
     //Give compass small time to adjust
     std::this_thread::sleep_for(std::chrono::milliseconds{100});
     std::cout << "rotation: " << compass->get_rotation().value << " | Direction" << compass->get_direction() << std::endl;
-    auto_control.move_to_point(finish);
+    auto_control.move_to_point_with_retry(finish);
     continue_on_click();
 }

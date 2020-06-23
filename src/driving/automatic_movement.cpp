@@ -17,9 +17,9 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
         return;
     }
 
-    std::cout << "Rotating in place" << std::endl;
-    std::cout << "Current rot: " << current_rot.value << std::endl;
-    std::cout << "End rot: " << end_rot.value << std::endl;
+//    std::cout << "Rotating in place" << std::endl;
+//    std::cout << "Current rot: " << current_rot.value << std::endl;
+//    std::cout << "End rot: " << end_rot.value << std::endl;
     if(angle.value >= 0){
         engine->turn_in_place_left();
     }else{
@@ -64,7 +64,9 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
                 direction_normalized *
                         (std::chrono::duration_cast<std::chrono::milliseconds>(dt).count()
                          * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
-        if(current_point.distance_to(finish) >= obst_dist.get()){
+        //This leads to the buggy not driving closer to the obstacle and staying in place
+//        if(current_point.distance_to(finish) >= obst_dist.get()){
+        if(obst_dist.get() < 10){
             std::cout << "Couldn't reach finish" << std::endl;
             engine->smooth_stop();
             //Stop execution
@@ -89,7 +91,7 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
              * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
 }
 
-void automatic_movement::move_to_point(vertex2D<float> finish_point) {
+void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) {
     auto current_point = vertex2D<float>{0., 0.};
     std::cout << "Moving to point" << std::endl;
     std::cout << "Current: " << current_point
@@ -124,6 +126,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
             obst_dist = dist_sensor->calc_distance();
             if(!obst_dist || obst_dist->get() < 40){
                 //if no obstacle or obstacle so far away there might be path on right
+                std::cout << "Found a way around on left side! Retrying:" << std::endl;
                 open_area_found = true;
                 move_forward(cm{30});
                 break;
@@ -132,7 +135,6 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
             obst_dist = dist_sensor->calc_distance();
         }
         if(open_area_found){
-            std::cout << "Found a way around on left side! Retrying:" << std::endl;
             continue;
         }
 
@@ -148,6 +150,7 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
             obst_dist = dist_sensor->calc_distance();
             if(!obst_dist || obst_dist->get() < 40){
                 //if no obstacle or obstacle so far away there might be path on right
+                std::cout << "Found a way around on right side! Retrying:" << std::endl;
                 open_area_found = true;
                 move_forward(cm{30});
                 break;
@@ -158,11 +161,10 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
 
         if(!open_area_found){
             //neither on left nor right side open area, cant reach point. return
-            std::cout << "No way left or right. Ending unsuccessfull" << std::endl;
             return;
         }
 
-        std::cout << "Found a way around on right side! Retrying:" << std::endl;
+        std::cout << "No way left or right. Ending unsuccessfull" << std::endl;
     }
 }
 
