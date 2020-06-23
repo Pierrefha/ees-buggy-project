@@ -121,6 +121,7 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
         auto obst_dist = dist_sensor->calc_distance();
         while(!obst_dist || obst_dist->get() >= 30){
             ++checks_done;
+            current_point = current_point + (cmpass->get_direction() * 20.);
             this->move_forward(cm{20});
             rotate_in_place_by(degree<float>{-90});
             obst_dist = dist_sensor->calc_distance();
@@ -128,6 +129,7 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
                 //if no obstacle or obstacle so far away there might be path on right
                 std::cout << "Found a way around on left side! Retrying:" << std::endl;
                 open_area_found = true;
+                current_point = current_point + (cmpass->get_direction() * 30.);
                 move_forward(cm{30});
                 break;
             }
@@ -141,10 +143,12 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
         std::cout << "Found no way on left side. Retrying on right side" << std::endl;
         //no open wall on left side of obstacle, now try on right side
         rotate_in_place_by(degree<float>{180.});
+        current_point = current_point + (cmpass->get_direction() * 20. * checks_done);
         move_forward(cm{checks_done * 20.});
 
         obst_dist = dist_sensor->calc_distance();
         while(!obst_dist || obst_dist->get() >= 30){
+            current_point = current_point + (cmpass->get_direction() * 20.);
             this->move_forward(cm{20});
             rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
@@ -152,6 +156,7 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
                 //if no obstacle or obstacle so far away there might be path on right
                 std::cout << "Found a way around on right side! Retrying:" << std::endl;
                 open_area_found = true;
+                current_point = current_point + (cmpass->get_direction() * 30.);
                 move_forward(cm{30});
                 break;
             }

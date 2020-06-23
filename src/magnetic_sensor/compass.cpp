@@ -40,7 +40,7 @@ void compass::set_current_dir_as(vertex2D<float> as_dir) {
 
 void compass::set_current_dir_as_base_dir() {
     this->base_dir = get_current_direction();
-    base_rot_angle_radians = 0;
+    base_rot_angle_radians = get_current_direction().angle_to(base_dir).to_radian();
 }
 
 compass::compass() {
