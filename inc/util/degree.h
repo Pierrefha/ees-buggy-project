@@ -27,10 +27,6 @@ public:
         }
     }
 
-    degree<T> eliminate_double_rot()const{
-        while()
-    }
-
     degree<T> operator-(const degree &rhs) const {
         return degree{value - rhs.value};
     }

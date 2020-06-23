@@ -103,7 +103,8 @@ degree<float> magnetic_sensor::get_rotation_360() {
  * @return The rotation of the buggy relative to north from [-90; 90] deg
  */
 degree<float> magnetic_sensor::get_rotation() {
-    return vertex2D<float>{-54.42, 394.77}.angle_to(get_direction());
+    return get_direction().angle_to(vertex2D<float>{-54.42, 394.77});
+//    return .angle_to(get_direction());
 }
 
 vertex2D<float> magnetic_sensor::get_direction() {

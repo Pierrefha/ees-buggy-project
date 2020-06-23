@@ -25,9 +25,15 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
         engine->turn_in_place_right();
     }
     engine->set_speed(MIN_SPEED_VALUE);
+    int i = 0;
     while(current_rot - end_rot > epsilon){
         current_rot = compass->get_rotation_360();
-        std::cout << current_rot.value << std::endl;
+        if(i == 100){
+            std::cout << current_rot.value << std::endl;
+            i = 0;
+        }else{
+            i++;
+        }
     }
     engine->smooth_stop();
 }
