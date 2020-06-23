@@ -1,4 +1,4 @@
-\documentclass[12pt,twoside]{report}
+\documentclass[12pt]{report}
 \pagenumbering{roman}
 
 \usepackage{graphicx}
@@ -7,6 +7,8 @@
 \usepackage[german]{babel}
 % for units
 \usepackage{siunitx}
+% floats pictures to the correct position when using [H]
+\usepackage{float}
 
 \usepackage{hyperref}
 \hypersetup{
@@ -21,10 +23,12 @@
 
 \begin{document}
 % CONSTANTS BEGIN
+\newcommand{\paragraphwithnewline}[1]{\paragraph{#1}\mbox{}\\} % used to create a newline after the paragraph tag.
 \newcommand{\githubrepo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
 \newcommand{\referenzcode}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
 % \newcommand{\github_repo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
 % \newcommand{\referenz_code}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
+% CONSTANTS END
 \begin{titlepage}
     \begin{center}
         \vspace*{1cm}
@@ -82,6 +86,7 @@ Als Ubuntu-Nutzer bzw. Linux-Nutzer muss man keine zusätzliche Software install
 Für den kompletten Zusammenbau wurden insgesamt 1,5 Stunden benötigt.
 
 %Das meinst du nicht ernst oder ??? Ich bin dafür das kommt raus.
+% Das ist der Punkt 1.4 aus  Arbeitsauftrag Projektphase_EES.pdf? 
 Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhaltenden Corona Phase abgeholt worden ist, wurde der Buggy von einer Person aufgebaut. Im Nachhinein haben wir uns trotzdem Gedanken dazu gemacht, wie wir den Aufbau am besten hätten aufteilen können. Wir sind zu dem Ergebnis gekommen, dass jede Person einen Teil des Buggys aufbauen sollte. Konkret hätte sich einer um das Kugellager und die Motoren gekümmert. Einer um die Abstandhalter und das Anbringen der Plastikplatte und des Raspberry Pi. Der letzte um das Anbringen des Motorhats und um das Anschließen und Fixieren der Powerbank.
 
 \end{section}
@@ -113,7 +118,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   verständlich, wenngleich hierbei eine Frage offengeblieben ist:
   Der Referenzcode schreibt den Wert 4096 in ein LED On bzw. Off Register um den
   jeweiligen Motor an bzw. auszuschalten. In der Dokumentation des PCA9685 PWM LED
-  Controllers heißt es jedoch unter Punkt 7.3.4 : ``The LEDn_ON and LEDn_OFF
+  Controllers heißt es jedoch unter Punkt 7.3.4 : ``The LEDn\_ON and LEDn\_OFF
   counts can vary from 0 to 4095.''.
 
   In den ersten Testläufen hat sich der Buggy beim Forwärtsfahren im Kreis
@@ -153,53 +158,127 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 \end{section}
 
 \begin{section}{Ultraschallsteuerung}
-    \begin{subsection}{Recherche zum Ultraschallsensor}
-        Quellen:
-        http://blog404de.github.io/RasPiUltraschallEntfernungsmesser/
-        https://www.einplatinencomputer.com/raspberry-pi-ultraschallsensor-hc-sr04-ansteuern-entfernung-messen/
-        https://tutorials-raspberrypi.de/entfernung-messen-mit-ultraschallsensor-hc-sr04/
-    \end{subsection}
-    \begin{subsection}{Aufbau}
-        % \iffalse
-        %     TODO: why does the picture always take a whole page and not fit inside the page?
-        % \fi
-        \begin{figure}[h!]
-              \includegraphics[width=\linewidth]{lernportfolio_assets/GPIO_Pins}
-              \caption{Pin Mapping WiringPi Motorhat}
-              \label{fig:boat1}
-        \end{figure}
-        Der Ultraschallsensor HC-SR04 hat einen Vcc, einen Gnd, einen Trigger und einen Echo Anschluss.
-        Der Ultraschallsensor benötigt eine Versorungsspannung von 5 Volt,
-        welche vom Motorhead bereitgestellt wird.
-        Der Trigger wird mit dem GPIO Pin 5 des Motorhead bzw. mit dem Pin 21 der wiringPi Bibliothek verbunden.
-        %TODO @Pierre Ist das hier korrekt umschrieben Pierre?
-        Das Echo Signal wird vom Motorhead mit einer Spannung von 5V
-        zurückgegeben. Da der RaspberryPi jedoch nur eine Spannung von 3,3V
-        verträgt, ist die Verwendung eines Vorwiderstand von 330$\Omega$ nötig.
-        Zusätzlich wird ein Pull-Down Widerstand in Höhe von 470$\Omega$
-        angeschlossen, welcher den Pin gegen Ground zieht, um so ein floating state zu verhindern.
-        Der GND Anschluss des Ultraschallsensors wird direkt an den GND Pin vom Motorhat angeschlossen.
+    % START task 3.1 of Arbeitsauftrag Projektphase_EES.pdf
+    \begin{subsection}{Recherche zum Ultraschallsensor und der Entfernungsmessung}
+        Bei der Suche nach einem Datasheet zum HC-SR04 haben wir vergeblich nach
+        einem offiziellen Datasheet gesucht. Daher haben wir uns  verschiedene 
+        Datasheets zum HC-SR04 angeschaut und die Spezifikationen gründlich
+        miteinander verglichen um sicher zu gehen, dass die Werte stimmen.
+        Um auf eine Formel für die Distanzberechnung mithilfe von Ultraschall
+        zu kommen haben wir nach der Geschwindigkeit von Schall in Luft gesucht.
+        Dadurch können wir nun mit Hilfe des Sensors die Distanz des Buggys zum
+        nächsten Objekt mit folgender Formel berechnen:\\
+        Distanz in \si\cm = \( \frac{Signalzeit}{2} \) \si{\milli\second} $ \times $ 34.3 \si[per-mode = fraction]{\cm\per\milli\second}
+        
 
-        \begin{figure}
+        % paragraph can be used for captions inside subsections
+        \begin{paragraph}{Quellen}
+        \begin{itemize}
+            \item \url{https://www.electroschematics.com/hc-sr04-datasheet}
+            \item \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet}
+            \item \url{https://www.sparkfun.com/products/15569\#documents-tab}
+            \item \url{https://en.wikipedia.org/wiki/Speed\_of\_sound}
+            \item \url{http://www.sengpielaudio.com/calculator-speedsound.htm}
+        \end{itemize}
+        \end{paragraph}
+    \end{subsection}
+    % END task 3.1
+
+    % START task 3.3 of Arbeitsauftrag Projektphase_EES.pdf
+    \begin{subsection}{Steuerung und Auslesen von GPIOs}
+        % Was haben Sie über die Steuerung und Auslesen von GPIOs gelernt
+        % und welches Wissen und Techniken aus dem ersten Teil der Vorlesung
+        % konnten Sie einsetzen?
+        Dank der Vorlesung haben wir gelernt, dass die GPIO Pins verschiedene
+        Modi besitzen. Um Signale zu senden muss man sie in den Output-Mode 
+        versetzen. Wenn man Signale empfangen will muss man den Pin in
+        den Input-Mode versetzten. Hier haben wir gelernt wie wichtig es ist 
+        auch die korrekte Spannung angelegt zu haben! Sowohl beim STM32 als auch
+        beim Raspberry Pi darf die Eingangsspannung 3.3V nicht überschreiten.
+        Höhere Eingangsspannungen (wie etwa die 5V die vom Ultraschallsensor 
+        ausgehen) können das Gerät zerstören! Wir haben ebenfalls gelernt, 
+        dass es zu einem floating State kommen kann, wenn wir keine Pull-up 
+        bzw. Pull-down Widerstände einsetzen. Dies kann bei der 
+        Nachimplementierung für bestimmte Protokolle genutzt werden. Bei unserem
+        Anwendungsfall gilt es jedoch, diese zu verhindern und klare Low und High
+        Pegel zu erhalten.\\
+        Mit unseren Kenntnissen konnten wir nun einen Schaltplan anfertigen:
+        % testing figure
+        \begin{figure}[H]
+        \centering
+            \begin{minipage}{0.45\textwidth}
+                \centering
+                \includegraphics[width=0.9\textwidth]{lernportfolio_assets/Schaltplan_Ultraschallsensor1}
+                \caption{Auf Papier geplant}
+            \end{minipage}
             \centering
             \begin{minipage}{0.45\textwidth}
                 \centering
-                \includegraphics[width=0.9\textwidth]{lernportfolio_assets/Schaltplan_Ultraschallsensor1} % first figure itself
-                \caption{Auf Papier}
-            \end{minipage}
-            \hfill
-            \begin{minipage}{0.45\textwidth}
-                \centering
-                \includegraphics[width=0.9\textwidth]{lernportfolio_assets/Schaltplan_Ultraschallsensor2} % second figure itself
-                \caption{Auf Papier}
+                \includegraphics[width=0.9\textwidth]{lernportfolio_assets/Schaltplan_Ultraschallsensor2} 
+                \caption{Im Buggy verbaut}
             \end{minipage}
         \end{figure}
-    \end{subsection}
-    \begin{subsection}{Distanzberechnung}
-        Die Distanz wird durch den Ultraschallsensor berechnet indem durch den Trigger ein Signal losschickt und die Zeit misst, die das Signal braucht um am Echo anzukommen. 
-        Distanz (in \si\cm)= \( \frac{Signalzeit}{2} \) \si\second $ \cdot $ 34350 \( \frac{\si\cm}{\si\second} \)
-    \end{subsection}
 
+    \end{subsection}
+    % END task 3.3
+
+    % START task 3.4 of Arbeitsauftrag Projektphase_EES.pdf
+    \begin{subsection}{Stolpersteine bei der Programmierung}
+        % Erörtern Sie, was bei der Programmierung der Entfernungsmessung
+        % mit dem Ultraschallsensor besonders wichtig ist.
+        Durch das Einbinden des Ultraschallsensors in unser Program sind wir auf
+        einige Fehlerquellen gestoßen. Im folgenden erläutern wir die Lösunen zu
+        unseren Problemen.
+        \begin{paragraphwithnewline}{Theorie und Praxis}
+            Laut Datenblatt muss der Trigger pin für mindestens 10 \si{\micro\second}
+            auf High gesetzt werden um die Ultraschallwelle auszulösen. Dadurch
+            hat man bei manchen Messungen jedoch kein Signal beim Trigger erzeugt
+            und hat dadurch komplett falsche Werte erhalten. Hier hat sich
+            schnell gezeigt, dass es in der Praxis besser ist eine gewisse Fehlertoleranz
+            einzubauen. Den Wert auf 20\si{\micro\second} zu erhöhen hat unser
+            Problem dann gelöst.
+        \end{paragraphwithnewline}
+
+        \begin{paragraphwithnewline}{Falsche Messwerte filtern}
+            Durch Störungen wird der Ultraschallsensor auch ggfs. falsche Werte
+            erzeugen. Um das Messergebnis nicht zu verfälschen muss man einen
+            Mechanismus einfügen der überprüft, ob die erhaltenen Werte wirklich
+            sinnvoll sind. 
+        \end{paragraphwithnewline}
+
+        \begin{paragraphwithnewline}{Distanz möglichst genau berechnen}
+            Die Messvarianz kann bei einzelnen Messungen das Ergebnis stark
+            beeinflussen. Um dem entgegenzuwirken wird die Messung mehrmals
+            wiederholt und die Distanz auf Basis des Mittelwerts gebildet.
+        \end{paragraphwithnewline}
+
+        % backup text that will be deleted when finished.
+        % Durch das Einbinden des Ultraschallsensors in unser Program sind wir auf
+        % einige Fehlerquellen gestoßen. Um den Trigger und damit die Ultraschall
+        % welle auszulösen muss der Pin für mindestens 10 \si{\micro\second} auf
+        % High gesetzt werden. Dies hatten wir zu Beginn eingestellt. Doch wir haben
+        % schnell gemerkt, dass manche Messungen nicht zustande gekommen sind, weil
+        % beim Echo Pin keine Antwort angekommen ist. Dadurch haben wir gelernt, 
+        % dass es in der Praxis doch besser ist auf Nummer sicher zu gehen und 
+        % haben dieses Zeitfenster auf 20 \si{\micro\second} erhöht. Unser nächstes
+        % Problem bestand darin, dass einzelne Messungen starke Abweichungen zum 
+        % Referenzwert aufwiesen. Dieses Problem wollten wir dadurch lösen, dass wir
+        % anstatt einer Messung nun 30 Messungen vornehmen und den Durchschnitt der
+        % erhaltenen Werte zurückgeben. Doch nun kam es zu sehr starken, unlogischen
+        % Abweichungen. Dies kam zu stande weil wir nach einer Messung nicht lange
+        % genug gewartet hatten, bis sich zu Pins zu ihren korrekten Pegeln zurück
+        % gesetzt hatten. Dieses Problem haben wir dadurch behoben, dass wir nun
+        % nach jeder Messung 1 \si{\milli\second} warten. Durch Störfaktoren (z.B.
+        % starker Wind) kann es ebenfalls zu komplett falschen Messwerten kommen,
+        % die wir nicht in die Messung aufnehmen dürfen. Da der Ultraschallsensor
+        % Distanzen im Berech von 4\si\cm bis 400\si\cm Messen kann nehmen wir 
+        % Messergebnisse, die eine errechnete Distanz von 3.5\si\cm unterschreiten,
+        % nicht mit in die Messung auf.
+
+    \end{subsection}
+    % END task 3.4
+
+    % START task 3.5 of Arbeitsauftrag Projektphase_EES.pdf
     \begin{subsection}{Bewertung der Zuverlässigkeit der Entfernungsmessung}
       Die Entfernungsmessung funktioniert für solide Objekte in einer Reichweite
       von 5 bis 100 cm zuverlässig. Für weniger solide Objekten, wie z.B. einer
@@ -253,6 +332,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \end{figure}
 
   \end{subsection}
+  % END task 3.5
 
 
 \end{section}
