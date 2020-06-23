@@ -28,7 +28,7 @@ private:
 		
 public:
 
-    compass();
+    magnetic_sensor();
 
 	//Getter für die Daten
 	int getX();

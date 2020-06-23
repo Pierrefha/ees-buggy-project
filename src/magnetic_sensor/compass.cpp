@@ -93,3 +93,7 @@ int compass::release_resources() {
     }
     return sensor.release_resources();
 }
+
+vertex2D<float> compass::get_direction() {
+    return get_rotation().to_vec();
+}

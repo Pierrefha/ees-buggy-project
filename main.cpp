@@ -7,15 +7,14 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 #include <signal.h>
+#include <magnetic_sensor/compass.h>
 #include <iostream>
 #include <thread>
 #include <motor_engine/constants.h>
 #include <motor_engine/motor_engine.h>
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
 #include <chrono>
-#include <magnetic_sensor/magnetic_sensor.h>
 #include <applications/wasd_control.h>
-#include <magnetic_sensor/compass.h>
 
 
 //Test files

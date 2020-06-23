@@ -8,7 +8,7 @@
 
 #define PI		3.1415926535
 
-compass::compass(){
+magnetic_sensor::magnetic_sensor(){
 	//Setup für den Filehandle für die Funktionen von wiringPiI2C
 	this->fd = wiringPiI2CSetup(sensor_address);
 	
@@ -32,7 +32,7 @@ compass::compass(){
 	}
 }
 
-int compass::check(){
+int magnetic_sensor::check(){
 	int tmp = wiringPiI2CReadReg8(this->fd, 0x06);
 	// erstes Bit des Statusregisters zeigt an ob neue Daten zur Verfügung stehen
 	//Modulo hier also um einfach nachzuverfolgen ob dieses Bit gesetzt ist.
@@ -64,17 +64,17 @@ int compass::check(){
 	return 0;
 }
 
-int compass::getX(){
+int magnetic_sensor::getX(){
 	return this->x;
 }
-int compass::getY(){
+int magnetic_sensor::getY(){
 	return this->y;
 }
-int compass::getZ(){
+int magnetic_sensor::getZ(){
 	return this->z;
 }
 
-double compass::testDirection(){
+double magnetic_sensor::testDirection(){
 	double dX = this->x;
 	double dY = this->y;
 	std::cout << atan((dX/dY)) << std::endl;
@@ -92,7 +92,7 @@ double compass::testDirection(){
 	}
 }
 
-int compass::release_resources() {
+int magnetic_sensor::release_resources() {
     if(fd != -1){
         wiringPiI2CWriteReg8(this->fd, 0x09, 0x00);
         return close(fd);
