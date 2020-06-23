@@ -60,10 +60,6 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
         }
         //There is an obstacle
         auto obst_dist = *obstacle_dist;
-        auto current_point =
-                direction_normalized *
-                        (std::chrono::duration_cast<std::chrono::milliseconds>(dt).count()
-                         * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
         //This leads to the buggy not driving closer to the obstacle and staying in place
 //        if(current_point.distance_to(finish) >= obst_dist.get()){
         if(obst_dist.get() < 10){
@@ -86,7 +82,7 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
     //Make sure engine is stopped
     engine->smooth_stop();
 
-    return direction_normalized *
+    return start + direction_normalized *
             (std::chrono::duration_cast<std::chrono::milliseconds>(time_moved).count()
              * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
 }
@@ -117,22 +113,21 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
         // if no open wall before wall in front end unsuccessfull
         std::cout << "Checking leftside for a way around the obstacle" << std::endl;
         bool open_area_found = false;
-        int checks_done = 0;
         rotate_in_place_by(degree<float>{90});
         auto obst_dist = dist_sensor->calc_distance();
+        cm total_moved_dist{0.};
         while(!obst_dist || obst_dist->get() >= 30){
-            ++checks_done;
-            current_point = current_point + (cmpass->get_direction() * 20.);
-            this->move_forward(cm{20});
+            cm moved_dist = this->move_forward(cm{20});
+            current_point = current_point + (cmpass->get_direction() * moved_dist.get());
+            total_moved_dist = cm{total_moved_dist.get() + moved_dist.get()};
             rotate_in_place_by(degree<float>{-90});
             obst_dist = dist_sensor->calc_distance();
-	    if(obst_dist) std::cout << "left side obst: " << obst_dist->get() << std::endl;
             if(!obst_dist || obst_dist->get() >= 40){
                 //if no obstacle or obstacle so far away there might be path on right
                 std::cout << "Found a way around on left side! Retrying:" << std::endl;
                 open_area_found = true;
-                current_point = current_point + (cmpass->get_direction() * 30.);
-                move_forward(cm{30});
+                moved_dist = move_forward(cm{30});
+                current_point = current_point + (cmpass->get_direction() * moved_dist.get());
                 break;
             }
             rotate_in_place_by(degree<float>{90});
@@ -145,21 +140,21 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
         std::cout << "Found no way on left side. Retrying on right side" << std::endl;
         //no open wall on left side of obstacle, now try on right side
         rotate_in_place_by(degree<float>{180.});
-        current_point = current_point + (cmpass->get_direction() * 20. * checks_done);
-        move_forward(cm{checks_done * 20.});
+        move_forward(total_moved_dist);
+        current_point = current_point + (cmpass->get_direction() * total_moved_dist.get());
 
         obst_dist = dist_sensor->calc_distance();
         while(!obst_dist || obst_dist->get() >= 30){
-            current_point = current_point + (cmpass->get_direction() * 20.);
-            this->move_forward(cm{20});
+            auto moved_dist = this->move_forward(cm{20});
+            current_point = current_point + (cmpass->get_direction() * moved_dist.get());
             rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
             if(!obst_dist || obst_dist->get() >= 40){
                 //if no obstacle or obstacle so far away there might be path on right
                 std::cout << "Found a way around on right side! Retrying:" << std::endl;
                 open_area_found = true;
-                current_point = current_point + (cmpass->get_direction() * 30.);
-                move_forward(cm{30});
+                moved_dist = move_forward(cm{30});
+                current_point = current_point + (cmpass->get_direction() * moved_dist.get());
                 break;
             }
             rotate_in_place_by(degree<float>{-90});
@@ -175,9 +170,9 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
     }
 }
 
-void automatic_movement::move_forward(cm forward_dist) {
+cm automatic_movement::move_forward(cm forward_dist) {
     const auto dir = cmpass->get_direction().normalize();
-    move_to_point_if_possible({0.,0.}, dir * forward_dist.get());
+    return cm{move_to_point_if_possible({0.,0.}, dir * forward_dist.get()).length()};
 }
 
 

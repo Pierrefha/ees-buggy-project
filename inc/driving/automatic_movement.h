@@ -39,8 +39,9 @@ public:
      * Moves the buggy forward by distance_cm
      * If a wall appears, the buggy stops.
      * @param distance_cm
+     * @return distance the buggy could move
      */
-    void move_forward(cm forward_dist);
+    cm move_forward(cm forward_dist);
 
     void move_to_point_with_retry(vertex2D<float> finish_point);
 
