@@ -16,6 +16,21 @@ public:
         this->value = check_value(value);
     }
 
+    /**
+     * @return this rotation with positive value
+     */
+    degree<T> to_positive()const{
+        if(value < 0){
+            return degree<T>{180 + (180 - std::abs(value))};
+        }else{
+            return *this;
+        }
+    }
+
+    degree<T> eliminate_double_rot()const{
+        while()
+    }
+
     degree<T> operator-(const degree &rhs) const {
         return degree{value - rhs.value};
     }

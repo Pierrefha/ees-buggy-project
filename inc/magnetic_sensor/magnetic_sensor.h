@@ -27,6 +27,8 @@ public:
 public:
     degree<float> get_rotation();
     vertex2D<float> get_direction();
+
+    degree<float> get_rotation_360();
 	magnetic_sensor();
 	//Getter für die Daten
 	int getX();
