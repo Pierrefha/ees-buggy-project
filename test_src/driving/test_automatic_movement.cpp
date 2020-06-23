@@ -3,12 +3,13 @@
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <iostream>
 #include <driving/automatic_movement.h>
+#include <magnetic_sensor/compass.h>
 #include "../../test_inc/test_util.h"
 
 //
 // Created by leonhard on 23.06.20.
 //
-void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass){
+void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass){
     std::cout << "Testing turning" << std::endl;
     std::cout << "Turning 45 deg" << std::endl;
 
@@ -35,8 +36,8 @@ void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_s
 
 }
 
-void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass){
-    automatic_movement auto_control{compass, engine, dist_sensor};
+void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* cmpass){
+    automatic_movement auto_control{cmpass, engine, dist_sensor};
     std::cout << "Driving Rectangle !" << std::endl;
     auto_control.move_forward(cm{20});
     auto_control.rotate_in_place_by(degree<float>{90});
@@ -47,7 +48,7 @@ void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnet
     continue_on_click();
 }
 
-void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass){
+void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass){
     automatic_movement auto_control{compass, engine, dist_sensor};
     std::cout << "Driving Rectangle !" << std::endl;
     std::cout << "Setting current dir as (0, 1)" << std::endl;

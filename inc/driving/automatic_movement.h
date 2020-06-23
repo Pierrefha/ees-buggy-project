@@ -8,18 +8,18 @@
 #include <motor_engine/motor_engine.h>
 #include <ultrasonic_sensor/ultrasonic_sensor.h>
 #include <util/strong_type_defs.h>
-#include <magnetic_sensor/magnetic_sensor.h>
+#include <magnetic_sensor/compass.h>
 
 class automatic_movement{
 private:
-    magnetic_sensor* compass = nullptr;
+    compass* cmpass = nullptr;
     motor_engine* engine = nullptr;
     ultrasonic_sensor* dist_sensor = nullptr;
 
 
 public:
 
-    automatic_movement(magnetic_sensor *compass, motor_engine *engine, ultrasonic_sensor *distSensor);
+    automatic_movement(compass *cmpass, motor_engine *engine, ultrasonic_sensor *distSensor);
 
     /**
      * Turn in place by the specified angle

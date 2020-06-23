@@ -15,6 +15,7 @@
 #include <chrono>
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <applications/wasd_control.h>
+#include <magnetic_sensor/compass.h>
 
 
 //Test files
@@ -26,15 +27,15 @@
 
 motor_engine* engine = nullptr;
 wasd_control* wasd_controller = nullptr;
-magnetic_sensor* magnet_sensor = nullptr;
+compass* _compass = nullptr;
 /// Interrupt Routine for STRG-C
 void release_resources(){
     if(engine){
         engine->emergency_stop();
         engine->release_engine();
     }
-    if(magnet_sensor){
-        magnet_sensor->release_resources();
+    if(_compass){
+        _compass->release_resources();
     }
     if(wasd_controller){
         wasd_controller->release_resources();
@@ -76,7 +77,7 @@ int main () {
     ultrasonic.init();
 
     //Magnetic Sensor
-    magnet_sensor = new magnetic_sensor{};
+    _compass = new compass{};
     /*
      * Test code for the ultrasonic sensor. 
      */
@@ -125,10 +126,10 @@ int main () {
     bool test_magnetic_sensor = false;
     if (test_magnetic_sensor) {
         for (int i = 0; i < 10000; i++) {
-            magnet_sensor->check();
-            std::cout << "x,y regs: " << magnet_sensor->x << " " << magnet_sensor->y << std::endl;
-            std::cout << "rot: " << magnet_sensor->get_rotation().value << std::endl;
-            auto dir = magnet_sensor->get_direction();
+//            _compass->check();
+//            std::cout << "x,y regs: " << _compass->x << " " << _compass->y << std::endl;
+            std::cout << "rot: " << _compass->get_rotation().value << std::endl;
+            auto dir = _compass->get_direction();
             std::cout << "dir : " << dir.x << " " << dir.y << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(1));
         }
@@ -136,14 +137,14 @@ int main () {
 
 
 
-    test_rectangle(engine, &ultrasonic, magnet_sensor);
-    test_move_to_point(engine, &ultrasonic, magnet_sensor);
+    test_rectangle(engine, &ultrasonic, _compass);
+    test_move_to_point(engine, &ultrasonic, _compass);
 //    test_turns(engine, &ultrasonic, magnet_sensor);
 
 #endif //TEST_ON
 
 	wasd_controller = new wasd_control{};
-	wasd_controller->run(engine, &ultrasonic, magnet_sensor);
+	wasd_controller->run(engine, &ultrasonic, _compass);
 
 
 

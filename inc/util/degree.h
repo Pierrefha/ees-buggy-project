@@ -6,11 +6,14 @@
 #define EES_BUGGY_DEGREE_H
 
 #include <stdlib.h>
+#include <math.h>
 
 template<typename T>
 struct degree{
 public:
     T value;
+
+    degree() : value{T()}{}
 
     constexpr explicit degree(T value){
         this->value = check_value(value);
@@ -24,7 +27,7 @@ public:
      */
     degree<T> to_positive()const{
         if(value < 0){
-            return degree<T>{180 + (180 - std::abs(value))};
+            return degree<T>{360. + value};
         }else{
             return *this;
         }

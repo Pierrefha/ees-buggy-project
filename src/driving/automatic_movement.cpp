@@ -10,8 +10,8 @@
 #include <iostream>
 
 void automatic_movement::rotate_in_place_by(degree<float> angle) {
-    const auto epsilon = degree<float>{10.};
-    auto current_rot = compass->get_rotation_360();
+    const auto epsilon = degree<float>{5.};
+    auto current_rot = cmpass->get_rotation_360();
     auto end_rot = (current_rot + angle).to_positive();
     std::cout << "Current rot: " << current_rot.value << std::endl;
     std::cout << "End rot: " << end_rot.value << std::endl;
@@ -27,7 +27,7 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
     engine->set_speed(MIN_SPEED_VALUE);
     int i = 0;
     while(current_rot - end_rot > epsilon){
-        current_rot = compass->get_rotation_360();
+        current_rot = cmpass->get_rotation_360();
         if(i == 100){
             std::cout << current_rot.value << std::endl;
             i = 0;
@@ -38,8 +38,8 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
     engine->smooth_stop();
 }
 
-automatic_movement::automatic_movement(magnetic_sensor *compass, motor_engine *engine, ultrasonic_sensor *distSensor)
-        : compass(compass), engine(engine), dist_sensor(distSensor) {}
+automatic_movement::automatic_movement(compass *compass, motor_engine *engine, ultrasonic_sensor *distSensor)
+        : cmpass(compass), engine(engine), dist_sensor(distSensor) {}
 
 vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish) {
     //Rotate buggy to point to finish_point
@@ -153,12 +153,12 @@ void automatic_movement::move_to_point(vertex2D<float> finish_point) {
 }
 
 void automatic_movement::move_forward(cm forward_dist) {
-    const auto dir = compass->get_direction().normalize();
+    const auto dir = cmpass->get_direction().normalize();
     move_to_point_if_possible({0.,0.}, dir * forward_dist.get());
 }
 
 
 void automatic_movement::rotate_in_place_to(vertex2D<float> direction) {
-    rotate_in_place_by(compass->get_direction().angle_to(direction));
+    rotate_in_place_by(cmpass->get_direction().angle_to(direction));
 }
 

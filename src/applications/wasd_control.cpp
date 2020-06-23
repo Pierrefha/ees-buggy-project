@@ -38,7 +38,7 @@ void wasd_control::print_info(std::tuple<float, float> speed_perc,
     mvprintw(2, 0, "Rotation: %.2f   |   Direction (%.2f , %.2f)", rot.value, dir.x, dir.y);
 
 }
-void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, magnetic_sensor *compass) {
+void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, compass *compass) {
     if(!init()){
         release_resources();
         return;

@@ -10,8 +10,9 @@
 
 template<typename T>
 struct vertex2D{
-    T x,y;
+    T x = 0.,y = 0.;
 
+    vertex2D(){}
     vertex2D(T x, T y) : x(x), y(y) {}
 
     vertex2D<T> operator+(const vertex2D<T>& rhs)const{
@@ -66,12 +67,10 @@ struct vertex2D{
         }else{
             min = 1;
         }
-        return degree<float>{  float(min * std::acos(
-                    ((*this) * other) / (length() * other.length())
-                    )
-                     * 180 / M_PI)
-
-        };
+        auto inside = ((*this) * other) / (length() * other.length());
+        inside = std::min(1., inside);
+        inside = std::max(-1., inside);
+        return degree<float>{float(min * std::acos(inside) * 180 / M_PI)};
     }
 
 };

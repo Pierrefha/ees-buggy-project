@@ -17,7 +17,7 @@ private:
     void print_info(std::tuple<float, float> speed_perc, std::optional<cm> obst_dist, degree<float> rot, vertex2D<float> dir);
 public:
 
-    void run(motor_engine* engine, ultrasonic_sensor* dist_sensor, magnetic_sensor* compass);
+    void run(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass);
     void release_resources();
 
     void print_warning();
