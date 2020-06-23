@@ -338,8 +338,79 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 \end{section}
 
 \begin{section}{Kompass}
-  \begin{subsection}{Analyse der Genauigkeit}
+  \begin{subsection}{Erste Recherche und Aufbau}
+  Bei der ersten Recherche stößt man schnell auf einen kleinen Wiki-Eintrag: 
+  http://wiki.sunfounder.cc/index.php?title=QMC5883L .
+  Allerdings wird hier ein Arduino benutzt, daher hilft der Eintrag überwiegend nur für den 
+  Anschluss des Kompass. Wo welche Anschlüsse benötigt werden ist aber auch direkt auf dem Kompass markiert.
   \end{subsection}
+  \begin{subsection}{Relevante Informationen aus dem Datenblatt}
+  Im Datenblatt stößt man als erstes auf die I2C Adresse des Kompass, mit der man dann z.B. mit dem Befehl 
+  "i2cdetect -y 1" überprüfen, ob der Kompass richting angeschlossen ist. Die Adresse des Kompass ist "0x0D" 
+  und wurde in der Tabelle der i2c Geräte angezeigt.
+  
+  Die nächsten relevanten Informationen sind Anwendungsbeispiele, hier sieht man schnell, welche Register für 
+  uns besonders relevant werden, darunter: das Set/Reset Register 0BH, das Control Register 09H, das Status 
+  Register 06H und die Daten Register 00H bis 05H. 
+  
+  Wenn man dem Beispiel folgt und sich die Register anguckt wird hier das Set/Reset Register auf 0x01 gesetzt, 
+  bei den Informationen zu dem Register wird nur empfohlen das Register auf den genannten 0x01 Wert zusetzten. 
+  Weitere Informationen zum Set/Reset Register werden nicht genannt.
+  
+  Danach kommt das Control Register, hier werden die gewünschten Einstellungen für den Kompass in zwei Bit 
+  Abfolgen gesetzt: als erstes der Modus, 0x00 für Standby und 0x01 für Continous, danach ODR, Output Data Rate, 
+  also die Rate in der beim Continous Modus neue Daten in die Datenregister geschrieben werden, dann RNG für die 
+  Sensitivität des Kompass, hier in 2 oder 8 Gauss gemessen und als letztes OSR Over sample Rate für die 
+  Bandbreite eines internen digitalen Filter.
+  
+  Als letztes kommen die Datenregister und ein Statusregister. Das Statusregister hat drei Bits, davon ist für 
+  uns überwiegend das erste relevant, das DRDY Bit. Das DRDY Bit wird vom Kompass auf 1 gesetzt, wenn neue Daten 
+  geschrieben werden.
+  
+  \end{subsection}
+  \begin{subsection}{Erstes Programmieren des Treibers}
+  Für den Treiber konnten wir die wiringPi Bibliothek wiringPiI2C benutzen die wir bereits in der 
+  Implementierung des Motorhat-Treibers benutzt hatten. Für das Setup des Treibers wird der Konstruktor benutzt, 
+  der Standardkonstruktor setzt hierbei den Kompass auf die Beispieldaten vom Datenblatt.
+  
+  Um die ersten Daten zu bekommen haben wir hier eine check() Methode benutzt, damit können wir neben den 
+  einfachen Einlese der Datenregister auf vom DRDY Bit einen Vorteil ziehen, wenn dies gesetzt ist müssen wir 
+  keine neuen Daten einlesen, da die alten Daten noch aktuell sind, und wir wissen schneller ob nicht etwas beim 
+  Setup fehlgeschlagen ist. Dafür gibt die Methode eine 1 zurück, wenn neue Daten eingelesen wurden ansonsten eine 
+  0.
+  
+  Nachdem wir nun die ersten Daten hatten und wusste das der Kompass funktioniert, mussten wir nun die Daten 
+  zusammensetzten. Die 16 Bit Daten für die Achsen sind nämlich immer jeweils in zwei 8 Bit Register gesetzt, ein 
+  LSB (least significant bit) und ein MSB (most significant bit).
+  
+  Beim recherchieren zum Kombinieren der Daten stoßten wir auch auf einen Forumsbeitrag, bei dem man den Vorteil 
+  von C++ für die Aufgabe sehen konnte 
+  https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/. Genauer genommen die 
+  Möglichkeit Variable als signed 16-Bit-Integer zu deklarieren. Dadurch konnten wir die Daten kombinieren ohne 
+  groß weiter auf das Komplement einzugehen, was z.B. in Python nicht so leicht ist.
+  \end{subsection}
+  \begin{subsection}{Genauigkeiten der Daten und Sensitivität}
+  Beim ersten Drehen des Buggies zum analysieren der Kompassdaten, gab es einer stärkere Störungsstelle und man 
+  konnte schnell sehen, wie sensibel der Kompass ist. Die Störung konnte man dann auch mit einem normalen Kompass 
+  auswending machen.
+  
+  \includegraphics[scale=0.7]{lernportfolio_assets/MagnetDatenStorung}
+  
+  Nach dem Wechseln des Raums zeigten die Daten des Kompass eine deutlich sichtbarere Ellipse.
+  
+  \includegraphics[scale=0.5]{lernportfolio_assets/MagnetDaten}
+  
+  Jetzt kann man sehen das die Werte bereits eine Ellipse anzeigen aber noch keinen guten Kreis darstellen, mit dem 
+  man eine, zumindest relative, Gradrichtung bestimmen kann. Mit der Hilfe eines Forumbeitrags im Ilias einer 
+  anderen Gruppe bezüglich der Kalibrierung konnte wir nur die Daten dazu benutzten, um auch unseren Kompass jetzt 
+  anzupassen.
+  
+  Nach der Kalibrierung war die Sensitivität immernoch stark erkennbar. Eine zu kurze Distanz zu einer Störungsquelle 
+  kann zu den Unterschied zwischen 90 Grad und 80 Grad Differenz sorgen.
+  \end{subsection}
+  % Hier vielleicht jetzt noch ein paar Worte zur Kalibrierung von Leonhard
+  % Und natürlich noch Videos oder Bilder von einer Fahrt mit Kompassunterstützung, wenn das soweit ist. 
+  % Kommt vielleicht auch einfach nur ins Padlet
 \end{section}
 
 
