@@ -99,6 +99,7 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
 
     //While we are not closer than 3 cm to the goal
     while(true) {
+	    std::cout << "Current point: " << current_point << std::endl;
         if((current_point - finish_point).length() < 3){
             std::cout << "Finish reached" << std::endl;
             return;
@@ -125,7 +126,8 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
             this->move_forward(cm{20});
             rotate_in_place_by(degree<float>{-90});
             obst_dist = dist_sensor->calc_distance();
-            if(!obst_dist || obst_dist->get() < 40){
+	    if(obst_dist) std::cout << "left side obst: " << obst_dist->get() << std::endl;
+            if(!obst_dist || obst_dist->get() >= 40){
                 //if no obstacle or obstacle so far away there might be path on right
                 std::cout << "Found a way around on left side! Retrying:" << std::endl;
                 open_area_found = true;
@@ -152,7 +154,7 @@ void automatic_movement::move_to_point_with_retry(vertex2D<float> finish_point) 
             this->move_forward(cm{20});
             rotate_in_place_by(degree<float>{90});
             obst_dist = dist_sensor->calc_distance();
-            if(!obst_dist || obst_dist->get() < 40){
+            if(!obst_dist || obst_dist->get() >= 40){
                 //if no obstacle or obstacle so far away there might be path on right
                 std::cout << "Found a way around on right side! Retrying:" << std::endl;
                 open_area_found = true;
