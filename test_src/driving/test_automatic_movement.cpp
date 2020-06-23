@@ -45,6 +45,8 @@ void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, compas
     auto_control.rotate_in_place_by(degree<float>{90});
     auto_control.move_forward(cm{20});
     auto_control.rotate_in_place_by(degree<float>{90});
+    auto_control.move_forward(cm{20});
+    auto_control.rotate_in_place_by(degree<float>{90});
     continue_on_click();
 }
 
@@ -60,6 +62,9 @@ void test_move_to_point(motor_engine* engine, ultrasonic_sensor* dist_sensor, co
     std::cout << "read: " << x << " " << y << std::endl;
     vertex2D<float> finish{std::stof(x), std::stof(y)};
     compass->set_current_dir_as(vertex2D<float>{0,1});
+    //Give compass small time to adjust
+    std::this_thread::sleep_for(std::chrono::milliseconds{100});
+    std::cout << "rotation: " << compass->get_rotation().value << " | Direction" << compass->get_direction() << std::endl;
     auto_control.move_to_point(finish);
     continue_on_click();
 }

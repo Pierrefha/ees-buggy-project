@@ -74,4 +74,10 @@ struct vertex2D{
     }
 
 };
+
+template<typename T, typename iostream>
+iostream& operator<<(iostream& stream, const vertex2D<T>& vec){
+    stream << "(" << vec.x << " ," << vec.y << ")";
+    return stream;
+}
 #endif //EES_BUGGY_VERTEX2D_H

@@ -91,6 +91,9 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
 
 void automatic_movement::move_to_point(vertex2D<float> finish_point) {
     auto current_point = vertex2D<float>{0., 0.};
+    std::cout << "Moving to point" << std::endl;
+    std::cout << "Current: " << current_point
+        << "Finish: " << finish_point << std::endl;
 
     //While we are not closer than 3 cm to the goal
     while(true) {

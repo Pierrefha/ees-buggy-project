@@ -82,4 +82,5 @@ private:
     }
 };
 
+
 #endif //EES_BUGGY_DEGREE_H
