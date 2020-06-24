@@ -11,8 +11,15 @@ void test_rotation_over_time(motor_engine* engine, compass* compass){
     auto now = std::chrono::steady_clock::now();
     engine->turn_in_place_left();
     engine->set_speed(MIN_SPEED_VALUE);
-    for (int i = 0; i < 10000; i++) {
-        std::cout << std::chrono::duration_cast<std::chrono::microseconds>(start - now).count() << " " << compass->get_rotation().value << std::endl;
-    }
-    engine->smooth_stop();
+    auto old_rot = degree<float>(0);
+	while(true){
+		auto rot = compass->get_rotation_360() ;
+
+		if(rot != old_rot){
+			now = std::chrono::steady_clock::now();
+			old_rot = rot;
+        std::cout << std::chrono::duration_cast<std::chrono::microseconds>(now - start).count() << " " << rot.value << std::endl;
+		}
+	}
+	engine->smooth_stop();
 }
