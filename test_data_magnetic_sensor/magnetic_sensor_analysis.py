@@ -1,6 +1,8 @@
+#To use this script Least Squares fitting of ellipses, python routine is needed
+#https://github.com/bdhammel/least-squares-ellipse-fitting
+#To install: pip install lsq-ellipse
 import pandas as pd
 import math
-import matplotlib.pyplot as plt
 import ellipse as el
 import numpy as np
 import matplotlib.pyplot as plt
