@@ -5,7 +5,9 @@ df = pd.read_csv("data.csv")
 
 # print(df.to_latex())
 
-print(df.describe().to_latex())
+describtion = df.describe()
+describtion= describtion.apply(lambda x: round(x, 2))
+print(describtion.to_latex())
 
 # mean = df.mean()
 # diff = mean.sub([5, 10, 15, 20, 30, 50, 100])

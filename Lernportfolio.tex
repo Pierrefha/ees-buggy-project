@@ -3,7 +3,9 @@
 
 %formatting of Source code
 \usepackage{listings}
+\usepackage{tabularx}
 \usepackage{graphicx}
+\usepackage{wrapfig} 
 \usepackage{subcaption}
 \usepackage[utf8]{inputenc}
 \usepackage[german]{babel}
@@ -45,7 +47,10 @@
 \newcommand{\paragraphwithnewline}[1]{\paragraph{#1}\mbox{}\\} % used to create a newline after the paragraph tag.
 \newcommand{\githubrepo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
 \newcommand{\referenzcode}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
-\newcommand{\itoc}{I<sup>2</sup>C}
+
+\newcommand{\gquotes}[1]{"`#1"'}
+\newcommand{\itoc}{$I^2C$}
+\newcommand{\wiringPi}{wiringPi}
 
 % \newcommand{\github_repo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
 % \newcommand{\referenz_code}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
@@ -97,9 +102,9 @@ Der Buggy wurde vor der Herausgabe des Arbeitsauftrages zusammengebaut. Zwischen
 Der Zusammenbau des Buggys verlief problemlos. Der Text ist insgesamt verständlich geschrieben und war eine große Unterstützung.
 
 % Wollen wir das aufnehmen?
-% Im Text ist der Genetiv von ``der Buggy'' durchgehend ``des Buggies''. Mit Verweis
+% Im Text ist der Genetiv von "`der Buggy"' durchgehend "`des Buggies"'. Mit Verweis
 % auf \url{https://www.duden.de/rechtschreibung/Buggy} ist der korrekte - und
-% kontraintuitive - Genetiv ``des Buggys''.
+% kontraintuitive - Genetiv "`des Buggys"'.
 In den meisten Bildern (außer auf Seite IV) ist der Buggy mit roter Platte gezeigt, wenngleich die Anleitung hier den weißen Winkel vorsieht. Eine Anmerkung, dass der Buggy im Folgendem mit roter Platte statt Winkel gezeigt wird, hätte eine kurze Verwirrung meinerseits verhindert.
 
 Als Ubuntu-Nutzer bzw. Linux-Nutzer muss man keine zusätzliche Software installieren um eine SSH-Verbindung herzustellen. Eine Ergänzung, dass \href{https://invisible-island.net/xterm/}{XTerm} eine Empfehlung an die Windows-Nutzer ist, wäre daher angebracht. Bei dieser Bemerkung wird davon ausgegangen, dass mit XTerm an dieser Stelle \href{https://mobaxterm.mobatek.net/}{MobaXterm} gemeint ist und nicht der Terminal Emulator XTerm. 
@@ -123,7 +128,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Informationen und 4. Analyse des Beispielcodes.
 
   Der Motorhat ist mit dem RaspberryPi über \itoc{} verbunden. Die
-  Wiring Pi Bibliothek ermöglicht das Verbinden, Schreiben und Lesen von
+  \wiringPi{} Bibliothek ermöglicht das Verbinden, Schreiben und Lesen von
   Registern über dieses Protokoll auf komfortablem und leicht verständlichem Wege.
   Bei der Benutzung dieser Bibliothek kam es zu keinen Problemen.
   
@@ -135,14 +140,14 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   verständlich, wenngleich hierbei eine Frage offengeblieben ist:
   Der Referenzcode schreibt den Wert 4096 in ein LED On bzw. Off Register um den
   jeweiligen Motor an bzw. auszuschalten. In der Dokumentation des PCA9685 PWM LED
-  Controllers heißt es jedoch unter Punkt 7.3.4 : ``The LEDn\_ON and LEDn\_OFF
-  counts can vary from 0 to 4095.''.
+  Controllers heißt es jedoch unter Punkt 7.3.4 : "`The LEDn\_ON and LEDn\_OFF
+  counts can vary from 0 to 4095"'.
 
   In den ersten Testläufen hat sich der Buggy beim Forwärtsfahren im Kreis
   gedreht. Die Motoren haben in unterschiedliche Richtungen gedreht. Dieses
   Verhalten war verständlich, da beide Motoren auf forwärts gestellt waren, was
   synonym für eine rechtsläufige Bewegung war. Für das rechte Rad bedeutet
-  'rechtsläufig' forwärts. Für das linke Rad, welches durch den Anbau 
+  rechtsläufig forwärts. Für das linke Rad, welches durch den Anbau 
   \ang{180} um die Z-Achse gedreht ist, bedeutet dies rückwärts.
   Das Problem konnte behoben werden, indem die beiden Pins, welche für die Richtung
   zuständig sind, vertauscht wurden. So wurde jede rechtsläufige Bewegung zu einer
@@ -157,11 +162,11 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   Neben den technischen Herausforderungen war auch das Testen des Codes auf dem
   Raspberry Pi eine Umgewöhnung. Der Code konnte nicht lokal (auf dem eigenen
-  Rechner) getestet werden, da die WiringPi Bibliothek nur auf einem Raspberry Pi funktioniert.
+  Rechner) getestet werden, da die \wiringPi{} Bibliothek nur auf einem Raspberry Pi funktioniert.
   Als Workflow hat sich durchgesetzt, dass auf dem eigenen Rechner entwickelt
   wurde, die Änderungen commitet und in das \githubrepo{} gepusht worden sind.
   Danach wurde der neue Code auf dem Raspberry Pi runtergeladen, die Binary
-  durch ``cmake . \&\& make'' gebaut und schließlich getestet. Kleine Änderungen
+  durch "`cmake . \&\& make"' gebaut und schließlich getestet. Kleine Änderungen
   wurden auf dem Raspberry Pi durch den Texteditor Vim vollzogen.
 
   Besonders hilfreich war zur Lösung dieser Aufgabe, die Vertrautheit im Umgang
@@ -332,36 +337,34 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \begin{subsection}{Bewertung der Genauigkeit}
       Die Entfernungsmessung funktioniert mit einer Standardabweichung von unter
       1,3 cm auf 100 cm genau.
-      Die Rohdaten können im Anhang \ref{ultraschallsensorRohdaten} eingesehen werden.
+      Die Rohdaten können im \githubrepo{} im Ordner
+      \gquotes{test\_data\_ultrasonic} eingesehen werden.
       Im folgendem eine Zusammenfassung.
       %The table is generated by pandas
       \begin{table}[h!]
-        \begin{tabular}{lrrrrrrr}
-          % \toprule
-          Abstand &       5cm &        10cm &        15cm &        20cm &        30cm &        50cm &       100cm \\
-          % \midrule
-          count &  100.000000 &  100.000000 &  100.000000 &  100.000000 &  100.000000 &  100.000000 &  100.000000 \\
-          mean  &    4.668009 &    9.355380 &   13.951283 &   19.938128 &   30.418109 &   51.078758 &   99.553521 \\
-          std   &    0.032030 &    0.305832 &    0.109583 &    0.060932 &    0.107799 &    0.482031 &    1.268841 \\
-          min   &    4.650300 &    8.792790 &   13.804400 &   19.811500 &   30.079000 &   50.054500 &   91.353200 \\
-          25\%   &    4.663265 &    9.122402 &   13.854150 &   19.880775 &   30.405600 &   50.820775 &   99.667750 \\
-          50\%   &    4.664025 &    9.305280 &   13.912850 &   19.933800 &   30.450700 &   50.999200 &   99.878350 \\
-          75\%   &    4.665242 &    9.658680 &   14.020900 &   19.983375 &   30.478350 &   51.518525 &   99.959425 \\
-          max   &    4.979740 &    9.821430 &   14.231100 &   20.131400 &   30.566800 &   51.951700 &  100.912000 \\
-          % \bottomrule
-        \end{tabular}
+        \begin{tabularx}{\textwidth}{XXXXXXXX}
+            {} &     5cm &    10cm &    15cm &    20cm &    30cm &    50cm &   100cm \\
+            count &  100.00 &  100.00 &  100.00 &  100.00 &  100.00 &  100.00 &  100.00 \\
+            mean  &    4.67 &    9.36 &   13.95 &   19.94 &   30.42 &   51.08 &   99.55 \\
+            std   &    0.03 &    0.31 &    0.11 &    0.06 &    0.11 &    0.48 &    1.27 \\
+            min   &    4.65 &    8.79 &   13.80 &   19.81 &   30.08 &   50.05 &   91.35 \\
+            25\%   &    4.66 &    9.12 &   13.85 &   19.88 &   30.41 &   50.82 &   99.67 \\
+            50\%   &    4.66 &    9.31 &   13.91 &   19.93 &   30.45 &   51.00 &   99.88 \\
+            75\%   &    4.67 &    9.66 &   14.02 &   19.98 &   30.48 &   51.52 &   99.96 \\
+            max   &    4.98 &    9.82 &   14.23 &   20.13 &   30.57 &   51.95 &  100.91 \\
+          \end{tabularx}
         \caption{Zusammenfassung der Rohdaten. Alle Werte in cm.}
     \end{table}
     Aus der Tabelle geht hervor, dass der Abstand zu nahen
-    Objekten (Abstand <= 20 cm) tendenziell unterschätzt wird, zu entfernteren
+    Objekten (Abstand $\leq{} 20 cm$) tendenziell unterschätzt wird, zu entfernteren
     Objekten hingegen geringfügig überschätzt. Eine Ausnahme bildet hier die
     Messreihe für den Abstand von 100 cm.
     
     Um den Mittelwert gibt es für alle Werte eine Standardabweichung von weniger
-    als 1,3 cm. Die Messung sind daher präzise. Erwähnenswert ist, dass die
+    als 1,3 cm. Die Messungen sind daher präzise. Erwähnenswert ist, dass die
     Standardabweichung bei kleineren Distanzen sehr viel geringer ist als bei größeren.
 
-    \begin{figure}[h!]
+    \begin{figure}[H]
       \centering
       \includegraphics[width=0.5\textwidth]{test_data_ultrasonic/meanDiff.png}
       \caption{Differenz des Mittelwertes zur tatsächlichen Distanz}
@@ -370,10 +373,10 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
   \begin{subsection}{Integration in das Programm}
     Kommt der Buggy unter manueller Steuerung via des Benutzerinterfaces oder
-    automatischer Steuerung durch die Klasse ``automatic\_movement'' zu nah
+    automatischer Steuerung durch die Klasse "`automatic\_movement"' zu nah
     an ein Gegenstand, hält der Buggy an. Bei der manuellen Steuerung geht zusätzlich
-    das ``Bremslicht an''.
-    Das Anhalten ist in dem Video ``NothaltVorWand.mp4'' dargestellt.
+    das "`Bremslicht an"'.
+    Das Anhalten ist in dem Video "`NothaltVorWand.mp4"' dargestellt.
   \end{subsection}
   % END task 3.5
 
@@ -388,59 +391,75 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
   \begin{subsection}{Relevante Informationen aus dem Datenblatt}
   Im Datenblatt stößt man als erstes auf die \itoc{} Adresse des Kompass, mit der man dann z.B. mit dem Befehl 
-  "i2cdetect -y 1" überprüfen kann, ob der Kompass richtig angeschlossen ist. Die Adresse des Kompass ist "0x0D" 
+  "`i2cdetect -y 1"' überprüfen kann, ob der Kompass richtig angeschlossen ist. Die Adresse des Kompass ist "`0x0D"' 
   und wurde in der Tabelle der \itoc{} Geräte angezeigt.
   
-  Die nächsten relevanten Informationen sind Anwendungsbeispiele, hier sieht man schnell, welche Register für 
-  uns besonders relevant werden, darunter: das Set/Reset Register 0BH, das Control Register 09H, das Status 
-  Register 06H und die Daten Register 00H bis 05H. 
+  Die nächsten relevanten Informationen sind Anwendungsbeispiele. Hier sieht man schnell, welche Register für 
+  uns besonders relevant werden. Darunter: das Set/Reset-Register 0BH, das
+  Control-Register 09H, das Statusregister 06H und die Datenregister 00H bis 05H. 
   
-  Wenn man dem Beispiel folgt und sich die Register anguckt wird hier das Set/Reset Register auf 0x01 gesetzt, 
-  bei den Informationen zu dem Register wird nur empfohlen das Register auf den genannten 0x01 Wert zusetzten. 
-  Weitere Informationen zum Set/Reset Register werden nicht genannt.
+  Wenn man dem Beispiel folgt und sich die Register anguckt, wird hier das Set/Reset-Register auf 0x01 gesetzt.
+  Bei den Informationen zu dem Register wird nur empfohlen das Register auf den genannten Wert 0x01 zusetzen. 
+  Weitere Informationen zum Set/Reset-Register werden nicht genannt.
   
-  Danach kommt das Control Register, hier werden die gewünschten Einstellungen für den Kompass in zwei Bit 
-  Abfolgen gesetzt: als erstes der Modus, 0x00 für Standby und 0x01 für Continous, danach ODR, Output Data Rate, 
-  also die Rate in der beim Continous Modus neue Daten in die Datenregister geschrieben werden, dann RNG für die 
-  Sensitivität des Kompass, hier in 2 oder 8 Gauss gemessen und als letztes OSR Over sample Rate für die 
-  Bandbreite eines internen digitalen Filter.
+  Danach kommt das Control Register. Hier werden die gewünschten Einstellungen für den Kompass in zwei Bit 
+  Abfolgen gesetzt. Als erstes der Modus. 0x00 steht für Standby und 0x01 für
+  Continous. Danach kommt die "`Output Data Rate"', kurz ODR, 
+  also die Rate in der beim Continous Modus neue Daten in die Datenregister
+  geschrieben werden. Danach folgt RNG für die 
+  Sensitivität des Kompass, welches in 2 oder 8 Gauss gemessen wird. Zuletzt
+  kommt die "`Over sample Rate"', kurz OSR, für die Bandbreite eines internen digitalen Filters.
   
-  Als letztes kommen die Datenregister und ein Statusregister. Das Statusregister hat drei Bits, davon ist für 
-  uns überwiegend das erste relevant, das DRDY Bit. Das DRDY Bit wird vom Kompass auf 1 gesetzt, wenn neue Daten 
+  Als letztes kommen die Datenregister und ein Statusregister. Das Statusregister hat drei Bits. Davon ist für 
+  uns überwiegend das erste - das DRDY Bit - relevant. Das DRDY Bit wird vom Kompass auf 1 gesetzt, sobald neue Daten 
   geschrieben werden.
-  
   \end{subsection}
   \begin{subsection}{Erstes Programmieren des Treibers}
-  Für den Treiber konnten wir die wiringPi Bibliothek wiringPiI2C benutzen die wir bereits in der 
-  Implementierung des Motorhat-Treibers benutzt hatten. Für das Setup des Treibers wird der Konstruktor benutzt, 
-  der Standardkonstruktor setzt hierbei den Kompass auf die Beispieldaten vom Datenblatt.
+  Für den Treiber konnten wir die \wiringPi{} Bibliothek wiringPiI2C benutzen, die wir bereits in der 
+  Implementierung des Motorhat-Treibers benutzt hatten. Der Treiber wird durch
+  die Klasse \gquotes{magnetic\_sensor} repräsentiert. Für das Setup des Treibers wird der Konstruktor benutzt. 
+  Der Standardkonstruktor initialisiert den Kompass auf die Beispieldaten vom Datenblatt.
   
-  Um die ersten Daten zu bekommen haben wir hier eine check() Methode benutzt, damit können wir neben den 
-  einfachen Einlese der Datenregister auf vom DRDY Bit einen Vorteil ziehen, wenn dies gesetzt ist müssen wir 
-  keine neuen Daten einlesen, da die alten Daten noch aktuell sind, und wir wissen schneller ob nicht etwas beim 
-  Setup fehlgeschlagen ist. Dafür gibt die Methode eine 1 zurück, wenn neue Daten eingelesen wurden ansonsten eine 
-  0.
-  
-  Nachdem wir nun die ersten Daten hatten und wusste das der Kompass funktioniert, mussten wir nun die Daten 
-  zusammensetzten. Die 16 Bit Daten für die Achsen sind nämlich immer jeweils in zwei 8 Bit Register gesetzt, ein 
+  Um die ersten Daten zu bekommen haben wir hier eine check() Methode benutzt. Damit können wir neben dem
+  einfachen Einlesen der Datenregister vom DRDY Bit einen Vorteil ziehen. Wenn dieses gesetzt ist, müssen wir 
+  keine neuen Daten einlesen, da die alten Daten noch aktuell sind.
+  %TODO @Jens Dieser Halbsatz macht für mich keinen Sinn. Warum ist das Setup
+  %fehlgeschhlagen wenn man check aufruft ohne dass das DRDY Bit gesetzt ist?
+  %%% und wir wissen schneller ob nicht etwas beim Setup fehlgeschlagen ist.
+  Falls die Daten aktualisiert worden sind, gibt die Methode eine eins zurück. Ansonsten eine 0. 
+
+  Nachdem wir nun die ersten Register gelesen hatten und wusste das der Kompass funktioniert, mussten wir nun die Daten 
+  zusammensetzten. Die 16 Bit Daten für die Achsen sind nämlich immer jeweils in zwei 8 Bit Registern gesetzt. Ein 
+  %TODO @Jens hier doch eher least/most significatn byte
   LSB (least significant bit) und ein MSB (most significant bit).
   
-  Beim recherchieren zum Kombinieren der Daten stoßten wir auch auf einen Forumsbeitrag, bei dem man den Vorteil 
-  von C++ für die Aufgabe sehen konnte 
-  https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/. Genauer genommen die 
-  Möglichkeit Variable als signed 16-Bit-Integer zu deklarieren. Dadurch konnten wir die Daten kombinieren ohne 
+  Beim recherchieren zum Kombinieren der Daten stoßten wir auch auf einen
+  \href{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/}{Forumsbeitrag},
+  bei dem man den Vorteil von C++ für diese Aufgabe sehen konnte. Genauer genommen die 
+  Möglichkeit Variablen als signed 16-Bit-Integer zu deklarieren. Dadurch konnten wir die Daten kombinieren ohne 
   groß weiter auf das Komplement einzugehen, was z.B. in Python nicht so leicht ist.
   \end{subsection}
   \begin{subsection}{Genauigkeiten der Daten und Sensitivität}
-  Beim ersten Drehen des Buggys zum analysieren der Kompassdaten, gab es einer stärkere Störungsstelle und man 
+  Die Rohdaten können im \githubrepo{} im Ordner \gquotes{test\_data\_magnetic\_sensor} eingesehen werden.
+  Beim ersten Drehen des Buggys zum analysieren der Kompassdaten, gab es eine stärkere Störungsstelle und man 
   konnte schnell sehen, wie sensibel der Kompass ist. Die Störung konnte man dann auch mit einem normalen Kompass 
-  auswending machen.
-  
-  \includegraphics[scale=1]{lernportfolio_assets/MagnetDatenStorung}
-  
-  Nach dem Wechseln des Raums zeigten die Daten des Kompass eine deutlich sichtbarere Ellipse.
-  
-  \includegraphics[scale=1]{lernportfolio_assets/MagnetDaten}
+  auffindig machen.
+  Eine zweite Messreihe wurde in einem anderen Raum durchgeführt.
+
+  \begin{figure}[h!]
+    \centering
+    \captionsetup[subfigure]{labelformat=empty}
+    \begin{subfigure}{0.45\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{lernportfolio_assets/MagnetDatenStorung}
+      \caption{Messungen mit Störung}
+    \end{subfigure}
+    \begin{subfigure}{0.45\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{lernportfolio_assets/MagnetDaten}
+      \caption{Messungen ohne Störung}
+    \end{subfigure}
+  \end{figure}
   
   Jetzt kann man sehen, dass die Werte eine Ellipse darstellen. Da der Sensor im
   Kreis gedreht worden ist, war zu erwarten, dass die Werte in Kreisform
@@ -456,12 +475,15 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   \begin{figure}[h!]
     \centering
+    \captionsetup{justification=centering}
     \captionsetup[subfigure]{labelformat=empty}
     \begin{subfigure}{0.45\linewidth}
+      \centering
       \includegraphics[width=\linewidth]{lernportfolio_assets/MagnetDatenMitEllipse.png}
       \caption{Daten vor der Transformation}
     \end{subfigure}
     \begin{subfigure}{0.45\linewidth}
+      \centering
       \includegraphics[width=\linewidth]{lernportfolio_assets/MagnetDatenAlsKreis.png}
       \caption{Daten nach der Transformation}
     \end{subfigure}
@@ -469,55 +491,47 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   
   Nach der Kalibrierung schwankten die Daten zu stark, um darauf basierend
   Entscheidungen beim Fahren zu treffen. Häufig kam es zu Ausreißern. Daher kam
-  es zur Implementation der Klasse ``Compass''. Diese Klasse fragt den
+  es zur Implementation der Klasse "`Compass"'. Diese Klasse fragt den
   Magnetsensor zyklisch nach neuen Daten ab und ermittelt basierend auf den
   Daten einen gleitenden Mittelwert, wobei die neuesten Messwerte mit fünf facher
   Gewichtung in die Rechnung eingehen, um der Phasenverschiebung auf Kosten der
   Glättung von Ausreißern entgegenzuwirken.
 
-  \begin{figure}[h!]
+  \begin{figure}[H]
     \centering
+    \captionsetup{justification=centering}
     \captionsetup[subfigure]{labelformat=empty}
     \begin{subfigure}{0.45\linewidth}
+      \centering
       \includegraphics[width=\linewidth]{lernportfolio_assets/CompassRotation360.png}
-      \caption{Y-Achse: Rotation in Grad}
+      \caption{Y-Achse: Rotation in Grad\newline}
     \end{subfigure}
     \begin{subfigure}{0.45\linewidth}
       \includegraphics[width=\linewidth]{lernportfolio_assets/CompassRotation360Diff.png}
-      \caption{Y-Achse: Differenz von Messpunkt1 zu Messpunkt0 in Grad}
+      \caption{Y-Achse: Differenz von Messpunkt n+1 zu Messpunkt n in Grad}
     \end{subfigure}
     \caption{X-Achse: Zeitverlauf ohne Einheiten aber mit konstanter Änderungsrate}
   \end{figure}
 
   Nach berechnen des Mittelwertes sieht man, dass Ausreißer eliminiert werden
   konnten. In dem Abschnitt im Intervall von 7365036 bis 7557114 kam es zu
-  einer Fehlfunktion des Sensors. Dieses kann man in den Rohdaten sehr klar erkennen:
-  \begin{tabular}{lr}
-     time &       rot \\
-    7373037 &  175.8100 \\
-    7381039 &  176.9410 \\
-    7389039 &  339.6910 \\
-    7397040 &  139.0360 \\
-    7405049 &  300.2140 \\
-    7413051 &  260.7380 \\
-    7421052 &   60.1572 \\
-    7429053 &   96.8943 \\
-    7437062 &   98.4091 \\
-    7445063 &  138.8670 \\
-    7453064 &  178.8960 \\
-    7461065 &  339.8530 \\
-    7469066 &  301.4020 \\
-    7477074 &  262.9910 \\
-    7485076 &  224.1490 \\
-    7493077 &  182.4500 \\
-    7501077 &   19.5078 \\
-    7509085 &  221.1170 \\
-    7517087 &  223.1090 \\
-    7525089 &  222.1960 \\
-    7533090 &  221.9140 \\
-    7541103 &  183.0830 \\
-    7549112 &  185.7220 \\
+  einer Fehlfunktion des Sensors. Dieses kann man in den Rohdaten sehr klar erkennen:\\\\
+  \begin{tabular}{lr|lr}
+    \centering
+    Zeit    &  Rotation & Zeit    &  Rotation \\
+    7373037 &  175.8100 & 7461065 &  339.8530 \\
+    7381039 &  176.9410 & 7469066 &  301.4020 \\
+    7389039 &  339.6910 & 7477074 &  262.9910 \\
+    7397040 &  139.0360 & 7485076 &  224.1490 \\
+    7405049 &  300.2140 & 7493077 &  182.4500 \\
+    7413051 &  260.7380 & 7501077 &   19.5078 \\
+    7421052 &   60.1572 & 7509085 &  221.1170 \\
+    7429053 &   96.8943 & 7517087 &  223.1090 \\
+    7437062 &   98.4091 & 7525089 &  222.1960 \\
+    7445063 &  138.8670 & 7533090 &  221.9140 \\
+    7453064 &  178.8960 & 7541103 &  183.0830 \\
   \end{tabular}
+  \\
 
   Das starke Schwanken der Linie im ersten Teil entsteht durch den Sprung
   von 0 auf 360 Grad. Die Rohdaten enthalten hier keine größeren Störungen. Es
@@ -525,19 +539,19 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   %TODO Grad zu Zeichen
   Eine Zeitdifferenz von 176.075 Einheiten ist 0,14 Sekunden.
-  Mit einer Standardabweichung von 83.22 Grad, einem Minimum von 19.5 Grad und
-  einem Maximum von 339.85 Grad ist dieser Abschnitt sehr inhomogen.
+  Mit einer Standardabweichung von 83.22\si{\degree}, einem Minimum von 19.5\si{\degree} und
+  einem Maximum von 339.85\si{\degree} ist dieser Abschnitt sehr inhomogen.
 
   Bei Betrachtung der Differenz eines Messwertes zu dem nächsten innerhalb eines
   vermutlich homogenen Abschnittes mit zeitlicher Kohärenz - hier der
   Abschnitt von 4002107 bis einschließlich 4119625, was 0,095 Sekunden sind -
-  gibt es eine Standardabweichung von 1,58 Grad. Der Bereich zwischen Minimum
-  und Maximum umfasst 6,25 Grad. Damit ist dieser exemplarische Bereich relativ
-  homogen. Jedoch kann es durch die Abweichung vom Mittelwert von bis zu $\pm 3$
-  Grad auch in diesen Bereichen zu zu frühem bzw. spätem Stoppen kommen.
+  gibt es eine Standardabweichung von 1,58\si{\degree}. Der Bereich zwischen Minimum
+  und Maximum umfasst 6,25\si{\degree}. Damit ist dieser exemplarische Bereich relativ
+  homogen. Jedoch kann es durch die Abweichung vom Mittelwert von bis zu $\pm
+  3$\si{\degree} auch in diesen Bereichen zu zu frühem bzw. spätem Stoppen kommen.
+  \\
   \begin{tabular}{lr}
     {} &        rot \\
-    count &  16.000000 \\
     mean  &   0.066956 \\
     std   &   1.585327 \\
     min   &  -2.960200 \\
@@ -546,6 +560,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     75\%   &   0.954975 \\
     max   &   3.298600 \\
   \end{tabular}
+  \\
 
   Die Wahl des gleitenden Mittelwertes ist, aus der Retroperspektive heraus
   betrachtet, die falsche Wahl. Hierdurch konnten Fehler des Sensors nicht abgefangen
@@ -564,15 +579,15 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
   \begin{subsection}{Integration in das Programm}
     Der Sensor wird vorallem bei dem automatischem Fahren - implementiert in der
-    Klasse ``automatic\_movement'' - genutzt. Durch die
+    Klasse "`automatic\_movement"' - genutzt. Durch die
     Richtungsdaten können Drehungen um einen Winkel vollzogen werden. Diese
-    Fähigkeit des Buggys wird in den Videos ``RechteckWinkel.mp4'' zur Schau
+    Fähigkeit des Buggys wird in den Videos "`RechteckWinkel.mp4"' zur Schau
     gestellt. Der Buggy soll 4 mal 20 cm forwärts fahren und sich dann um 90
     Grad drehen. Die Drehung um 90 Grad funktioniert mäßig.
 
     Eine Interpretation des Winkels als Richtungsvektor ermöglicht die
     Fortbewegung im Raum auf Grundlage von Vektorarithmetik.
-    Ein Beispiel ist hierfür das Video ``AutomatischesUmfahrenGegenstand.mp4''.
+    Ein Beispiel ist hierfür das Video "`AutomatischesUmfahrenGegenstand.mp4"'.
     Die Startrichtung des Vektors wird als (0,1) und die Startposition des
     Buggys als (0,0) vorgegeben. Ziel des Buggys ist es zu dem Punkt (0, 120) zu fahren.
     Stößt der Buggy auf ein Hindernis untersucht er die linke Umgebung, bis das
@@ -583,12 +598,12 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     Bei erfolgreicher Ankunft am Ziel stoppt der Buggy.
 
     Das Abfahren eines Rechteckes basierend auf einer Abfolge des Abfahrens von
-    Punkten ist in den Videos ``RechteckPunkte.mp4'' zu sehen.
+    Punkten ist in den Videos "`RechteckPunkte.mp4"' zu sehen.
 
     Der Buggy kann zudem beim geradeaus fahren die Startrichtung halten. Dieses
-    ist im Video ``RichtungHalten.mp4'' zu sehen. 
+    ist im Video "`RichtungHalten.mp4"' zu sehen. 
 
-    Desweiteren kann der Buggy, wie im Video ``Kurve180.mp4'' demonstriert,
+    Desweiteren kann der Buggy, wie im Video "`Kurve180.mp4"' demonstriert,
     Kurven abfahren.
   \end{subsection}
 \end{section}
@@ -622,8 +637,8 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     1 ausgeben mag, aber der Wert der Variable trotzdem ungleich Eins sein kann.
     Diesen Fehler zu finden, war Nerven zerreibend.
 
-    Beim nächsten Mal würde ich die Klassen ``vertex2D'' und ``degree '' nicht
-    selber implementieren. Auch wenn die Implementation vermeintlich ``trivial''
+    Beim nächsten Mal würde ich die Klassen "`vertex2D"' und "`degree "' nicht
+    selber implementieren. Auch wenn die Implementation vermeintlich "`trivial"'
     erscheint, schafft man es dennoch zu übersehen, dass man an einer Stelle die
     Wurzel nicht hätten ziehen dürfen. Die Implementations- und Fehlersuchzeit
     wiegt das Installieren und die Einarbeitung in eine Mathebibliothek nicht
@@ -633,7 +648,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     intensiver über die Mathematik hinter den Funktionen nachzudenken. Man kann
     dieses als Lernanreiz oder als kognitive Last auffassen.
 
-    Darüber hinaus würde ich beim nächsten Mal versuchen, die WiringPi
+    Darüber hinaus würde ich beim nächsten Mal versuchen, die \wiringPi{}
     Bibliothek auf meinem Rechner statisch zu linken, damit ich eine
     erfolgreiche Kompilierung vor dem Hochladen des Codes auf den RaspberryPi
     sicherstellen kann. Das Ausbessern von Fehlern über SSH in einem ungewohntem
@@ -664,11 +679,6 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
 \end{section}
 
-\begin{section}{Anhang}
-  \begin{subsection}{Rohdaten Ultraschallsensor} \label{ultraschallsensorRohdaten}
-    \input{test_data_ultrasonic/rohdaten.tex}
-  \end{subsection}
-\end{section}
 
 \end{document}
 
