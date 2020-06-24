@@ -9,11 +9,11 @@
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <iostream>
 
+const auto rotation_epsilon = degree<float>{3.};
 void automatic_movement::rotate_in_place_by(degree<float> angle) {
-    const auto epsilon = degree<float>{5.};
     auto current_rot = cmpass->get_rotation_360();
     auto end_rot = (current_rot + angle).to_positive();
-    if(current_rot - end_rot <= epsilon){
+    if(current_rot - end_rot <= rotation_epsilon){
         return;
     }
 
@@ -27,7 +27,7 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
     }
     engine->set_speed(MIN_SPEED_VALUE);
 //    int i = 0;
-    while(current_rot - end_rot > epsilon){
+    while(current_rot - end_rot > rotation_epsilon){
         current_rot = cmpass->get_rotation_360();
 //        if(i == 100){
 //            std::cout << current_rot.value << std::endl;
@@ -44,10 +44,10 @@ automatic_movement::automatic_movement(compass *compass, motor_engine *engine, u
 
 vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish) {
     //Rotate buggy to point to finish_point
-    const auto direction_normalized = (finish - start).normalize();
-    rotate_in_place_to(direction_normalized);
+    const auto init_dir = (finish - start).normalize();
+    rotate_in_place_to(init_dir);
 
-    cm distance = cm{start.distance_to(finish)};
+    const auto distance = cm{start.distance_to(finish)};
     const auto travel_time_needed = std::chrono::milliseconds{long(distance.get() / MIN_SPEED_IN_CM_PER_SEC * 1000)};
 
     engine->forward();
@@ -69,21 +69,34 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
             return false;
         }
 
+        //Check buggy is still going correct direction
+        const auto rot_delta = cmpass->get_direction().angle_to(init_dir);
+        if(rot_delta > rotation_epsilon){
+            if(rot_delta.value < 0){
+                engine->turn_right();
+            }else{
+                engine->turn_left();
+            }
+        }else{
+            //If we have init_dir / if we have correct direction
+            //Check that both wheels have same speed, and if not
+            //Set both wheels to same speed
+            auto[left_speed, right_speed] = engine->get_speed_perc();
+            //This float check is okay, because both floats gets computed same way
+            if(left_speed != right_speed){
+                std::cout << "on track again" << std::endl;
+                engine->set_speed(MIN_SPEED_VALUE);
+            }
+        }
+
         return true;
 
-        //TODO
-        //Check buggy is still going correct direction
-//        auto current_dir = compass->get_direction();
-//        auto epsilon = degree<float>{3};
-//        if(current_dir.angle_to() < epsilon){
-//
-//        }
     }, travel_time_needed);
     //Make sure engine is stopped
     engine->smooth_stop();
 
-    return start + direction_normalized *
-            (std::chrono::duration_cast<std::chrono::milliseconds>(time_moved).count()
+    return start + init_dir *
+                   (std::chrono::duration_cast<std::chrono::milliseconds>(time_moved).count()
              * MIN_SPEED_IN_CM_PER_SEC / 1000.0);
 }
 
@@ -180,3 +193,19 @@ void automatic_movement::rotate_in_place_to(vertex2D<float> direction) {
     rotate_in_place_by(cmpass->get_direction().angle_to(direction));
 }
 
+void automatic_movement::rotate_by(degree<float> rotate_by, uint16_t speed_diff) {
+    if(speed_diff == 0){
+        speed_diff = engine->get_speed_change();
+    }
+    const auto end_rot = cmpass->get_rotation_360() + rotate_by;
+    engine->forward();
+    engine->set_speed(MIN_SPEED_VALUE);
+    if(rotate_by.value < 0){
+        engine->turn_right(speed_diff);
+    }else{
+        engine->turn_left(speed_diff);
+    }
+
+    busy_wait_until([&](){return cmpass->get_rotation() - end_rot > rotation_epsilon;});
+    engine->emergency_stop();
+}

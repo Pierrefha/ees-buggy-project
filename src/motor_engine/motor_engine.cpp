@@ -70,6 +70,14 @@ void motor_engine::emergency_stop() {
     cur_direction = direction::STOP;
 }
 
+void motor_engine::turn_right(uint16_t speed_change_val) {
+    left.set_speed(left.get_speed() + speed_change_val);
+}
+
+void motor_engine::turn_left(uint16_t speed_change_val) {
+    right.set_speed(right.get_speed() + speed_change_val);
+}
+
 void motor_engine::turn_right() {
     left.increase_speed(speed_change);
 }
@@ -81,6 +89,14 @@ void motor_engine::turn_left() {
 
 int motor_engine::device_fd() {
     return fd;
+}
+
+void motor_engine::set_speed_left(uint16_t speed_val) {
+    left.set_speed(speed_val);
+}
+
+void motor_engine::set_speed_right(uint16_t speed_val) {
+    right.set_speed(speed_val);
 }
 
 void motor_engine::set_speed(uint16_t speed_value) {
@@ -160,6 +176,10 @@ std::tuple<float, float> motor_engine::get_speed_perc() {
             left.get_speed() / float(MAX_SPEED_VALUE),
             right.get_speed() / float(MAX_SPEED_VALUE)
             );
+}
+
+uint16_t motor_engine::get_speed_change() const{
+    return speed_change;
 }
 
 

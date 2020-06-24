@@ -22,18 +22,22 @@ public:
     automatic_movement(compass *cmpass, motor_engine *engine, ultrasonic_sensor *distSensor);
 
     /**
+     * Turn in a curve by the specified angle.
+     * @param angle angle the buggy shall rotate
+     */
+    void rotate_by(degree<float> angle, uint16_t speed_diff = 0);
+    /**
      * Turn in place by the specified angle
-     * @param dir either turn_in_place_left or turn_in_place_right
      * @param angle angle the buggy shall rotate
      */
     void rotate_in_place_by(degree<float> angle);
 
     /**
      * Turn in place to the specified angle
-     * @param dir either turn_in_place_left or turn_in_place_right
      * @param angle angle the buggy shall rotate
      */
     void rotate_in_place_to(vertex2D<float> direction);
+
 
     /**
      * Moves the buggy forward by distance_cm

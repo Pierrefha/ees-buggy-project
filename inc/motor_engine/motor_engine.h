@@ -22,11 +22,15 @@ public:
     void decrease_speed();
     void increase_speed();
     void set_speed(uint16_t speed_value);
+    void set_speed_left(uint16_t speed_val);
+    void set_speed_right(uint16_t speed_val);
     void forward();
     void backwards();
 
     void turn_right();
     void turn_left();
+    void turn_right(uint16_t speed_change_val);
+    void turn_left(uint16_t speed_change_val);
 
     void turn_in_place_right();
     void turn_in_place_left();
@@ -36,6 +40,7 @@ public:
 
     void set_frequency(double frequency);
     void set_speed_change(uint16_t speed_change);
+    uint16_t get_speed_change()const;
 
     int release_engine();
 
