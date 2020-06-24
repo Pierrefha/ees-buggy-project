@@ -55,6 +55,9 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
         bool forward_movement_possible = check_forward_movement_possible(obst_dist);
         if(!forward_movement_possible && engine->get_direction() == direction::FORWARD){
             engine->smooth_stop();
+            dist_sensor->set_brake_light(ON);
+        }else{
+            dist_sensor->set_brake_light(OFF);
         }
 
         int user_cmd = getch();

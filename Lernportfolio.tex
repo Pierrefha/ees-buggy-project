@@ -94,10 +94,6 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 \end{section}
 
 \begin{section}{Motorensteuerung}
-
-  Videos zu den Tests der Motorensteuerung sind unter: TODO LINK EINFÜGEN
-  Der Quelltext kann unter \githubrepo{} eingesehen werden.
-
   Die Aufgabenstellung wurde so verstanden, dass man die Motorensteuerung
   selbst implementieren sollte. Das Lösen der Aufgabe geschah vor Erscheinen des
   erklärenden Forenposts. Daher wird im Folgendem auch über das Erstellen des
@@ -155,7 +151,23 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   mal und das Unterscheiden zwischen wichtigen und unwichtigen Informationen
   ging schneller.
 
-    TODO Video einfügen von der Rechteckfahrt objects/rectangle.mp4
+
+  Videos auf denen der Buggy geradeaus, slalom und verschiedene andere
+  Bewegungen ausführt, können im Video Ordner eingesehen werden.
+
+  Zur manuellen Steuerung des Buggys wurde ein
+  \href{https://en.wikipedia.org/wiki/Ncurses}{ncurses} basiertes
+  Benutzerinterface gebaut. Die Steuerung funktioniert über die Tasten W, A, S
+  und D. Q kann für zur Durchführung eines langsamen Stopps und E zur
+  Durchführung eines schnellen Stopps betätigt werden. Durch X wird das
+  Benutzerinterface geschlossen.
+  In dem Interface werden im oberem Bereich die aktuellen Sensordaten angezeigt.
+
+  \begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.75\textwidth]{lernportfolio/WasdBenutzerinterface.png}
+    \caption{Benutzerinterface für die manuelle Steuerung des Buggies}
+  \end{figure}
 
 \end{section}
 
@@ -191,6 +203,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
         % Was haben Sie über die Steuerung und Auslesen von GPIOs gelernt
         % und welches Wissen und Techniken aus dem ersten Teil der Vorlesung
         % konnten Sie einsetzen?
+      %PRAISE THE LORD IN HIS ALMIGHTY.
         Dank der Vorlesung haben wir gelernt, dass die GPIO Pins verschiedene
         Modi besitzen. Um Signale zu senden muss man sie in den Output-Mode 
         versetzen. Wenn man Signale empfangen will muss man den Pin in
@@ -334,8 +347,14 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \end{figure}
 
   \end{subsection}
+  \begin{subsection}{Integration in das Programm}
+    Kommt der Buggy unter manueller Steuerung via des Benutzerinterfaces oder
+    automatischer Steuerung durch die Klasse ``automatic_movement'' zu nah
+    an ein Gegenstand, hält der Buggy an. Bei der manuellen Steuerung geht zusätzlich
+    das ``Bremslicht an''.
+    Das Anhalten ist in dem Video ``NothaltVorWand.mp4'' dargestellt.
+  \end{subsection}
   % END task 3.5
-
 
 \end{section}
 
@@ -427,13 +446,124 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \end{subfigure}
   \end{figure}
   
-  Nach der Kalibrierung war die Sensitivität immernoch stark erkennbar. Eine zu kurze Distanz zu einer Störungsquelle 
-  kann zu den Unterschied zwischen 90 Grad und 80 Grad Differenz sorgen.
+  Nach der Kalibrierung schwankten die Daten zu stark, um darauf basierend
+  Entscheidungen beim Fahren zu treffen. Häufig kam es zu Ausreißern. Daher kam
+  es zur Implementation der Klasse ``Compass''. Diese Klasse fragt den
+  Magnetsensor zyklisch nach neuen Daten ab und ermittelt basierend auf den
+  Daten einen gleitenden Mittelwert, wobei die neuesten Messwerte mit fünf facher
+  Gewichtung in die Rechnung eingehen, um der Phasenverschiebung auf Kosten der
+  Glättung von Ausreißern entgegenzuwirken.
+
+  \begin{figure}[h!]
+    \centering
+    \captionsetup[subfigure]{labelformat=empty}
+    \begin{subfigure}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{lernportfolio_assets/CompassRotation360.png}
+      \caption{Y-Achse: Rotation in Grad}
+    \end{subfigure}
+    \begin{subfigure}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{lernportfolio_assets/CompassRotation360Diff.png}
+      \caption{Y-Achse: Differenz von Messpunkt1 zu Messpunkt0 in Grad}
+    \end{subfigure}
+    \caption{X-Achse: Zeitverlauf ohne Einheiten aber mit konstanter Änderungsrate}
+  \end{figure}
+
+  Nach berechnen des Mittelwertes sieht man, dass Ausreißer eliminiert werden
+  konnten. In dem Abschnitt im Intervall von 7365036 bis 7557114 kam es zu
+  einer Fehlfunktion des Sensors. Dieses kann man in den Rohdaten sehr klar erkennen:
+  \begin{tabular}{lr}
+     time &       rot \\
+    7373037 &  175.8100 \\
+    7381039 &  176.9410 \\
+    7389039 &  339.6910 \\
+    7397040 &  139.0360 \\
+    7405049 &  300.2140 \\
+    7413051 &  260.7380 \\
+    7421052 &   60.1572 \\
+    7429053 &   96.8943 \\
+    7437062 &   98.4091 \\
+    7445063 &  138.8670 \\
+    7453064 &  178.8960 \\
+    7461065 &  339.8530 \\
+    7469066 &  301.4020 \\
+    7477074 &  262.9910 \\
+    7485076 &  224.1490 \\
+    7493077 &  182.4500 \\
+    7501077 &   19.5078 \\
+    7509085 &  221.1170 \\
+    7517087 &  223.1090 \\
+    7525089 &  222.1960 \\
+    7533090 &  221.9140 \\
+    7541103 &  183.0830 \\
+    7549112 &  185.7220 \\
+  \end{tabular}
+
+  Das starke Schwanken der Linie im ersten Teil entsteht durch den Sprung
+  von 0 auf 360 Grad. Die Rohdaten enthalten hier keine größeren Störungen. Es
+  ist daher ein rein visueller Effekt.
+
+  %TODO Grad zu Zeichen
+  Eine Zeitdifferenz von 176.075 Einheiten ist 0,14 Sekunden.
+  Mit einer Standardabweichung von 83.22 Grad, einem Minimum von 19.5 Grad und
+  einem Maximum von 339.85 Grad ist dieser Abschnitt sehr inhomogen.
+
+  Bei Betrachtung der Differenz eines Messwertes zu dem nächsten innerhalb eines
+  vermutlich homogenen Abschnittes mit zeitlicher Kohärenz - hier der
+  Abschnitt von 4002107 bis einschließlich 4119625, was 0,095 Sekunden sind -
+  gibt es eine Standardabweichung von 1,58 Grad. Der Bereich zwischen Minimum
+  und Maximum umfasst 6,25 Grad. Damit ist dieser exemplarische Bereich relativ
+  homogen. Jedoch kann es durch die Abweichung vom Mittelwert von bis zu \pm 3
+  Grad auch in diesen Bereichen zu zu frühem bzw. spätem Stoppen kommen.
+  \begin{tabular}{lr}
+    {} &        rot \\
+    count &  16.000000 \\
+    mean  &   0.066956 \\
+    std   &   1.585327 \\
+    min   &  -2.960200 \\
+    25\%   &  -0.919675 \\
+    50\%   &   0.193750 \\
+    75\%   &   0.954975 \\
+    max   &   3.298600 \\
+  \end{tabular}
+
+  Die Wahl des gleitenden Mittelwertes ist, aus der Retroperspektive heraus
+  betrachtet, die falsche Wahl. Hierdurch konnten Fehler des Sensors nicht abgefangen
+  werden. Unter der realitätsnahen Annahme, dass die Geschwindigkeit
+  sich für den Buggy durch eine Lineare Funktion darstellen lassen kann, ist
+  abzuleiten, dass die Drehung des Roboters sich auch linear beschreiben lassen kann.
+  Daher ist die Beschreibung der Rotation durch ein lineares Regressionsmodell möglich.
+  Durch dieses könnte man die aktuellen Richtung mit der Vorhersage des
+  Regressionsmodelles vergleichen und bei zu großer Inkongruenz den Messwert als
+  Fehler verwerfen und anschließend die Richtung aus dem Regressionsmodell und der
+  Veränderung in der Motorsteuerung berechnen.
+  Zudem hat sich in den Tests gezeigt, dass der Buggy unterstützt durch den
+  Sensor lediglich inkonsistent bei der Drehung um einen vorgegebenem Winkel ist.
+  Insgesamt ist die Genauigkeit des Sensors mäßig. Fehlmessungen kommen vor.
 
   \end{subsection}
-  % Hier vielleicht jetzt noch ein paar Worte zur Kalibrierung von Leonhard
-  % Und natürlich noch Videos oder Bilder von einer Fahrt mit Kompassunterstützung, wenn das soweit ist. 
-  % Kommt vielleicht auch einfach nur ins Padlet
+  \begin{subsection}{Integration in das Programm}
+    Der Sensor wird vorallem bei dem automatischem Fahren, implementiert in der
+    Klasse ``automatic_movement'', genutzt. Durch die
+    Richtungsdaten können Drehungen um einen Winkel vollzogen werden. Diese
+    Fähigkeit des Buggys wird in den Videos ``RechteckWinkel.mp4'' zur Schau
+    gestellt. Der Buggy soll 4 mal 20 cm forwärts fahren und sich dann um 90
+    Grad drehen. Die Drehung um 90 Grad funktioniert mäßig.
+
+    Eine Interpretation des Winkels als Richtungsvektor ermöglicht die
+    Fortbewegung im Raum auf Grundlage von Vektorarithmetik.
+    Ein Beispiel ist hierfür das Video ``AutomatischesUmfahrenGegenstand.mp4''.
+    Die Startrichtung des Vektors wird als (0,1) und die Startposition des
+    Buggys als (0,0) vorgegeben. Ziel des Buggys ist es zu dem Punkt (0, 120) zu fahren.
+    Stößt der Buggy auf ein Hindernis untersucht er die linke Umgebung, bis das
+    Objekt nicht mehr im Weg steht und fährt 30 cm an dem Hindernis vorbei.
+    Danach richtet der Buggy sich erneut zum Ziel aus und bewegt sich weiter.
+    Könnte der Buggy das Hindernis auf der linken Seite nicht ausweichen, würde
+    er auf der rechten Seite gleiches probieren.
+    Bei erfolgreicher Ankunft am Ziel stoppt der Buggy.
+
+    Das Abfahren eines Rechteckes basierend als Abfolge des Abfahrens von
+    Punkten ist in den Videos ``RechteckPunkte.mp4'' zu sehen.
+  \end{subsection}
 \end{section}
 
 
