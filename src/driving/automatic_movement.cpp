@@ -42,7 +42,7 @@ void automatic_movement::rotate_in_place_by(degree<float> angle) {
 automatic_movement::automatic_movement(compass *compass, motor_engine *engine, ultrasonic_sensor *distSensor)
         : cmpass(compass), engine(engine), dist_sensor(distSensor) {}
 
-vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish) {
+vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish, bool direction_correction) {
     //Rotate buggy to point to finish_point
     const auto init_dir = (finish - start).normalize();
     rotate_in_place_to(init_dir);
@@ -63,29 +63,30 @@ vertex2D<float> automatic_movement::move_to_point_if_possible(vertex2D<float> st
         //This leads to the buggy not driving closer to the obstacle and staying in place
 //        if(current_point.distance_to(finish) >= obst_dist.get()){
         if(obst_dist.get() < 10){
-            std::cout << "Couldn't reach finish" << std::endl;
             engine->smooth_stop();
             //Stop execution
             return false;
         }
 
         //Check buggy is still going correct direction
-        const auto rot_delta = cmpass->get_direction().angle_to(init_dir);
-        if(rot_delta > rotation_epsilon){
-            if(rot_delta.value < 0){
-                engine->turn_right();
+        if(direction_correction){
+            const auto rot_delta = cmpass->get_direction().angle_to(init_dir);
+            if(rot_delta > rotation_epsilon){
+                if(rot_delta.value < 0){
+                    engine->turn_right();
+                }else{
+                    engine->turn_left();
+                }
             }else{
-                engine->turn_left();
-            }
-        }else{
-            //If we have init_dir / if we have correct direction
-            //Check that both wheels have same speed, and if not
-            //Set both wheels to same speed
-            auto[left_speed, right_speed] = engine->get_speed_perc();
-            //This float check is okay, because both floats gets computed same way
-            if(left_speed != right_speed){
-                std::cout << "on track again" << std::endl;
-                engine->set_speed(MIN_SPEED_VALUE);
+                //If we have init_dir / if we have correct direction
+                //Check that both wheels have same speed, and if not
+                //Set both wheels to same speed
+                auto[left_speed, right_speed] = engine->get_speed_perc();
+                //This float check is okay, because both floats gets computed same way
+                if(left_speed != right_speed){
+                    std::cout << "on track again" << std::endl;
+                    engine->set_speed(MIN_SPEED_VALUE);
+                }
             }
         }
 
@@ -197,7 +198,8 @@ void automatic_movement::rotate_by(degree<float> rotate_by, uint16_t speed_diff)
     if(speed_diff == 0){
         speed_diff = engine->get_speed_change();
     }
-    const auto end_rot = cmpass->get_rotation_360() + rotate_by;
+    auto end_rot = cmpass->get_rotation_360() + rotate_by;
+    end_rot = end_rot.to_positive();
     engine->forward();
     engine->set_speed(MIN_SPEED_VALUE);
     if(rotate_by.value < 0){
@@ -206,6 +208,6 @@ void automatic_movement::rotate_by(degree<float> rotate_by, uint16_t speed_diff)
         engine->turn_left(speed_diff);
     }
 
-    busy_wait_until([&](){return cmpass->get_rotation() - end_rot > rotation_epsilon;});
+    busy_wait_until([&](){return cmpass->get_rotation_360() - end_rot <= rotation_epsilon;});
     engine->emergency_stop();
 }

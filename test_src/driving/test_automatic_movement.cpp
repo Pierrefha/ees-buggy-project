@@ -89,10 +89,11 @@ void test_move_rectangle_with_points(motor_engine* engine, ultrasonic_sensor* di
     continue_on_click();
 }
 
-void test_move_with_direction_control(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass){
-    automatic_movement auto_control{compass, engine, dist_sensor};
+void test_move_with_direction_control(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* cmpass){
+    automatic_movement auto_control{cmpass, engine, dist_sensor};
     //distract buggy and check manualy that buggy tries to hold direction
-    auto_control.move_forward(cm{200});
+    cmpass->set_current_dir_as({0,1});
+    auto_control.move_to_point_if_possible({0,0}, {0,200}, true);
     continue_on_click();
 }
 

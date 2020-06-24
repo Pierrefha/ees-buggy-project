@@ -56,7 +56,7 @@ public:
 
     vertex2D<float> move_to_point_with_retry(vertex2D<float> current_point, vertex2D<float> finish_point);
 
-    vertex2D<float> move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish);
+    vertex2D<float> move_to_point_if_possible(vertex2D<float> start, vertex2D<float> finish, bool direction_correction = false);
 
 };
 
