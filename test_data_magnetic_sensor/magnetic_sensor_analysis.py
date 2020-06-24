@@ -30,15 +30,15 @@ plt.show()
 
 circ = df.copy()
 #append north
-circ = circ.append({'x': -1060., 'y': -245., 'z': 0.}, ignore_index=True)
+# circ = circ.append({'x': -1060., 'y': -245., 'z': 0.}, ignore_index=True)
 c, s = math.cos(phi), math.sin(phi)
 circ["x"] -= center[0]
 circ["y"] -= center[1]
 for i,row in circ.iterrows():
-    # circ.iloc[i,0] = row["x"].copy() - center[0]
-    # circ.iloc[i,1] = row["y"].copy() - center[1]
-    circ.iloc[i,0] = row["x"].copy() * math.cos(phi) - row["y"].copy() * math.sin(phi)
-    circ.iloc[i,1] = row["y"].copy() * math.cos(phi) + row["x"].copy() * math.sin(phi)
+    x = row["x"].copy()
+    y = row["y"].copy()
+    circ.iloc[i,0] = x * math.cos(phi) - y * math.sin(phi)
+    circ.iloc[i,1] = y * math.cos(phi) + x * math.sin(phi)
 
 for i,row in circ.iterrows():
     circ.iloc[i,0] = row["x"].copy() * width / height

@@ -51,11 +51,9 @@ struct vertex2D{
     vertex2D<T> rotate_by(T radians){
         const float c = std::cos(radians);
         const float s = std::sin(radians);
-        const float x_copy = x;
-        const float y_copy = y;
         vertex2D<T> result;
-        result.x = x_copy * c - y_copy * s;
-        result.y = y_copy * c + x_copy * s;
+        result.x = x * c - y * s;
+        result.y = y * c + x * s;
         return result;
     }
 

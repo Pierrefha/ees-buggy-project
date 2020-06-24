@@ -26,6 +26,8 @@
 \newcommand{\paragraphwithnewline}[1]{\paragraph{#1}\mbox{}\\} % used to create a newline after the paragraph tag.
 \newcommand{\githubrepo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
 \newcommand{\referenzcode}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
+\newcommand{\itoc}{I<sup>2</sup>C}
+
 % \newcommand{\github_repo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
 % \newcommand{\referenz_code}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
 % CONSTANTS END
@@ -105,7 +107,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Dokumentation, 2. Verstehen der Dokumentation, 3. Extraktion der relevanten
   Informationen und 4. Analyse des Beispielcodes.
 
-  Der Motorhat ist mit dem RaspberryPi über I<sup>2</sup>C verbunden. Die
+  Der Motorhat ist mit dem RaspberryPi über \itoc{} verbunden. Die
   Wiring Pi Bibliothek ermöglicht das Verbinden, Schreiben und Lesen von
   Registern über dieses Protokoll auf komfortablem und leicht verständlichem Wege.
   Bei der Benutzung dieser Bibliothek kam es zu keinen Problemen.
@@ -345,9 +347,9 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Anschluss des Kompass. Wo welche Anschlüsse benötigt werden ist aber auch direkt auf dem Kompass markiert.
   \end{subsection}
   \begin{subsection}{Relevante Informationen aus dem Datenblatt}
-  Im Datenblatt stößt man als erstes auf die I2C Adresse des Kompass, mit der man dann z.B. mit dem Befehl 
-  "i2cdetect -y 1" überprüfen, ob der Kompass richting angeschlossen ist. Die Adresse des Kompass ist "0x0D" 
-  und wurde in der Tabelle der i2c Geräte angezeigt.
+  Im Datenblatt stößt man als erstes auf die \itoc{} Adresse des Kompass, mit der man dann z.B. mit dem Befehl 
+  "i2cdetect -y 1" überprüfen kann, ob der Kompass richtig angeschlossen ist. Die Adresse des Kompass ist "0x0D" 
+  und wurde in der Tabelle der \itoc{} Geräte angezeigt.
   
   Die nächsten relevanten Informationen sind Anwendungsbeispiele, hier sieht man schnell, welche Register für 
   uns besonders relevant werden, darunter: das Set/Reset Register 0BH, das Control Register 09H, das Status 
@@ -400,13 +402,34 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   
   \includegraphics[scale=0.5]{lernportfolio_assets/MagnetDaten}
   
-  Jetzt kann man sehen das die Werte bereits eine Ellipse anzeigen aber noch keinen guten Kreis darstellen, mit dem 
-  man eine, zumindest relative, Gradrichtung bestimmen kann. Mit der Hilfe eines Forumbeitrags im Ilias einer 
-  anderen Gruppe bezüglich der Kalibrierung konnte wir nur die Daten dazu benutzten, um auch unseren Kompass jetzt 
-  anzupassen.
+  Jetzt kann man sehen, dass die Werte eine Ellipse darstellen. Da der Sensor im
+  Kreis gedreht worden ist, war zu erwarten, dass die Werte in Kreisform
+  angeordnet sein werden. Auch bei Wiederholung der Messung gab der Sensor Daten
+  in Ellipsenform aus. Daher handelt es sich hierbei aller Wahrscheinlichkeit
+  nach um eine Fehlfunktion. Denn durch die Ellipsenform werden die
+  y-Koordinaten im Bezug zu den x-Koordinaten überschätzt.
+
+  Dieses ist jedoch korrigierbar. Eine Ellipse kann in einen Kreis transformiert
+  werden, indem der Ursprung der Ellipse nach (0, 0) verschoben wird, die
+  Ellipse gedreht wird, bis sie Achsensymetrisch ist und anschließend die
+  x-Koordinaten gestreckt werden.
+
+  \begin{figure}[h!]
+    \centering
+    \captionsetup[subfigure]{labelformat=empty}
+    \begin{subfigure}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{lernportfolio_assets/MagnetDatenMitEllipse.png}
+      \caption{Daten vor der Transformation}
+    \end{subfigure}
+    \begin{subfigure}{0.45\linewidth}
+      \includegraphics[width=\linewidth]{lernportfolio_assets/MagnetDatenAlsKreis.png}
+      \caption{Daten nach der Transformation}
+    \end{subfigure}
+  \end{figure}
   
   Nach der Kalibrierung war die Sensitivität immernoch stark erkennbar. Eine zu kurze Distanz zu einer Störungsquelle 
   kann zu den Unterschied zwischen 90 Grad und 80 Grad Differenz sorgen.
+
   \end{subsection}
   % Hier vielleicht jetzt noch ein paar Worte zur Kalibrierung von Leonhard
   % Und natürlich noch Videos oder Bilder von einer Fahrt mit Kompassunterstützung, wenn das soweit ist. 

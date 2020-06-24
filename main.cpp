@@ -19,6 +19,7 @@
 
 //Test files
 #include "test_inc/driving/test_automatic_movement.h"
+#include "test_inc/calibration.h"
 
 #define ULTRASONIC_BRAKE_LIGHT_PIN_WPI 0
 #define ULTRASONIC_ECHO_PIN_WPI 1
@@ -136,8 +137,9 @@ int main () {
 
 
 
+    test_rotation_over_time(engine, _compass);
     //test_rectangle(engine, &ultrasonic, _compass);
-    test_move_to_point(engine, &ultrasonic, _compass);
+//    test_move_to_point(engine, &ultrasonic, _compass);
 //    test_turns(engine, &ultrasonic, magnet_sensor);
 
 #endif //TEST_ON

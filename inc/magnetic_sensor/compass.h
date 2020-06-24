@@ -31,7 +31,6 @@ private:
     void calc_floating_average();
 public:
     compass();
-    void run();
     /**
      * @return The rotation of the buggy relative to base_dir from [-180; 180] deg
      */
