@@ -1,6 +1,8 @@
 \documentclass[12pt]{report}
 \pagenumbering{roman}
 
+%formatting of Source code
+\usepackage{listings}
 \usepackage{graphicx}
 \usepackage{subcaption}
 \usepackage[utf8]{inputenc}
@@ -16,6 +18,23 @@
   linkcolor=blue,
   filecolor=magenta,      
   urlcolor=cyan,
+}
+
+\lstset{frame=tb,
+  language=C++,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\small\ttfamily},
+  numbers=none,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true,
+  tabsize=4
 }
 
 \urlstyle{same}
@@ -167,7 +186,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.75\textwidth]{lernportfolio/WasdBenutzerinterface.png}
+    \includegraphics[width=0.75\textwidth]{lernportfolio_assets/WasdBenutzerinterface.png}
     \caption{Benutzerinterface für die manuelle Steuerung des Buggies}
   \end{figure}
 
@@ -351,7 +370,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
   \begin{subsection}{Integration in das Programm}
     Kommt der Buggy unter manueller Steuerung via des Benutzerinterfaces oder
-    automatischer Steuerung durch die Klasse ``automatic_movement'' zu nah
+    automatischer Steuerung durch die Klasse ``automatic\_movement'' zu nah
     an ein Gegenstand, hält der Buggy an. Bei der manuellen Steuerung geht zusätzlich
     das ``Bremslicht an''.
     Das Anhalten ist in dem Video ``NothaltVorWand.mp4'' dargestellt.
@@ -514,7 +533,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Abschnitt von 4002107 bis einschließlich 4119625, was 0,095 Sekunden sind -
   gibt es eine Standardabweichung von 1,58 Grad. Der Bereich zwischen Minimum
   und Maximum umfasst 6,25 Grad. Damit ist dieser exemplarische Bereich relativ
-  homogen. Jedoch kann es durch die Abweichung vom Mittelwert von bis zu \pm 3
+  homogen. Jedoch kann es durch die Abweichung vom Mittelwert von bis zu $\pm 3$
   Grad auch in diesen Bereichen zu zu frühem bzw. spätem Stoppen kommen.
   \begin{tabular}{lr}
     {} &        rot \\
@@ -545,7 +564,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
   \begin{subsection}{Integration in das Programm}
     Der Sensor wird vorallem bei dem automatischem Fahren - implementiert in der
-    Klasse ``automatic_movement'' - genutzt. Durch die
+    Klasse ``automatic\_movement'' - genutzt. Durch die
     Richtungsdaten können Drehungen um einen Winkel vollzogen werden. Diese
     Fähigkeit des Buggys wird in den Videos ``RechteckWinkel.mp4'' zur Schau
     gestellt. Der Buggy soll 4 mal 20 cm forwärts fahren und sich dann um 90
@@ -574,6 +593,76 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
 \end{section}
 
+\begin{section}{Zusammenfassung}
+  \begin{subsection}{Zusammenfassung Leonhard Kipp}
+    In der Projektphase ist mir bewusst geworden, dass Sensoren nicht nur
+    fehleranfällig sind, sondern dass die Analyse und Aufbereitung der Inputs
+    von Sensoren sowie das Abfangen falscher Messdaten sehr viel mehr Zeit in Anspruch nimmt und weitaus komplexer
+    ist als die Implementation der Abfragen der Sensoren in Software. Die
+    hierfür benötigte Zeit habe ich unterschätzt.
+    Bei der Aufbereitung der Messdaten ist die Bildung eines Durchschnittes nicht
+    immer das beste Mittel. Das arithmetische Mittel sowie die
+    Standardabweichung ist anfällig gegenüber Ausreißern
+    in den Daten. Eine bessere Messmethode für die Betrachtung von wenigen Daten
+    kann die Verwendung des Medians und der Mittleren absoluten Abweichung vom
+    Median sein.
+
+    Zudem hat die Projektphase das Verständnis von Datenblättern gefördert. Ich
+    fühle mich mittlerweile sehr viel schneller und sicherer im Umgang mit diesen.
+
+    Eine Auffrischung bzgl. der Mathematik war das Anwenden von Vektorarithmetik. Das Vorstellen,
+    welche Bewegungen der Buggy durch die implementierten Funktionen vollziehen
+    wird, hat gleichzeitig das räumliche Vorstellungsvermögen trainiert.
+
+    Was ich nicht vergessen werde ist, dass
+    \begin{lstlisting}
+      std::cout << float_value << std::endl
+      std::cout << std::acos(float_value) << std::endl
+    \end{lstlisting}
+    1 ausgeben mag, aber der Wert der Variable trotzdem ungleich Eins sein kann.
+    Diesen Fehler zu finden, war Nerven zerreibend.
+
+    Beim nächsten Mal würde ich die Klassen ``vertex2D'' und ``degree '' nicht
+    selber implementieren. Auch wenn die Implementation vermeintlich ``trivial''
+    erscheint, schafft man es dennoch zu übersehen, dass man an einer Stelle die
+    Wurzel nicht hätten ziehen dürfen. Die Implementations- und Fehlersuchzeit
+    wiegt das Installieren und die Einarbeitung in eine Mathebibliothek nicht
+    auf. Des Weiteren kann man die Bibliothek in anderen Projekten
+    wiederverwenden.
+    Durch die eigen Implementation war man gezwungen nochmals
+    intensiver über die Mathematik hinter den Funktionen nachzudenken. Man kann
+    dieses als Lernanreiz oder als kognitive Last auffassen.
+
+    Darüber hinaus würde ich beim nächsten Mal versuchen, die WiringPi
+    Bibliothek auf meinem Rechner statisch zu linken, damit ich eine
+    erfolgreiche Kompilierung vor dem Hochladen des Codes auf den RaspberryPi
+    sicherstellen kann. Das Ausbessern von Fehlern über SSH in einem ungewohntem
+    Texteditor ist unkomfortabel.
+
+    Die Verwendung von WhatsApp als Kommunikationsplattform war die falsche
+    Wahl. Gibt es mehrere Aufgaben gleichzeitig zu koordinieren, verliere ich in
+    einem linearen Nachrichtenstrom schneller die Übersicht über den Stand jeder
+    einzelnen Aufgabe als in Foren bzw. Themen basierten Kommunikationsplattformen.
+
+    Beibehalten würde ich die Verwendung eines RaspberryPi's. Das Verbinden
+    können über SSH, die Rechenleistung und in einer gewohnten Umgebung
+    (Bash-Shell) zu sein, hat seine Vorteile gegenüber einfacheren Microcontrollern.
+
+    Das meiste habe ich in dem Umgang mit den Sensoren gelernt. Das Lesen der
+    Datenblätter und die Implementation von Sensorabfragen waren für mich Neuland.
+
+    Spaß hat mir die Datenanalyse und Datenaufbereitung gemacht. Die Erstellung
+    eines kleinen ncurses basierten Benutzerinterfaces hat mir aufgezeigt, wie
+    graphische Terminalprogramme implementiert sein mögen und hat so seinen
+    eigenen Reiz gehabt. Zu sehen, wie die implementierten Funktionen
+    aufgrund von Ausreißern in den Messwerten zu falschem Verhalten neigen,
+    waren Tiefpunkte in der Arbeit. Zugleich war es das am meisten
+    Motivierenste, wenn man durch Transformationen, wie die Bildung des
+    Mittelwertes oder eines gleitenden Mittels, das Verhalten der Funktionen
+    verbessern konnte.
+       
+  \end{subsection}
+\end{section}
 
 \begin{section}{Anhang}
   \begin{subsection}{Rohdaten Ultraschallsensor} \label{ultraschallsensorRohdaten}
