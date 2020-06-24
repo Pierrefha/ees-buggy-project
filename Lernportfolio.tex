@@ -11,7 +11,7 @@
 \usepackage{siunitx}
 % floats pictures to the correct position when using [H]
 \usepackage{float}
-
+\usepackage[hyphens]{url}
 \usepackage{hyperref}
 \hypersetup{
   colorlinks=true,
@@ -94,7 +94,7 @@
 
 Der Buggy wurde vor der Herausgabe des Arbeitsauftrages zusammengebaut. Zwischenschritte sind daher nicht bildlich festgehalten. 
 
-Der Zusammenbau des Buggies verlief problemlos. Der Text ist insgesamt verständlich geschrieben und war eine große Unterstützung.
+Der Zusammenbau des Buggys verlief problemlos. Der Text ist insgesamt verständlich geschrieben und war eine große Unterstützung.
 
 % Wollen wir das aufnehmen?
 % Im Text ist der Genetiv von ``der Buggy'' durchgehend ``des Buggies''. Mit Verweis
@@ -159,7 +159,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Raspberry Pi eine Umgewöhnung. Der Code konnte nicht lokal (auf dem eigenen
   Rechner) getestet werden, da die WiringPi Bibliothek nur auf einem Raspberry Pi funktioniert.
   Als Workflow hat sich durchgesetzt, dass auf dem eigenen Rechner entwickelt
-  wurde, die Änderungen commitet und in das \githubrepo gepusht worden sind.
+  wurde, die Änderungen commitet und in das \githubrepo{} gepusht worden sind.
   Danach wurde der neue Code auf dem Raspberry Pi runtergeladen, die Binary
   durch ``cmake . \&\& make'' gebaut und schließlich getestet. Kleine Änderungen
   wurden auf dem Raspberry Pi durch den Texteditor Vim vollzogen.
@@ -187,7 +187,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \begin{figure}[h!]
     \centering
     \includegraphics[width=0.75\textwidth]{lernportfolio_assets/WasdBenutzerinterface.png}
-    \caption{Benutzerinterface für die manuelle Steuerung des Buggies}
+    \caption{Benutzerinterface für die manuelle Steuerung des Buggys}
   \end{figure}
 
 \end{section}
@@ -224,7 +224,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
         % Was haben Sie über die Steuerung und Auslesen von GPIOs gelernt
         % und welches Wissen und Techniken aus dem ersten Teil der Vorlesung
         % konnten Sie einsetzen?
-      %PRAISE THE LORD IN HIS ALMIGHTY.
+      %PRAISE THE LORD IN HIS ALMIGHTY. AMEN
         Dank der Vorlesung haben wir gelernt, dass die GPIO Pins verschiedene
         Modi besitzen. Um Signale zu senden muss man sie in den Output-Mode 
         versetzen. Wenn man Signale empfangen will muss man den Pin in
@@ -432,7 +432,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   groß weiter auf das Komplement einzugehen, was z.B. in Python nicht so leicht ist.
   \end{subsection}
   \begin{subsection}{Genauigkeiten der Daten und Sensitivität}
-  Beim ersten Drehen des Buggies zum analysieren der Kompassdaten, gab es einer stärkere Störungsstelle und man 
+  Beim ersten Drehen des Buggys zum analysieren der Kompassdaten, gab es einer stärkere Störungsstelle und man 
   konnte schnell sehen, wie sensibel der Kompass ist. Die Störung konnte man dann auch mit einem normalen Kompass 
   auswending machen.
   
