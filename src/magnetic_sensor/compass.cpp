@@ -13,7 +13,7 @@ degree<float> compass::get_current_rotation() {
 }
 
 vertex2D<float> compass::get_current_direction() {
-    sensor.check();
+    sensor.check_and_update();
     //update measurements
 
     //The given data is a ellipse
