@@ -14,7 +14,7 @@ void motor_engine::decrease_speed() {
     right.decrease_speed(speed_change);
 
     if(left.stands_still() && right.stands_still()){
-        cur_direction = direction::STOP;
+        cur_direction = movement_type::STOP;
     }
     //If only one of them stands still and the other drives,
     //we are turning_in_place. The decrase has no effect on the rotation direction
@@ -40,13 +40,13 @@ int motor_engine::release_engine() {
 void motor_engine::forward() {
     right.forward();
     left.forward();
-    cur_direction = direction::FORWARD;
+    cur_direction = movement_type::FORWARD;
 }
 
 void motor_engine::backwards() {
     right.backwards();
     left.backwards();
-    cur_direction = direction::BACKWARDS;
+    cur_direction = movement_type::BACKWARDS;
 }
 
 void motor_engine::smooth_stop() {
@@ -60,14 +60,14 @@ void motor_engine::smooth_stop() {
     left.stop();
     right.stop();
 
-    cur_direction = direction::STOP;
+    cur_direction = movement_type::STOP;
 }
 
 void motor_engine::emergency_stop() {
     left.stop();
     right.stop();
 
-    cur_direction = direction::STOP;
+    cur_direction = movement_type::STOP;
 }
 
 void motor_engine::turn_right(uint16_t speed_change_val) {
@@ -108,17 +108,17 @@ void motor_engine::turn_in_place_right() {
     left.forward();
     right.backwards();
 
-    cur_direction = direction::IN_PLACE_TURN_RIGHT;
+    cur_direction = movement_type::IN_PLACE_TURN_RIGHT;
 }
 
 void motor_engine::turn_in_place_left() {
     left.backwards();
     right.forward();
 
-    cur_direction = direction::IN_PLACE_TURN_LEFT;
+    cur_direction = movement_type::IN_PLACE_TURN_LEFT;
 }
 
-direction motor_engine::get_direction() {
+movement_type motor_engine::get_direction() {
     return cur_direction;
 }
 
@@ -190,7 +190,7 @@ motor_engine make_motor_engine(uint32_t motor_hat_addr) {
         return motor_engine{-1, wheel(), wheel()};
     }
 
-    //reset??? mode reg
+    //reset
     setAll (fd, 0, 0);
     wiringPiI2CWriteReg8(fd, Registers::kMode2, ModeBits::kOutDrive);
     wiringPiI2CWriteReg8(fd, Registers::kMode1, ModeBits::kAllCall);

@@ -3,17 +3,18 @@
 
 #include <tuple>
 #include <motor_engine/wheel.h>
-#include <motor_engine/direction.h>
+#include <motor_engine/movement_type.h>
 #include <util/degree.h>
 
 class motor_engine{
 private:
     int fd;
     wheel left, right;
-    direction cur_direction = direction::STOP;
+    movement_type cur_direction = movement_type::STOP;
 
-    //The value by which the wheel slows down or speeds up
-    //by increase / decrease speed
+    /**
+     * The value by which the wheel slows down or speeds up in increase/decrease speed functions
+     */
     uint16_t speed_change = 20;
 public:
     motor_engine(int fd, const wheel &left, const wheel &right);
@@ -44,18 +45,16 @@ public:
 
     int release_engine();
 
-    // TODO if we turn left is left wheel full speed and right wheel on zero?
-    //  or how does it work?
-
-    // returns speed of right wheel. 
-    // This is just to test speed when driving in a straight line
     uint16_t get_speed_right();
     uint16_t get_speed_left();
     /**
      * @return Speed of left and right wheels in percent
      */
     std::tuple<float, float> get_speed_perc();
-    direction get_direction();
+    /**
+     * @return current movement type
+     */
+    movement_type get_direction();
     int device_fd();
 };
 

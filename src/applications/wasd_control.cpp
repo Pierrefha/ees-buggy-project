@@ -56,7 +56,7 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
 
         bool forward_movement_possible = check_forward_movement_possible(obst_dist);
         if(!forward_movement_possible){
-		if( engine->get_direction() == direction::FORWARD){
+		if(engine->get_direction() == movement_type::FORWARD){
             engine->smooth_stop();
             dist_sensor->set_brake_light(ON);
 	    backlight_on = true;
@@ -91,20 +91,20 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
                     continue;
                 }
                 switch(engine->get_direction()){
-                    case direction::IN_PLACE_TURN_RIGHT:
-                    case direction::IN_PLACE_TURN_LEFT:
+                    case movement_type::IN_PLACE_TURN_RIGHT:
+                    case movement_type::IN_PLACE_TURN_LEFT:
                         engine->smooth_stop();
                         engine->forward();
                         engine->increase_speed();
                         break;
-                    case direction::BACKWARDS:
+                    case movement_type::BACKWARDS:
                         engine->decrease_speed();
                         break;
-                    case direction::STOP:
+                    case movement_type::STOP:
                         engine->forward();
                         engine->increase_speed();
                         break;
-                    case direction::FORWARD:
+                    case movement_type::FORWARD:
                         engine->increase_speed();
                         break;
                 }
@@ -112,20 +112,20 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
             }
             case 's':{
                 switch(engine->get_direction()){
-                    case direction::IN_PLACE_TURN_RIGHT:
-                    case direction::IN_PLACE_TURN_LEFT:
+                    case movement_type::IN_PLACE_TURN_RIGHT:
+                    case movement_type::IN_PLACE_TURN_LEFT:
                         engine->smooth_stop();
                         engine->backwards();
                         engine->increase_speed();
                         break;
-                    case direction::FORWARD:
+                    case movement_type::FORWARD:
                         engine->decrease_speed();
                         break;
-                    case direction::STOP:
+                    case movement_type::STOP:
                         engine->backwards();
                         engine->increase_speed();
                         break;
-                    case direction::BACKWARDS:
+                    case movement_type::BACKWARDS:
                         engine->increase_speed();
                         break;
                 }
@@ -133,17 +133,17 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
             }
             case 'd':{
                 switch(engine->get_direction()){
-                    case direction::IN_PLACE_TURN_RIGHT:
+                    case movement_type::IN_PLACE_TURN_RIGHT:
                         engine->increase_speed();
                         break;
-                    case direction::IN_PLACE_TURN_LEFT:
+                    case movement_type::IN_PLACE_TURN_LEFT:
                         engine->decrease_speed();
                         break;
-                    case direction::FORWARD:
-                    case direction::BACKWARDS:
+                    case movement_type::FORWARD:
+                    case movement_type::BACKWARDS:
                         engine->turn_right();
                         break;
-                    case direction::STOP:
+                    case movement_type::STOP:
                         engine->turn_in_place_right();
                         engine->increase_speed();
                         break;
@@ -152,17 +152,17 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
             }
             case 'a':{
                 switch(engine->get_direction()){
-                    case direction::IN_PLACE_TURN_RIGHT:
+                    case movement_type::IN_PLACE_TURN_RIGHT:
                         engine->decrease_speed();
                         break;
-                    case direction::IN_PLACE_TURN_LEFT:
+                    case movement_type::IN_PLACE_TURN_LEFT:
                         engine->increase_speed();
                         break;
-                    case direction::FORWARD:
-                    case direction::BACKWARDS:
+                    case movement_type::FORWARD:
+                    case movement_type::BACKWARDS:
                         engine->turn_left();
                         break;
-                    case direction::STOP:
+                    case movement_type::STOP:
                         engine->turn_in_place_left();
                         engine->increase_speed();
                         break;
