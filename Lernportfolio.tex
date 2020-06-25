@@ -423,16 +423,17 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   
   Um die ersten Daten zu bekommen haben wir hier eine check() Methode benutzt. Damit können wir neben dem
   einfachen Einlesen der Datenregister vom DRDY Bit einen Vorteil ziehen. Wenn dieses gesetzt ist, müssen wir 
-  keine neuen Daten einlesen, da die alten Daten noch aktuell sind.
+  keine neuen Daten einlesen, da die alten Daten noch aktuell sind. Wenn das Bit für längere Zeit auf Null bleibt
+  wissen wir so auch, dass etwas beim Setup fehlgeschlagen ist.
   %TODO @Jens Dieser Halbsatz macht für mich keinen Sinn. Warum ist das Setup
   %fehlgeschhlagen wenn man check aufruft ohne dass das DRDY Bit gesetzt ist?
-  %%% und wir wissen schneller ob nicht etwas beim Setup fehlgeschlagen ist.
-  Falls die Daten aktualisiert worden sind, gibt die Methode eine eins zurück. Ansonsten eine 0. 
+  %%% und wir wissen schneller ob nicht etwas beim Setup fehlgeschlagen ist. %added
+  Falls die Daten aktualisiert worden sind, gibt die Methode eine Eins zurück. Ansonsten eine Null. 
 
-  Nachdem wir nun die ersten Register gelesen hatten und wusste das der Kompass funktioniert, mussten wir nun die Daten 
+  Nachdem wir nun die ersten Register gelesen hatten und wussten, dass der Kompass funktioniert, mussten wir nun die Daten 
   zusammensetzten. Die 16 Bit Daten für die Achsen sind nämlich immer jeweils in zwei 8 Bit Registern gesetzt. Ein 
   %TODO @Jens hier doch eher least/most significatn byte
-  LSB (least significant bit) und ein MSB (most significant bit).
+  LSB (least significant byte) und ein MSB (most significant byte).
   
   Beim recherchieren zum Kombinieren der Daten stoßten wir auch auf einen
   \href{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/}{Forumsbeitrag},
@@ -444,7 +445,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Die Rohdaten können im \githubrepo{} im Ordner \gquotes{test\_data\_magnetic\_sensor} eingesehen werden.
   Beim ersten Drehen des Buggys zum analysieren der Kompassdaten, gab es eine stärkere Störungsstelle und man 
   konnte schnell sehen, wie sensibel der Kompass ist. Die Störung konnte man dann auch mit einem normalen Kompass 
-  auffindig machen.
+  ausfindig machen.
   Eine zweite Messreihe wurde in einem anderen Raum durchgeführt.
 
   \begin{figure}[h!]
