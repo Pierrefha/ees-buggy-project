@@ -46,14 +46,12 @@
 % CONSTANTS BEGIN
 \newcommand{\paragraphwithnewline}[1]{\paragraph{#1}\mbox{}\\} % used to create a newline after the paragraph tag.
 \newcommand{\githubrepo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
-\newcommand{\referenzcode}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
 
 \newcommand{\gquotes}[1]{"`#1"'}
 \newcommand{\itoc}{$I^2C$}
 \newcommand{\wiringPi}{wiringPi}
 
 % \newcommand{\github_repo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
-% \newcommand{\referenz_code}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
 % CONSTANTS END
 \begin{titlepage}
     \begin{center}
@@ -130,12 +128,11 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Registern über dieses Protokoll auf komfortablem und leicht verständlichem Wege.
   Bei der Benutzung dieser Bibliothek kam es zu keinen Problemen.
   
-  Durch die Schematas unter
-  \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+  Durch die Schematas \cite{motorhatDownloads}
   konnte die Verknüpfung der Pins des PCA9685 PWM LED Controllers mit den beiden
   TB6612FNG Motorsteuerungschips nachvollzogen werden.
-  Durch die Datenblätter \gquotes{PCA9685 PWM driver} und \gquotes{TB6612 Motor
-    driver} wurde die Funktionsweise des \referenzcode's
+  Durch die Datenblätter \cite{datasheetPCA9685} und \cite{datasheetTB6612}
+  wurde die Funktionsweise des Referenzcodes \cite{referenzcode}
   verständlich, wenngleich hierbei eine Frage offengeblieben ist:
   Der Referenzcode schreibt den Wert 4096 in ein LED On bzw. Off Register um den
   jeweiligen Motor an bzw. auszuschalten. In der Dokumentation des PCA9685 PWM LED
@@ -181,7 +178,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   abzudriften.
 
   Zur manuellen Steuerung des Buggys wurde ein
-  \href{https://en.wikipedia.org/wiki/Ncurses}{ncurses} basiertes
+  \href{https://invisible-island.net/ncurses/announce.html}{ncurses} basiertes
   Benutzerinterface gebaut. Die Steuerung funktioniert über die Tasten W, A, S
   und D. Q kann für zur Durchführung eines langsamen Stopps und E zur
   Durchführung eines schnellen Stopps betätigt werden. Durch X wird das
@@ -201,25 +198,14 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \begin{subsection}{Recherche zum Ultraschallsensor und der Entfernungsmessung}
         Bei der Suche nach einem Datasheet zum HC-SR04 haben wir vergeblich nach
         einem offiziellen Datasheet gesucht. Daher haben wir uns  verschiedene 
-        Datasheets zum HC-SR04 angeschaut und die Spezifikationen gründlich
+        Datasheets \cite{datasheetUltrasonic1,datasheetUltrasonic2,
+          datasheetUltrasonic3} zum HC-SR04 angeschaut und die Spezifikationen gründlich
         miteinander verglichen um sicher zu gehen, dass die Werte stimmen.
         Um auf eine Formel für die Distanzberechnung mithilfe von Ultraschall
         zu kommen haben wir nach der Geschwindigkeit von Schall in Luft gesucht.
         Dadurch können wir nun mit Hilfe des Sensors die Distanz des Buggys zum
         nächsten Objekt mit folgender Formel berechnen:\\
         Distanz in \si\cm = \( \frac{Signalzeit}{2} \) \si{\milli\second} $ \times $ 34.3 \si[per-mode = fraction]{\cm\per\milli\second}
-        
-
-        % paragraph can be used for captions inside subsections
-        \begin{paragraph}{Quellen}
-        \begin{itemize}
-            \item \url{https://www.electroschematics.com/hc-sr04-datasheet}
-            \item \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet}
-            \item \url{https://www.sparkfun.com/products/15569\#documents-tab}
-            \item \url{https://en.wikipedia.org/wiki/Speed\_of\_sound}
-            \item \url{http://www.sengpielaudio.com/calculator-speedsound.htm}
-        \end{itemize}
-        \end{paragraph}
     \end{subsection}
     % END task 3.1
 
@@ -684,6 +670,54 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
        
   \end{subsection}
 \end{section}
+
+\begin{thebibliography}{9}
+
+\bibitem{motorhatDownloads}
+  Schematas des Motorhats
+  \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+  Zuletzt abgerufen am: 25.05.2020
+
+\bibitem{datasheetPCA9685}
+  Datasheet PCA9685 PWM driver,
+  \url{http://www.adafruit.com/datasheets/PCA9685.pdf},
+  Zuletzt abgerufen am: 25.05.2020
+
+\bibitem{datasheetTB6612}
+  Datasheet TB6612 Motor driver,
+  \url{http://www.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf},
+  Zuletzt abgerufen am: 25.05.2020
+
+\bibitem{referenzcode}
+  adafruit-motor-hat-cpp-library,
+  Autor tomfclarke,
+  \url{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library},
+  Zuletzt abgerufen am: 25.05.2020
+
+
+\bibitem{datasheetUltrasonic1}
+  Datasheet HC-SR04,
+  \url{https://www.electroschematics.com/wp-content/uploads/2013/07/HCSR04-datasheet-version-1.pdf},
+  Zuletzt abgerufen am: 25.05.2020
+\bibitem{datasheetUltrasonic2}
+  Datasheet HC-SR04,
+  \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet},
+  Zuletzt abgerufen am: 25.05.2020
+\bibitem{datasheetUltrasonic3}
+  Datasheet HC-SR04,
+  \url{https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf},
+  Zuletzt abgerufen am: 25.05.2020
+% \bibitem{}
+%   Datasheet HC-SR04,
+%   \url{https://en.wikipedia.org/wiki/Speed\_of\_sound},
+%   Zuletzt abgerufen am: 25.05.2020
+% \bibitem{datasheetUltrasonic1}
+%   Datasheet HC-SR04,
+%   \url{http://www.sengpielaudio.com/calculator-speedsound.htm},
+%   Zuletzt abgerufen am: 25.05.2020
+
+\end{thebibliography}
+
 
 \pagebreak
 \begin{section}{Selbstständigkeitserklärung}
