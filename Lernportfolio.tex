@@ -57,25 +57,23 @@
 % CONSTANTS END
 \begin{titlepage}
     \begin{center}
-        \vspace*{1cm}
-            
         \Huge
         \textbf{Lernportfolio}
 
-        \vspace{1.5cm}
-            
         \normalsize
         \textbf{Pierre Dahmani pd1528s 3215892\\
         Jens Peter Dennigmann jd8389s 3190025 \\
         Leonhard Kipp lk2149s 3188047\\}
             
-        \vfill
-            
-        EES Buggy-Projekt 
         \vspace{0.8cm}
             
-        %% TODO Add title pic
-        %% \includegraphics[width=0.4\textwidth]{university}
+        \begin{figure}[H]
+          \centering
+          \captionsetup[subfigure]{labelformat=empty}
+          \includegraphics[width=\linewidth, angle=-90]{lernportfolio_assets/BuggyZusammengebaut.JPG}
+        \end{figure}
+        \vspace{0.8cm}
+        EES Buggy-Projekt 
         \pagebreak
     \end{center}
 \end{titlepage}
@@ -636,8 +634,8 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     Was ich nicht vergessen werde ist, dass
     \begin{lstlisting}
       std::cout << float_value << std::endl
-      //Later on taking acos of float_value returning NaN
-      //std::cout << std::acos(float_value) << std::endl
+      Later on taking acos of float_value returning NaN
+      std::cout << std::acos(float_value) << std::endl
     \end{lstlisting}
     1 ausgeben mag, aber der Wert der Variable trotzdem ungleich Eins sein kann.
     Diesen Fehler zu finden, war Nerven zerreibend.
