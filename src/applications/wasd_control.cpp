@@ -180,8 +180,8 @@ void wasd_control::release_resources() {
 
 
 bool wasd_control::check_forward_movement_possible(std::optional<cm> obst_dist) {
+    clear_obstacle_warnings();
     if(!obst_dist){
-        clear_obstacle_warnings();
         return true;
     }
     if(obst_dist->get() < 20){
