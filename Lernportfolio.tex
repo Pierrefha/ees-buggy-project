@@ -136,7 +136,8 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
   konnte die Verknüpfung der Pins des PCA9685 PWM LED Controllers mit den beiden
   TB6612FNG Motorsteuerungschips nachvollzogen werden.
-  Durch die Datenblätter wurde die Funktionsweise des '\referenzcode's
+  Durch die Datenblätter \gquotes{PCA9685 PWM driver} und \gquotes{TB6612 Motor
+    driver} wurde die Funktionsweise des \referenzcode's
   verständlich, wenngleich hierbei eine Frage offengeblieben ist:
   Der Referenzcode schreibt den Wert 4096 in ein LED On bzw. Off Register um den
   jeweiligen Motor an bzw. auszuschalten. In der Dokumentation des PCA9685 PWM LED
@@ -515,7 +516,9 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   Nach berechnen des Mittelwertes sieht man, dass Ausreißer eliminiert werden
   konnten. In dem Abschnitt im Intervall von 7365036 bis 7557114 kam es zu
-  einer Fehlfunktion des Sensors. Dieses kann man in den Rohdaten sehr klar erkennen:\\\\
+  einer Fehlfunktion des Sensors. Dieses kann man in den Rohdaten sehr klar
+  erkennen:\\
+  \\
   \begin{tabular}{lr|lr}
     \centering
     Zeit    &  Rotation & Zeit    &  Rotation \\
@@ -564,10 +567,9 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
   Die Wahl des gleitenden Mittelwertes ist, aus der Retroperspektive heraus
   betrachtet, die falsche Wahl. Hierdurch konnten Fehler des Sensors nicht abgefangen
-  werden. Unter der realitätsnahen Annahme, dass die Geschwindigkeit
-  sich für den Buggy durch eine Lineare Funktion darstellen lassen kann, ist
-  abzuleiten, dass die Drehung des Roboters sich auch linear beschreiben lassen kann.
-  Daher ist die Beschreibung der Rotation durch ein lineares Regressionsmodell möglich.
+  werden. Unter der realitätsnahen Annahme, dass die Geschwindigkeit und damit
+  die Drehung sich für den Buggy durch eine lineare Funktion annähern lassen
+  kann, ist die Beschreibung der Rotation durch ein lineares Regressionsmodell möglich.
   Durch dieses könnte man die aktuellen Richtung mit der Vorhersage des
   Regressionsmodelles vergleichen und bei zu großer Inkongruenz den Messwert als
   Fehler verwerfen und anschließend die Richtung aus dem Regressionsmodell und der
@@ -601,7 +603,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     Punkten ist in den Videos "`RechteckPunkte.mp4"' zu sehen.
 
     Der Buggy kann zudem beim geradeaus fahren die Startrichtung halten. Dieses
-    ist im Video "`RichtungHalten.mp4"' zu sehen. 
+    ist im Video "`RichtungHalten.mp4"' zu sehen.
 
     Desweiteren kann der Buggy, wie im Video "`Kurve180.mp4"' demonstriert,
     Kurven abfahren.
@@ -615,6 +617,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     von Sensoren sowie das Abfangen falscher Messdaten sehr viel mehr Zeit in Anspruch nimmt und weitaus komplexer
     ist als die Implementation der Abfragen der Sensoren in Software. Die
     hierfür benötigte Zeit habe ich unterschätzt.
+    
     Bei der Aufbereitung der Messdaten ist die Bildung eines Durchschnittes nicht
     immer das beste Mittel. Das arithmetische Mittel sowie die
     Standardabweichung ist anfällig gegenüber Ausreißern
@@ -632,7 +635,8 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     Was ich nicht vergessen werde ist, dass
     \begin{lstlisting}
       std::cout << float_value << std::endl
-      std::cout << std::acos(float_value) << std::endl
+      //Later on taking acos of float_value returning NaN
+      //std::cout << std::acos(float_value) << std::endl
     \end{lstlisting}
     1 ausgeben mag, aber der Wert der Variable trotzdem ungleich Eins sein kann.
     Diesen Fehler zu finden, war Nerven zerreibend.
@@ -659,9 +663,12 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     einem linearen Nachrichtenstrom schneller die Übersicht über den Stand jeder
     einzelnen Aufgabe als in Foren bzw. Themen basierten Kommunikationsplattformen.
 
-    Beibehalten würde ich die Verwendung eines RaspberryPi's. Das Verbinden
+    Beibehalten würde ich die Verwendung eines RaspberryPi's und das Schreiben
+    des Lernportfolios mit \LaTeX. Das Verbinden
     können über SSH, die Rechenleistung und in einer gewohnten Umgebung
     (Bash-Shell) zu sein, hat seine Vorteile gegenüber einfacheren Microcontrollern.
+    Der Vorteil von \LaTeX\ besteht vor allem darin, dass es aus \gquotes{plain text}
+    besteht und daher sich sehr einfach mit Git verwalten lässt.
 
     Das meiste habe ich in dem Umgang mit den Sensoren gelernt. Das Lesen der
     Datenblätter und die Implementation von Sensorabfragen waren für mich Neuland.
@@ -677,6 +684,15 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     verbessern konnte.
        
   \end{subsection}
+\end{section}
+
+\pagebreak
+\begin{section}{Selbstständigkeitserklärung}
+  Hiermit erklären wir, dass wir die Projektarbeit selbstständig und ohne
+  unerlaubte fremde Hilfe angefertigt, keine anderen als die
+  angegebenen Quellen und Hilfsmittel verwendet und die den verwendeten Quellen
+  und Hilfsmitteln wörtlich oder inhaltlich entnommenen Stellen als solche kenntlich
+  gemacht haben.
 \end{section}
 
 
