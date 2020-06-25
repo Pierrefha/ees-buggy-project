@@ -35,6 +35,7 @@ public:
     std::optional<cm> calc_distance();
     // sets brake light
     void set_brake_light(int8_t mode);
+    void release_resources();
 
     /*
      * additional functions

@@ -117,6 +117,9 @@ std::optional<cm> ultrasonic_sensor::calc_distance(){
 void ultrasonic_sensor::set_brake_light(int8_t mode){
 	digitalWrite(this->brake_light_pin,mode);
 }
+void ultrasonic_sensor::release_resources(){
+	digitalWrite(this->brake_light_pin,OFF);
+}
 
 
 //TODO: probably should be in engine cpp or wheel cpp

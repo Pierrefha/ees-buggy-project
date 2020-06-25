@@ -40,47 +40,45 @@
 }
 
 \urlstyle{same}
+\setcounter{chapter}{1}
 
 
 \begin{document}
 % CONSTANTS BEGIN
 \newcommand{\paragraphwithnewline}[1]{\paragraph{#1}\mbox{}\\} % used to create a newline after the paragraph tag.
 \newcommand{\githubrepo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
-\newcommand{\referenzcode}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
 
 \newcommand{\gquotes}[1]{"`#1"'}
 \newcommand{\itoc}{$I^2C$}
 \newcommand{\wiringPi}{wiringPi}
 
 % \newcommand{\github_repo}{\href{https://github.com/Pierrefha/ees-buggy-project}{GitHub-Repository}}
-% \newcommand{\referenz_code}{\href{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library}{Referenz-Code}}
 % CONSTANTS END
 \begin{titlepage}
     \begin{center}
-        \vspace*{1cm}
-            
         \Huge
         \textbf{Lernportfolio}
 
-        \vspace{1.5cm}
-            
         \normalsize
         \textbf{Pierre Dahmani pd1528s 3215892\\
         Jens Peter Dennigmann jd8389s 3190025 \\
         Leonhard Kipp lk2149s 3188047\\}
             
-        \vfill
-            
-        EES Buggy-Projekt 
         \vspace{0.8cm}
             
-        %% TODO Add title pic
-        %% \includegraphics[width=0.4\textwidth]{university}
+        \begin{figure}[H]
+          \centering
+          \captionsetup[subfigure]{labelformat=empty}
+          \includegraphics[width=0.45\linewidth, scale = 0.5]{lernportfolio_assets/BuggyZusammengebaut.JPG}
+        \end{figure}
+        \vspace{0.8cm}
+        EES Buggy-Projekt 
         \pagebreak
     \end{center}
 \end{titlepage}
 
-% TODO Inhaltsverzeichnis
+\tableofcontents
+\pagebreak
 
 \begin{section}{Aufbau des Buggy}
 
@@ -89,11 +87,11 @@
   \captionsetup[subfigure]{labelformat=empty}
   \begin{subfigure}{0.45\linewidth}
     \includegraphics[width=\linewidth]{lernportfolio_assets/Buggy_Koffer.jpeg}
-    \caption{Der Buggy vor dem Aufbau.}
+    \caption{Der Buggy vor dem Aufbau}
   \end{subfigure}
   \begin{subfigure}{0.45\linewidth}
-    \includegraphics[width=\linewidth]{lernportfolio_assets/Buggy_Koffer.jpeg}
-    \caption{Und danach.}
+    \includegraphics[width=\linewidth]{lernportfolio_assets/BuggyZusammengebaut.JPG}
+    \caption{Und komplett aufgebaut}
   \end{subfigure}
 \end{figure}
 
@@ -128,16 +126,15 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   Informationen und 4. Analyse des Beispielcodes.
 
   Der Motorhat ist mit dem RaspberryPi über \itoc{} verbunden. Die
-  \wiringPi{} Bibliothek ermöglicht das Verbinden, Schreiben und Lesen von
+  \wiringPi{}\cite{wiringPi} Bibliothek ermöglicht das Verbinden, Schreiben und Lesen von
   Registern über dieses Protokoll auf komfortablem und leicht verständlichem Wege.
   Bei der Benutzung dieser Bibliothek kam es zu keinen Problemen.
   
-  Durch die Schematas unter
-  \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+  Durch die Schematas \cite{motorhatDownloads}
   konnte die Verknüpfung der Pins des PCA9685 PWM LED Controllers mit den beiden
   TB6612FNG Motorsteuerungschips nachvollzogen werden.
-  Durch die Datenblätter \gquotes{PCA9685 PWM driver} und \gquotes{TB6612 Motor
-    driver} wurde die Funktionsweise des \referenzcode's
+  Durch die Datenblätter \cite{datasheetPCA9685} und \cite{datasheetTB6612}
+  wurde die Funktionsweise des Referenzcodes \cite{referenzcode}
   verständlich, wenngleich hierbei eine Frage offengeblieben ist:
   Der Referenzcode schreibt den Wert 4096 in ein LED On bzw. Off Register um den
   jeweiligen Motor an bzw. auszuschalten. In der Dokumentation des PCA9685 PWM LED
@@ -183,7 +180,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   abzudriften.
 
   Zur manuellen Steuerung des Buggys wurde ein
-  \href{https://en.wikipedia.org/wiki/Ncurses}{ncurses} basiertes
+  \href{https://invisible-island.net/ncurses/announce.html}{ncurses} basiertes
   Benutzerinterface gebaut. Die Steuerung funktioniert über die Tasten W, A, S
   und D. Q kann für zur Durchführung eines langsamen Stopps und E zur
   Durchführung eines schnellen Stopps betätigt werden. Durch X wird das
@@ -203,25 +200,14 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \begin{subsection}{Recherche zum Ultraschallsensor und der Entfernungsmessung}
         Bei der Suche nach einem Datasheet zum HC-SR04 haben wir vergeblich nach
         einem offiziellen Datasheet gesucht. Daher haben wir uns  verschiedene 
-        Datasheets zum HC-SR04 angeschaut und die Spezifikationen gründlich
+        Datasheets \cite{datasheetUltrasonic1,datasheetUltrasonic2,
+          datasheetUltrasonic3} zum HC-SR04 angeschaut und die Spezifikationen gründlich
         miteinander verglichen um sicher zu gehen, dass die Werte stimmen.
         Um auf eine Formel für die Distanzberechnung mithilfe von Ultraschall
         zu kommen haben wir nach der Geschwindigkeit von Schall in Luft gesucht.
         Dadurch können wir nun mit Hilfe des Sensors die Distanz des Buggys zum
         nächsten Objekt mit folgender Formel berechnen:\\
         Distanz in \si\cm = \( \frac{Signalzeit}{2} \) \si{\milli\second} $ \times $ 34.3 \si[per-mode = fraction]{\cm\per\milli\second}
-        
-
-        % paragraph can be used for captions inside subsections
-        \begin{paragraph}{Quellen}
-        \begin{itemize}
-            \item \url{https://www.electroschematics.com/hc-sr04-datasheet}
-            \item \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet}
-            \item \url{https://www.sparkfun.com/products/15569\#documents-tab}
-            \item \url{https://en.wikipedia.org/wiki/Speed\_of\_sound}
-            \item \url{http://www.sengpielaudio.com/calculator-speedsound.htm}
-        \end{itemize}
-        \end{paragraph}
     \end{subsection}
     % END task 3.1
 
@@ -294,28 +280,6 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
             wiederholt und die Distanz auf Basis des Mittelwerts gebildet.
         \end{paragraphwithnewline}
 
-        % backup text that will be deleted when finished.
-        % Durch das Einbinden des Ultraschallsensors in unser Program sind wir auf
-        % einige Fehlerquellen gestoßen. Um den Trigger und damit die Ultraschall
-        % welle auszulösen muss der Pin für mindestens 10 \si{\micro\second} auf
-        % High gesetzt werden. Dies hatten wir zu Beginn eingestellt. Doch wir haben
-        % schnell gemerkt, dass manche Messungen nicht zustande gekommen sind, weil
-        % beim Echo Pin keine Antwort angekommen ist. Dadurch haben wir gelernt, 
-        % dass es in der Praxis doch besser ist auf Nummer sicher zu gehen und 
-        % haben dieses Zeitfenster auf 20 \si{\micro\second} erhöht. Unser nächstes
-        % Problem bestand darin, dass einzelne Messungen starke Abweichungen zum 
-        % Referenzwert aufwiesen. Dieses Problem wollten wir dadurch lösen, dass wir
-        % anstatt einer Messung nun 30 Messungen vornehmen und den Durchschnitt der
-        % erhaltenen Werte zurückgeben. Doch nun kam es zu sehr starken, unlogischen
-        % Abweichungen. Dies kam zu stande weil wir nach einer Messung nicht lange
-        % genug gewartet hatten, bis sich zu Pins zu ihren korrekten Pegeln zurück
-        % gesetzt hatten. Dieses Problem haben wir dadurch behoben, dass wir nun
-        % nach jeder Messung 1 \si{\milli\second} warten. Durch Störfaktoren (z.B.
-        % starker Wind) kann es ebenfalls zu komplett falschen Messwerten kommen,
-        % die wir nicht in die Messung aufnehmen dürfen. Da der Ultraschallsensor
-        % Distanzen im Berech von 4\si\cm bis 400\si\cm Messen kann nehmen wir 
-        % Messergebnisse, die eine errechnete Distanz von 3.5\si\cm unterschreiten,
-        % nicht mit in die Messung auf.
 
     \end{subsection}
     % END task 3.4
@@ -338,7 +302,7 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     \begin{subsection}{Bewertung der Genauigkeit}
       Die Entfernungsmessung funktioniert mit einer Standardabweichung von unter
       1,3 cm auf 100 cm genau.
-      Die Rohdaten können im \githubrepo{} im Ordner
+      Die Rohdaten können im Ordner
       \gquotes{test\_data\_ultrasonic} eingesehen werden.
       Im folgendem eine Zusammenfassung.
       %The table is generated by pandas
@@ -384,13 +348,10 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 \end{section}
 
 \begin{section}{Kompass}
-  \begin{subsection}{Erste Recherche und Aufbau}
-  Bei der ersten Recherche stößt man schnell auf einen kleinen Wiki-Eintrag: 
-  http://wiki.sunfounder.cc/index.php?title=QMC5883L .
-  Allerdings wird hier ein Arduino benutzt, daher hilft der Eintrag überwiegend nur für den 
-  Anschluss des Kompass. Wo welche Anschlüsse benötigt werden ist aber auch direkt auf dem Kompass markiert.
-  \end{subsection}
   \begin{subsection}{Relevante Informationen aus dem Datenblatt}
+    Aus dem Datenblatt \cite{datasheetMagnet} konnte die korrekte Verkabelung
+    entnommen werden.
+
   Im Datenblatt stößt man als erstes auf die \itoc{} Adresse des Kompass, mit der man dann z.B. mit dem Befehl 
   "`i2cdetect -y 1"' überprüfen kann, ob der Kompass richtig angeschlossen ist. Die Adresse des Kompass ist "`0x0D"' 
   und wurde in der Tabelle der \itoc{} Geräte angezeigt.
@@ -435,14 +396,13 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   %TODO @Jens hier doch eher least/most significatn byte
   LSB (least significant byte) und ein MSB (most significant byte).
   
-  Beim recherchieren zum Kombinieren der Daten stoßten wir auch auf einen
-  \href{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/}{Forumsbeitrag},
+  Beim recherchieren zum Kombinieren der Daten stoßten wir auch auf einen Forumsbeitrag\cite{forumMagnet}
   bei dem man den Vorteil von C++ für diese Aufgabe sehen konnte. Genauer genommen die 
-  Möglichkeit Variablen als signed 16-Bit-Integer zu deklarieren. Dadurch konnten wir die Daten kombinieren ohne 
+  Möglichkeit Variablen als signed 16-Bit-Integer zu deklarieren. Dadurch konnten wir die Daten kombinieren, ohne 
   groß weiter auf das Komplement einzugehen, was z.B. in Python nicht so leicht ist.
   \end{subsection}
   \begin{subsection}{Genauigkeiten der Daten und Sensitivität}
-  Die Rohdaten können im \githubrepo{} im Ordner \gquotes{test\_data\_magnetic\_sensor} eingesehen werden.
+  Die Rohdaten können im Ordner \gquotes{test\_data\_magnetic\_sensor} eingesehen werden.
   Beim ersten Drehen des Buggys zum analysieren der Kompassdaten, gab es eine stärkere Störungsstelle und man 
   konnte schnell sehen, wie sensibel der Kompass ist. Die Störung konnte man dann auch mit einem normalen Kompass 
   ausfindig machen.
@@ -635,11 +595,14 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
     Was ich nicht vergessen werde ist, dass
     \begin{lstlisting}
-      std::cout << float_value << std::endl
-      //Later on taking acos of float_value returning NaN
-      //std::cout << std::acos(float_value) << std::endl
+      std::cout << calculated_float_value << std::endl
+      ...Later on taking, acos returning NaN
+      std::cout << std::acos(calculated_float_value) << std::endl
     \end{lstlisting}
-    1 ausgeben mag, aber der Wert der Variable trotzdem ungleich Eins sein kann.
+    1 ausgeben mag, aber der arcus cosinus dennoch NaN zurück gibt.
+    Die Rechnung war korrekt, jedoch hat der Computer aufgrund der geringen
+    Präzision einen Wert minimalst größer als eins produziert. Das Terminal hat
+    diesen Wert aufgrund seiner geringen Differenz zu eins als eine eins interpretiert.
     Diesen Fehler zu finden, war Nerven zerreibend.
 
     Beim nächsten Mal würde ich die Klassen "`vertex2D"' und "`degree "' nicht
@@ -685,18 +648,178 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
     verbessern konnte.
        
   \end{subsection}
+  \begin{subsection}{Zusammenfassung Jens Dennigmann}
+  Durch die Projektphase ist mir wieder bewusst geworden, dass Kommunikation durch 
+  Messenger besonders am Anfang der Phase relativ schwerfällig ist. Dazu kommt noch der 
+  mangelnde persönliche Kontakt, der besonders am Anfang einer Projektphase zur Organisation 
+  wichtig ist, aber durch die Umstände dieses Semesters wegfiehl. Eine bewusstere 
+  Entscheidung für eine Kommunikationsplattform hätte hier wahrscheinlich bei einigen 
+  Startschwierigkeiten geholfen.
+  
+  Weitere Punkte bei denen ich viel gelernt habe, waren vorallem der Umgang mit Datenblättern 
+  und das Testen von Sensoren. Durch das selbständige Arbeiten mit z.B. dem Datenblatt zum 
+  Magnetsensor habe ich gelernt zu unterscheiden zwischen Abschnitte, auf die
+  man achten muss und Abschnitte, die eher unrelevant für einen sind. Mir zeigt
+  sich, dass man nicht direkt zu den gewünschten Registern springen sollte, sondern auch 
+  allgemeinere Erklärungen zuvor für einen relevant und wichtig sind.
+  
+  Beim Testen von dem Magnetsensor fiel mir schnell auf, wie wichtig Funktionen sind mit denen 
+  man schnell viele Testdaten bekommt. Die Daten von dem Sensor sahen anfangs recht willkürlich 
+  aus und erst nach dem Auswerten von einigen Testdaten konnte man sehen, dass sich eine 
+  Ellipse formt. Die Anfälligkeit für Störungen konnte man sehen. Selbst bei
+  relativ störungsfreiem Testen sind die Werte nicht immer präzise.
+  
+  Es gab auch ein paar Sachen die leichter fielen als erwartet. So z.B. das
+      Anschließen von dem Magnetsensor oder das Verbinden zum Raspberry Pi, das mit dem Programm Putty relativ simpel 
+      und angenehm gemacht ist. 
+
+      Anschließend lässt sich noch sagen, dass besonders das Arbeiten, mit dem Buggy direkt bei 
+      einem selber vor Ort, Spaß gemacht hat. Das schnelle Erkennen von Resultaten hat sehr dazu 
+      motiviert weiter zu arbeiten und Ziele zu erreichen. Auch das arbeiten mit Github, was 
+      %Unser Projekt war ein mini Projekt
+      mittlerweile recht selbstverständlich ist, besonders bei größeren Projekten wie diesem, hat 
+      sehr geholfen. Man konnte den Code der Gruppenmitglieder schnell selber einsehen und sich 
+      auch so gegenseitig helfen und austauschen.
+  \end{subsection}
+        \begin{subsection}{Zusammenfassung Pierre Dahmani}
+            % Start task 5.1 of Arbeitsauftrag Projektphase_EES.pdf
+            % Beschreiben Sie kurz, was Sie in der Projektphase bei der Arbeit mit
+            % dem Buggy gelernt haben.
+            \begin{paragraphwithnewline}{Gelerntes durch Arbeit mit dem Buggy}
+            Beim wiederholten Messen von Signalen innerhalb kürzester Zeit muss
+            man die Slew-Rate in betracht ziehen um falsche Werte zu verhindern.
+            Sensoren sind zwar ziemlich genau, jedoch weit davon entfernt, perfekt
+            zu sein. Bei einzelnen Messungen kenn eine hohe Varianz entstehen, welche
+            durch das Bilden eines Mittelwerts niedrig gehalten werden kann. Man muss
+            beachten, dass einzelne Messungen durch Störfaktoren komplett falsche Werte
+            liefern können, die man aussortieren muss um das Ergebnis nicht zu 
+            verfälschen. Wenn man Probleme mit dem Code hat kann es sehr hilfreich
+            sein die Teammitglieder zu befragen. Damit die Teammitglieder den eigenen
+            Code verstehen ist es sehr wichtig diesen gut zu Dokumentieren und
+            beschreibende Funktionen und Variablennamen zu wählen. Gemeinsam an
+            einem Projekt zu arbeiten ist schwieriger als zu Beginn erwartet. Die in
+            der Vorlesung gelernte Methodik des Code Reviews hat sich als sehr hilfreich
+            bewiesen. Dies haben wir konsequent über GitHub anhand von Pull-Requests
+            durchgeführt.
+            % End task 5.1
+            \end{paragraphwithnewline}
+
+            % Start task 5.2 of Arbeitsauftrag Projektphase_EES.pdf
+            % Was würden Sie beim nächsten Mal anders machen? Was würden Sie
+            % beibehalten?
+            \begin{paragraphwithnewline}{Konsequenzen für zukünftige Projekte}
+            Beim nächsten Mal sollten wir mehr Zeit in die Aufgabenplanung stecken
+            und rechtzeitig Feedback geben und um Hilfe bitten, wenn etwas nicht
+            funktioniert wie geplant und man dadruch nicht voran kommt. Wir müssen
+            darauf achten dass einzelne Gruppenmitglieder den Buggy nur haben, wenn
+            sie auch Zeit haben sich um die Aufgabe zu kümmern. Was wir beibehalten
+            würden ist die Aufgabenverteilung. Wir sind zu dritt und konnten dadurch
+            für jeden Aufgabenbereich einen spezialisten wählen, der dafür verantwortlich
+            war, dass die Funktionalitäten ausgebessert und gefundene Fehler behoben wurden.
+            Das Verwenden von GitHub als VCS war eine gute Wahl weil jeder der
+            Teammitglieder bereits vertraut damit war. Das wählen von \LaTeX\xspace
+            für die Erstellung des Lernportfolios hat zu Beginn viel Zeit in Anspruch
+            genommen. Durch die Steile Lernkurve und gegenseitige Unterstützung war
+            es im Nachhinein jedoch seine sehr gut Entscheidung, die wir für kommende
+            Portfolios beibehalten werden. Die Kommunikation über WhatsApp hat uns
+            einen leichten Einstieg in die Zusammenarbeit gegeben. Jedoch wäre eine
+            andere Wahl der Kommunikation besser gewesen. Beim nächsten Projekt würden
+            wir das anders angehen. Wir haben uns überlegt die GitHub spezifischen
+            Features zur Projektplanung zu nutzen. Dadurch bekommt man einen Problem
+            spezifischen Einblick zu den Fragen und kann direkt den jeweiligen Issue
+            oder Codeabschnitt einsehen. Es werden ebenfalls nicht alle beteiligten
+            Benachrichtigt, wenn die Frage nur an eine Person gehen soll. Dadurch wird
+            der leicht enstehende Spamm bei WhatsApp verhindert.
+            \end{paragraphwithnewline}
+            % End task 5.2
+
+            % Start task 5.3 of Arbeitsauftrag Projektphase_EES.pdf
+            % Bewerten Sie, in welchen Teilen der Aufgabenstellung Sie viel gelernt
+            % und welche Ihnen Spaß gemacht haben.
+            \begin{paragraphwithnewline}{Das hat uns Spaß bereitet}
+            Am meisten Spaß hat es gemacht den implementierten Code dann am Buggy zu
+            testen. Auch wenn die Messungen einen stellenweise zur Weißglut gebracht
+            haben hat man dadurch gelernt auf wie viele Faktoren man bei Sensoren
+            achten muss und was alles schief gehen kann. Durch die Projektphase
+            haben wir ein besseres Verständnis dafür bekommen, wie man Treiber
+            programmiert und diese schließlich verwendet. Wir haben erstaunlich
+            viel Spaß daran gehabt und wollen uns in unserer Freizeit nun vermehrt
+            mit dem Thema embedded Pi auseinandersetzen.
+            \end{paragraphwithnewline}
+            % End task 5.3
+        \end{subsection}
 \end{section}
+
+\begin{thebibliography}{9}
+
+    \bibitem{motorhatDownloads}
+        Schematas des Motorhats
+        \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+        Zuletzt abgerufen am: 25.05.2020
+
+    \bibitem{datasheetPCA9685}
+        Datasheet PCA9685 PWM driver,
+        \url{http://www.adafruit.com/datasheets/PCA9685.pdf},
+        Zuletzt abgerufen am: 25.05.2020
+
+    \bibitem{datasheetTB6612}
+        Datasheet TB6612 Motor driver,
+        \url{http://www.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf},
+        Zuletzt abgerufen am: 25.05.2020
+
+    \bibitem{referenzcode}
+        adafruit-motor-hat-cpp-library,
+        Autor tomfclarke,
+        \url{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library},
+        Zuletzt abgerufen am: 25.05.2020
+
+
+    \bibitem{datasheetUltrasonic1}
+        Datasheet HC-SR04,
+        \url{https://www.electroschematics.com/wp-content/uploads/2013/07/HCSR04-datasheet-version-1.pdf},
+        Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetUltrasonic2}
+        Datasheet HC-SR04,
+        \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet},
+        Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetUltrasonic3}
+        Datasheet HC-SR04,
+        \url{https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf},
+        Zuletzt abgerufen am: 25.05.2020
+
+    \bibitem{datasheetMagnet}
+        3-Axis Magnetic Sensor QMC5883L,
+        \url{https://www.ili.fh-aachen.de/goto_elearning_file_554919_download.html},
+        Zuletzt abgerufen am: 25.05.2020
+
+    \bibitem{forumMagnet}
+        3-Axis Magnetic Sensor QMC5883L,
+        \url{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/},
+        Zuletzt abgerufen am: 25.05.2020
+
+    \bibitem{wiringPi}
+        wiringPi Bibliothek
+        \url{http://wiringpi.com/},
+        Zuletzt abgerufen am: 25.05.2020
+
+        % \bibitem{}
+        %   Datasheet HC-SR04,
+        %   \url{https://en.wikipedia.org/wiki/Speed\_of\_sound},
+        %   Zuletzt abgerufen am: 25.05.2020
+        % \bibitem{datasheetUltrasonic1}
+        %   Datasheet HC-SR04,
+        %   \url{http://www.sengpielaudio.com/calculator-speedsound.htm},
+        %   Zuletzt abgerufen am: 25.05.2020
+
+\end{thebibliography}
 
 \pagebreak
 \begin{section}{Selbstständigkeitserklärung}
-  Hiermit erklären wir, dass wir die Projektarbeit selbstständig und ohne
-  unerlaubte fremde Hilfe angefertigt, keine anderen als die
-  angegebenen Quellen und Hilfsmittel verwendet und die den verwendeten Quellen
-  und Hilfsmitteln wörtlich oder inhaltlich entnommenen Stellen als solche kenntlich
-  gemacht haben.
+    Hiermit erklären wir, dass wir die Projektarbeit selbstständig und ohne
+    unerlaubte fremde Hilfe angefertigt, keine anderen als die
+    angegebenen Quellen und Hilfsmittel verwendet und die den verwendeten Quellen
+    und Hilfsmitteln wörtlich oder inhaltlich entnommenen Stellen als solche kenntlich
+    gemacht haben.
 \end{section}
 
-
 \end{document}
-
- 

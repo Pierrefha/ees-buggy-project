@@ -1,5 +1,4 @@
-#include <motor_engine/motor_engine.h>
-#include <ultrasonic_sensor/ultrasonic_sensor.h>
+#include "../../test_inc/driving/test_automatic_movement.h"
 #include <magnetic_sensor/magnetic_sensor.h>
 #include <iostream>
 #include <driving/automatic_movement.h>

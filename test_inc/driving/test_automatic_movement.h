@@ -5,6 +5,10 @@
 #ifndef EES_BUGGY_TEST_AUTOMATIC_MOVEMENT_H
 #define EES_BUGGY_TEST_AUTOMATIC_MOVEMENT_H
 
+#include <motor_engine/motor_engine.h>
+#include <ultrasonic_sensor/ultrasonic_sensor.h>
+#include <magnetic_sensor/compass.h>
+
 void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass);
 
 void test_rectangle(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass);
