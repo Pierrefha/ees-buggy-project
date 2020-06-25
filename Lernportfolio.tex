@@ -278,28 +278,6 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
             wiederholt und die Distanz auf Basis des Mittelwerts gebildet.
         \end{paragraphwithnewline}
 
-        % backup text that will be deleted when finished.
-        % Durch das Einbinden des Ultraschallsensors in unser Program sind wir auf
-        % einige Fehlerquellen gestoßen. Um den Trigger und damit die Ultraschall
-        % welle auszulösen muss der Pin für mindestens 10 \si{\micro\second} auf
-        % High gesetzt werden. Dies hatten wir zu Beginn eingestellt. Doch wir haben
-        % schnell gemerkt, dass manche Messungen nicht zustande gekommen sind, weil
-        % beim Echo Pin keine Antwort angekommen ist. Dadurch haben wir gelernt, 
-        % dass es in der Praxis doch besser ist auf Nummer sicher zu gehen und 
-        % haben dieses Zeitfenster auf 20 \si{\micro\second} erhöht. Unser nächstes
-        % Problem bestand darin, dass einzelne Messungen starke Abweichungen zum 
-        % Referenzwert aufwiesen. Dieses Problem wollten wir dadurch lösen, dass wir
-        % anstatt einer Messung nun 30 Messungen vornehmen und den Durchschnitt der
-        % erhaltenen Werte zurückgeben. Doch nun kam es zu sehr starken, unlogischen
-        % Abweichungen. Dies kam zu stande weil wir nach einer Messung nicht lange
-        % genug gewartet hatten, bis sich zu Pins zu ihren korrekten Pegeln zurück
-        % gesetzt hatten. Dieses Problem haben wir dadurch behoben, dass wir nun
-        % nach jeder Messung 1 \si{\milli\second} warten. Durch Störfaktoren (z.B.
-        % starker Wind) kann es ebenfalls zu komplett falschen Messwerten kommen,
-        % die wir nicht in die Messung aufnehmen dürfen. Da der Ultraschallsensor
-        % Distanzen im Berech von 4\si\cm bis 400\si\cm Messen kann nehmen wir 
-        % Messergebnisse, die eine errechnete Distanz von 3.5\si\cm unterschreiten,
-        % nicht mit in die Messung auf.
 
     \end{subsection}
     % END task 3.4
@@ -690,93 +668,160 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   relativ störungsfreiem Testen sind die Werte nicht immer präzise.
   
   Es gab auch ein paar Sachen die leichter fielen als erwartet. So z.B. das
-  Anschließen von dem Magnetsensor oder das Verbinden zum Raspberry Pi, das mit dem Programm Putty relativ simpel 
-  und angenehm gemacht ist. 
-  
-  Anschließend lässt sich noch sagen, dass besonders das Arbeiten, mit dem Buggy direkt bei 
-  einem selber vor Ort, Spaß gemacht hat. Das schnelle Erkennen von Resultaten hat sehr dazu 
-  motiviert weiter zu arbeiten und Ziele zu erreichen. Auch das arbeiten mit Github, was 
-  %Unser Projekt war ein mini Projekt
-  mittlerweile recht selbstverständlich ist, besonders bei größeren Projekten wie diesem, hat 
-  sehr geholfen. Man konnte den Code der Gruppenmitglieder schnell selber einsehen und sich 
-  auch so gegenseitig helfen und austauschen.
+      Anschließen von dem Magnetsensor oder das Verbinden zum Raspberry Pi, das mit dem Programm Putty relativ simpel 
+      und angenehm gemacht ist. 
+
+      Anschließend lässt sich noch sagen, dass besonders das Arbeiten, mit dem Buggy direkt bei 
+      einem selber vor Ort, Spaß gemacht hat. Das schnelle Erkennen von Resultaten hat sehr dazu 
+      motiviert weiter zu arbeiten und Ziele zu erreichen. Auch das arbeiten mit Github, was 
+      %Unser Projekt war ein mini Projekt
+      mittlerweile recht selbstverständlich ist, besonders bei größeren Projekten wie diesem, hat 
+      sehr geholfen. Man konnte den Code der Gruppenmitglieder schnell selber einsehen und sich 
+      auch so gegenseitig helfen und austauschen.
   \end{subsection}
+        \begin{subsection}{Zusammenfassung Pierre Dahmani}
+            % Start task 5.1 of Arbeitsauftrag Projektphase_EES.pdf
+            % Beschreiben Sie kurz, was Sie in der Projektphase bei der Arbeit mit
+            % dem Buggy gelernt haben.
+            \begin{paragraphwithnewline}{Gelerntes durch Arbeit mit dem Buggy}
+            Beim wiederholten Messen von Signalen innerhalb kürzester Zeit muss
+            man die Slew-Rate in betracht ziehen um falsche Werte zu verhindern.
+            Sensoren sind zwar ziemlich genau, jedoch weit davon entfernt, perfekt
+            zu sein. Bei einzelnen Messungen kenn eine hohe Varianz entstehen, welche
+            durch das Bilden eines Mittelwerts niedrig gehalten werden kann. Man muss
+            beachten, dass einzelne Messungen durch Störfaktoren komplett falsche Werte
+            liefern können, die man aussortieren muss um das Ergebnis nicht zu 
+            verfälschen. Wenn man Probleme mit dem Code hat kann es sehr hilfreich
+            sein die Teammitglieder zu befragen. Damit die Teammitglieder den eigenen
+            Code verstehen ist es sehr wichtig diesen gut zu Dokumentieren und
+            beschreibende Funktionen und Variablennamen zu wählen. Gemeinsam an
+            einem Projekt zu arbeiten ist schwieriger als zu Beginn erwartet. Die in
+            der Vorlesung gelernte Methodik des Code Reviews hat sich als sehr hilfreich
+            bewiesen. Dies haben wir konsequent über GitHub anhand von Pull-Requests
+            durchgeführt.
+            % End task 5.1
+            \end{paragraphwithnewline}
+
+            % Start task 5.2 of Arbeitsauftrag Projektphase_EES.pdf
+            % Was würden Sie beim nächsten Mal anders machen? Was würden Sie
+            % beibehalten?
+            \begin{paragraphwithnewline}{Konsequenzen für zukünftige Projekte}
+            Beim nächsten Mal sollten wir mehr Zeit in die Aufgabenplanung stecken
+            und rechtzeitig Feedback geben und um Hilfe bitten, wenn etwas nicht
+            funktioniert wie geplant und man dadruch nicht voran kommt. Wir müssen
+            darauf achten dass einzelne Gruppenmitglieder den Buggy nur haben, wenn
+            sie auch Zeit haben sich um die Aufgabe zu kümmern. Was wir beibehalten
+            würden ist die Aufgabenverteilung. Wir sind zu dritt und konnten dadurch
+            für jeden Aufgabenbereich einen spezialisten wählen, der dafür verantwortlich
+            war, dass die Funktionalitäten ausgebessert und gefundene Fehler behoben wurden.
+            Das Verwenden von GitHub als VCS war eine gute Wahl weil jeder der
+            Teammitglieder bereits vertraut damit war. Das wählen von \LaTeX\xspace
+            für die Erstellung des Lernportfolios hat zu Beginn viel Zeit in Anspruch
+            genommen. Durch die Steile Lernkurve und gegenseitige Unterstützung war
+            es im Nachhinein jedoch seine sehr gut Entscheidung, die wir für kommende
+            Portfolios beibehalten werden. Die Kommunikation über WhatsApp hat uns
+            einen leichten Einstieg in die Zusammenarbeit gegeben. Jedoch wäre eine
+            andere Wahl der Kommunikation besser gewesen. Beim nächsten Projekt würden
+            wir das anders angehen. Wir haben uns überlegt die GitHub spezifischen
+            Features zur Projektplanung zu nutzen. Dadurch bekommt man einen Problem
+            spezifischen Einblick zu den Fragen und kann direkt den jeweiligen Issue
+            oder Codeabschnitt einsehen. Es werden ebenfalls nicht alle beteiligten
+            Benachrichtigt, wenn die Frage nur an eine Person gehen soll. Dadurch wird
+            der leicht enstehende Spamm bei WhatsApp verhindert.
+            \end{paragraphwithnewline}
+            % End task 5.2
+
+            % Start task 5.3 of Arbeitsauftrag Projektphase_EES.pdf
+            % Bewerten Sie, in welchen Teilen der Aufgabenstellung Sie viel gelernt
+            % und welche Ihnen Spaß gemacht haben.
+            \begin{paragraphwithnewline}{Das hat uns Spaß bereitet}
+            Am meisten Spaß hat es gemacht den implementierten Code dann am Buggy zu
+            testen. Auch wenn die Messungen einen stellenweise zur Weißglut gebracht
+            haben hat man dadurch gelernt auf wie viele Faktoren man bei Sensoren
+            achten muss und was alles schief gehen kann. Durch die Projektphase
+            haben wir ein besseres Verständnis dafür bekommen, wie man Treiber
+            programmiert und diese schließlich verwendet. Wir haben erstaunlich
+            viel Spaß daran gehabt und wollen uns in unserer Freizeit nun vermehrt
+            mit dem Thema embedded Pi auseinandersetzen.
+            \end{paragraphwithnewline}
+            % End task 5.3
+        \end{subsection}
 \end{section}
 
 \begin{thebibliography}{9}
 
-\bibitem{motorhatDownloads}
-  Schematas des Motorhats
-  \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{motorhatDownloads}
+        Schematas des Motorhats
+        \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+        Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{datasheetPCA9685}
-  Datasheet PCA9685 PWM driver,
-  \url{http://www.adafruit.com/datasheets/PCA9685.pdf},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetPCA9685}
+        Datasheet PCA9685 PWM driver,
+        \url{http://www.adafruit.com/datasheets/PCA9685.pdf},
+        Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{datasheetTB6612}
-  Datasheet TB6612 Motor driver,
-  \url{http://www.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetTB6612}
+        Datasheet TB6612 Motor driver,
+        \url{http://www.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf},
+        Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{referenzcode}
-  adafruit-motor-hat-cpp-library,
-  Autor tomfclarke,
-  \url{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{referenzcode}
+        adafruit-motor-hat-cpp-library,
+        Autor tomfclarke,
+        \url{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library},
+        Zuletzt abgerufen am: 25.05.2020
 
 
-\bibitem{datasheetUltrasonic1}
-  Datasheet HC-SR04,
-  \url{https://www.electroschematics.com/wp-content/uploads/2013/07/HCSR04-datasheet-version-1.pdf},
-  Zuletzt abgerufen am: 25.05.2020
-\bibitem{datasheetUltrasonic2}
-  Datasheet HC-SR04,
-  \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet},
-  Zuletzt abgerufen am: 25.05.2020
-\bibitem{datasheetUltrasonic3}
-  Datasheet HC-SR04,
-  \url{https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetUltrasonic1}
+        Datasheet HC-SR04,
+        \url{https://www.electroschematics.com/wp-content/uploads/2013/07/HCSR04-datasheet-version-1.pdf},
+        Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetUltrasonic2}
+        Datasheet HC-SR04,
+        \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet},
+        Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetUltrasonic3}
+        Datasheet HC-SR04,
+        \url{https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf},
+        Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{datasheetMagnet}
-  3-Axis Magnetic Sensor QMC5883L,
-  \url{https://www.ili.fh-aachen.de/goto_elearning_file_554919_download.html},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{datasheetMagnet}
+        3-Axis Magnetic Sensor QMC5883L,
+        \url{https://www.ili.fh-aachen.de/goto_elearning_file_554919_download.html},
+        Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{forumMagnet}
-  3-Axis Magnetic Sensor QMC5883L,
-  \url{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{forumMagnet}
+        3-Axis Magnetic Sensor QMC5883L,
+        \url{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/},
+        Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{wiringPi}
-  wiringPi Bibliothek
-  \url{http://wiringpi.com/},
-  Zuletzt abgerufen am: 25.05.2020
+    \bibitem{wiringPi}
+        wiringPi Bibliothek
+        \url{http://wiringpi.com/},
+        Zuletzt abgerufen am: 25.05.2020
 
-  % \bibitem{}
-%   Datasheet HC-SR04,
-%   \url{https://en.wikipedia.org/wiki/Speed\_of\_sound},
-%   Zuletzt abgerufen am: 25.05.2020
-% \bibitem{datasheetUltrasonic1}
-%   Datasheet HC-SR04,
-%   \url{http://www.sengpielaudio.com/calculator-speedsound.htm},
-%   Zuletzt abgerufen am: 25.05.2020
+        % \bibitem{}
+        %   Datasheet HC-SR04,
+        %   \url{https://en.wikipedia.org/wiki/Speed\_of\_sound},
+        %   Zuletzt abgerufen am: 25.05.2020
+        % \bibitem{datasheetUltrasonic1}
+        %   Datasheet HC-SR04,
+        %   \url{http://www.sengpielaudio.com/calculator-speedsound.htm},
+        %   Zuletzt abgerufen am: 25.05.2020
 
 \end{thebibliography}
 
 
 \pagebreak
 \begin{section}{Selbstständigkeitserklärung}
-  Hiermit erklären wir, dass wir die Projektarbeit selbstständig und ohne
-  unerlaubte fremde Hilfe angefertigt, keine anderen als die
-  angegebenen Quellen und Hilfsmittel verwendet und die den verwendeten Quellen
-  und Hilfsmitteln wörtlich oder inhaltlich entnommenen Stellen als solche kenntlich
-  gemacht haben.
+    Hiermit erklären wir, dass wir die Projektarbeit selbstständig und ohne
+    unerlaubte fremde Hilfe angefertigt, keine anderen als die
+    angegebenen Quellen und Hilfsmittel verwendet und die den verwendeten Quellen
+    und Hilfsmitteln wörtlich oder inhaltlich entnommenen Stellen als solche kenntlich
+    gemacht haben.
 \end{section}
 
 
 \end{document}
 
- 
+
