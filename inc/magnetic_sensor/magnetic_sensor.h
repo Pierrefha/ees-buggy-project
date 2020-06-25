@@ -29,9 +29,6 @@ namespace magnetic_sensor_defs{
 
 class magnetic_sensor{
 private:
-    /**
-     * Default base_dir is north
-     */
     //Filehandle für das Benutzen der WiringI2CLibrary
 	int fd;
 	int16_t x;
@@ -51,15 +48,59 @@ public:
 	int getX();
 	int getY();
 	int getZ();
-	
-	//void setup();
-	//Überprüft nach neuen Daten und fügt sie, wenn gegeben, in die Attribute ein
-	int check();
 
 
-	double testDirection();
+	void set_mode(magnetic_sensor_defs::MODE new_mode);
+    void set_odr(magnetic_sensor_defs::ODR new_odr);
+    void set_rng(magnetic_sensor_defs::RNG new_rng);
+    void set_osr(magnetic_sensor_defs::OSR new_osr);
+
+	/**
+	 * @return true if any x, y, z value had an overflow; false otherwise
+	 */
+	bool data_overflow();
+	/**
+	 * @return true if new data is available; false otherwise
+	 */
+	bool has_new_data();
+
+	/**
+	 * @return true if new data is available but has not yet been read in
+	 */
+	bool data_skipped();
+
+	/**
+	 * Checks for new data and updates x,y,z coordinates when new data is available
+	 * @return 1 if data updated, 0 otherwise
+	 */
+	int check_and_update();
+
+	/**
+	 * Resets all registers to default values.
+	 */
+	void soft_reset();
+
+	/**
+	 * Disable ability to check for new data
+	 * Default: Update ready bit is enabled
+	 */
+	void disable_update_ready_bit();
+	/**
+	 * Enables ability to check for new data
+	 * Default: Update ready bit is enabled
+	 */
+	void enable_update_ready_bit();
 
 	int release_resources();
+
+	/**
+	 * The temperature is factory calibrated, but the offset is not compensated
+	 * Only uses these values for relative calculations
+	 * e.G. (new_temp - old_temp) > 0 == temperature_increased
+	 * The coefficient is ca. 100 LSB/Celsius
+	 * @return relative temperature value
+	 */
+	int get_temperature();
 };
 
 #endif //EES_MAGNETIC_SENSOR_H

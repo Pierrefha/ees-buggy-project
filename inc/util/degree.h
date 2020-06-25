@@ -20,19 +20,19 @@ public:
     }
 
     T to_radian()const{
-        return value * M_PI / 180.;
+        return T(value * M_PI / 180.);
     }
 
     std::tuple<T, T> to_vec()const{
         const auto radians = to_radian();
-        return std::tuple<T, T>{std::cos(radians), std::sin(radians)};
+        return std::tuple<T, T>{T(std::cos(radians)), T(std::sin(radians))};
     }
     /**
      * @return this rotation with positive value
      */
     degree<T> to_positive()const{
         if(value < 0){
-            return degree<T>{360. + value};
+            return degree<T>{T(360. + value)};
         }else{
             return *this;
         }

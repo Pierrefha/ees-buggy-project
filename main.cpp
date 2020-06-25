@@ -73,7 +73,6 @@ int main () {
     // init sensor
     ultrasonic_sensor ultrasonic(ULTRASONIC_TRIGGER_PIN_WPI, ULTRASONIC_ECHO_PIN_WPI,
                                  ULTRASONIC_BRAKE_LIGHT_PIN_WPI);
-    ultrasonic_sensor *ultrasonic_ptr = &ultrasonic;
     ultrasonic.init();
 
     //Magnetic Sensor
