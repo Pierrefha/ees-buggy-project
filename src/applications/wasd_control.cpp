@@ -18,6 +18,7 @@ bool wasd_control::init() {
     cbreak();
     nodelay(stdscr,true);
     noecho();
+    clear();
     return true;
 }
 
