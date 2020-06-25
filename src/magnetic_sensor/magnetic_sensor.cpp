@@ -191,7 +191,7 @@ void magnetic_sensor::set_rng(magnetic_sensor_defs::RNG new_rng) {
 
 void magnetic_sensor::set_osr(magnetic_sensor_defs::OSR new_osr) {
 	const int current_state = wiringPiI2CReadReg8(this->fd, CONTROL_REG_1);
-	wiringPiI2CWriteReg8(this->fd, CONTROL_REG_1, (current_state & 0x3F) | static_cast<uint>(new_osr) << CONTROL_REG_1_OSR_BIT));
+	wiringPiI2CWriteReg8(this->fd, CONTROL_REG_1, (current_state & 0x3F) | (static_cast<uint>(new_osr) << CONTROL_REG_1_OSR_BIT));
 }
 
 void magnetic_sensor::soft_reset() {
@@ -218,7 +218,7 @@ int magnetic_sensor::get_temperature() {
             //clang tidy isn't happy about: int | uint
             //Interesting one :)
             msb << uint(8) | lsb
-            )
+            );
 }
 
 

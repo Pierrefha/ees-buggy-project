@@ -43,6 +43,7 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
         release_resources();
         return;
     }
+	bool backlight_on = false;
     /*
      * Remote control of the motor engine using wasd keys.
      */
@@ -53,17 +54,23 @@ void wasd_control::run(motor_engine *engine, ultrasonic_sensor *dist_sensor, com
         print_info(engine->get_speed_perc(), obst_dist, compass->get_rotation(), compass->get_direction());
 
         bool forward_movement_possible = check_forward_movement_possible(obst_dist);
-        if(!forward_movement_possible && engine->get_direction() == direction::FORWARD){
+        if(!forward_movement_possible){
+		if( engine->get_direction() == direction::FORWARD){
             engine->smooth_stop();
             dist_sensor->set_brake_light(ON);
+	    backlight_on = true;
+		}
         }else{
-            dist_sensor->set_brake_light(OFF);
-        }
+	}
 
         int user_cmd = getch();
         if(user_cmd == 'x'){
             break;
         }
+	if(backlight_on && (user_cmd == 's' || user_cmd == 'a' || user_cmd == 'd')){
+
+            dist_sensor->set_brake_light(OFF);
+	}
         print_user_input(user_cmd);
 
         //Commit changes to screen
