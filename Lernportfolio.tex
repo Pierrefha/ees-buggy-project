@@ -40,6 +40,7 @@
 }
 
 \urlstyle{same}
+\setcounter{chapter}{1}
 
 
 \begin{document}
@@ -68,7 +69,7 @@
         \begin{figure}[H]
           \centering
           \captionsetup[subfigure]{labelformat=empty}
-          \includegraphics[width=\linewidth, angle=-90]{lernportfolio_assets/BuggyZusammengebaut.JPG}
+          \includegraphics[width=0.45\linewidth, scale = 0.5]{lernportfolio_assets/BuggyZusammengebaut.JPG}
         \end{figure}
         \vspace{0.8cm}
         EES Buggy-Projekt 
@@ -76,7 +77,8 @@
     \end{center}
 \end{titlepage}
 
-% TODO Inhaltsverzeichnis
+\tableofcontents
+\pagebreak
 
 \begin{section}{Aufbau des Buggy}
 
@@ -85,11 +87,11 @@
   \captionsetup[subfigure]{labelformat=empty}
   \begin{subfigure}{0.45\linewidth}
     \includegraphics[width=\linewidth]{lernportfolio_assets/Buggy_Koffer.jpeg}
-    \caption{Der Buggy vor dem Aufbau.}
+    \caption{Der Buggy vor dem Aufbau}
   \end{subfigure}
   \begin{subfigure}{0.45\linewidth}
-    \includegraphics[width=\linewidth]{lernportfolio_assets/Buggy_Koffer.jpeg}
-    \caption{Und danach.}
+    \includegraphics[width=\linewidth]{lernportfolio_assets/BuggyZusammengebaut.JPG}
+    \caption{Und komplett aufgebaut}
   \end{subfigure}
 \end{figure}
 
@@ -703,68 +705,70 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
   \end{subsection}
 \end{section}
 
-\begin{thebibliography}{9}
+\begin{section}{Quellenverzeichnis}
+  \begin{thebibliography}{9}
 
-\bibitem{motorhatDownloads}
-  Schematas des Motorhats
-  \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{motorhatDownloads}
+    Schematas des Motorhats
+    \url{https://learn.adafruit.com/adafruit-dc-and-stepper-motor-hat-for-raspberry-pi/downloads}
+    Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{datasheetPCA9685}
-  Datasheet PCA9685 PWM driver,
-  \url{http://www.adafruit.com/datasheets/PCA9685.pdf},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{datasheetPCA9685}
+    Datasheet PCA9685 PWM driver,
+    \url{http://www.adafruit.com/datasheets/PCA9685.pdf},
+    Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{datasheetTB6612}
-  Datasheet TB6612 Motor driver,
-  \url{http://www.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{datasheetTB6612}
+    Datasheet TB6612 Motor driver,
+    \url{http://www.adafruit.com/datasheets/TB6612FNG_datasheet_en_20121101.pdf},
+    Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{referenzcode}
-  adafruit-motor-hat-cpp-library,
-  Autor tomfclarke,
-  \url{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{referenzcode}
+    adafruit-motor-hat-cpp-library,
+    Autor tomfclarke,
+    \url{https://github.com/tomfclarke/adafruit-motor-hat-cpp-library},
+    Zuletzt abgerufen am: 25.05.2020
 
 
-\bibitem{datasheetUltrasonic1}
-  Datasheet HC-SR04,
-  \url{https://www.electroschematics.com/wp-content/uploads/2013/07/HCSR04-datasheet-version-1.pdf},
-  Zuletzt abgerufen am: 25.05.2020
-\bibitem{datasheetUltrasonic2}
-  Datasheet HC-SR04,
-  \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet},
-  Zuletzt abgerufen am: 25.05.2020
-\bibitem{datasheetUltrasonic3}
-  Datasheet HC-SR04,
-  \url{https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{datasheetUltrasonic1}
+    Datasheet HC-SR04,
+    \url{https://www.electroschematics.com/wp-content/uploads/2013/07/HCSR04-datasheet-version-1.pdf},
+    Zuletzt abgerufen am: 25.05.2020
+  \bibitem{datasheetUltrasonic2}
+    Datasheet HC-SR04,
+    \url{https://components101.com/ultrasonic-sensor-working-pinout-datasheet},
+    Zuletzt abgerufen am: 25.05.2020
+  \bibitem{datasheetUltrasonic3}
+    Datasheet HC-SR04,
+    \url{https://cdn.sparkfun.com/datasheets/Sensors/Proximity/HCSR04.pdf},
+    Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{datasheetMagnet}
-  3-Axis Magnetic Sensor QMC5883L,
-  \url{https://www.ili.fh-aachen.de/goto_elearning_file_554919_download.html},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{datasheetMagnet}
+    3-Axis Magnetic Sensor QMC5883L,
+    \url{https://www.ili.fh-aachen.de/goto_elearning_file_554919_download.html},
+    Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{forumMagnet}
-  3-Axis Magnetic Sensor QMC5883L,
-  \url{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{forumMagnet}
+    3-Axis Magnetic Sensor QMC5883L,
+    \url{https://forum-raspberrypi.de/forum/thread/39028-qmc5883l-kompass-daten-konvertieren/},
+    Zuletzt abgerufen am: 25.05.2020
 
-\bibitem{wiringPi}
-  wiringPi Bibliothek
-  \url{http://wiringpi.com/},
-  Zuletzt abgerufen am: 25.05.2020
+  \bibitem{wiringPi}
+    wiringPi Bibliothek
+    \url{http://wiringpi.com/},
+    Zuletzt abgerufen am: 25.05.2020
 
-  % \bibitem{}
-%   Datasheet HC-SR04,
-%   \url{https://en.wikipedia.org/wiki/Speed\_of\_sound},
-%   Zuletzt abgerufen am: 25.05.2020
-% \bibitem{datasheetUltrasonic1}
-%   Datasheet HC-SR04,
-%   \url{http://www.sengpielaudio.com/calculator-speedsound.htm},
-%   Zuletzt abgerufen am: 25.05.2020
+    % \bibitem{}
+    %   Datasheet HC-SR04,
+    %   \url{https://en.wikipedia.org/wiki/Speed\_of\_sound},
+    %   Zuletzt abgerufen am: 25.05.2020
+    % \bibitem{datasheetUltrasonic1}
+    %   Datasheet HC-SR04,
+    %   \url{http://www.sengpielaudio.com/calculator-speedsound.htm},
+    %   Zuletzt abgerufen am: 25.05.2020
 
-\end{thebibliography}
+  \end{thebibliography}
+\end{section}
 
 
 \pagebreak
@@ -779,4 +783,4 @@ Weil der Buggy schon vor Herausgabe des Arbeitsauftrages und während der anhalt
 
 \end{document}
 
- 
+
