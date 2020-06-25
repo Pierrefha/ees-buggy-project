@@ -56,7 +56,8 @@ compass::compass() {
             if(join_update_thread){
                 break;
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds{UPDATE_RATE_IN_MILLIS});
+            //The sensor updates with frequency 200 Hz == every 5 millisecs update
+            std::this_thread::sleep_for(std::chrono::milliseconds{5});
             saved_rotations[oldest_rot_value] = get_current_rotation();
             //Advance oldest value pointer
             if(oldest_rot_value == COMPASS_FLOATING_AVERAGE_SIZE - 1){

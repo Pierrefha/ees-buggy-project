@@ -3,16 +3,28 @@
 
 #include <cstdint>
 
-#define sensor_address	0x0d
-#define SET_RESET_REG	0x0b
-#define SETUP_REG		0x09
-#define X_LSB			0x00
-#define X_MSB			0x01
-#define Y_LSB			0x02
-#define Y_MSB			0x03
-#define Z_LSB			0x04
-#define Z_MSB			0x05
-#define UPDATE_RATE_IN_MILLIS 5
+namespace magnetic_sensor_defs{
+    enum class MODE{
+        STANDBY = 0,
+        CONTINOUS = 1
+    };
+    enum class ODR{
+        _10Hz = 0,
+        _50Hz = 1,
+        _100Hz = 2,
+        _200Hz = 3
+    };
+    enum class RNG{
+        _2G = 0,
+        _8G = 1,
+    };
+    enum class OSR{
+        _512 = 0,
+        _256 = 1,
+        _128 = 2,
+        _64 = 3
+    };
+}
 
 
 class magnetic_sensor{
@@ -25,12 +37,15 @@ private:
 	int16_t x;
 	int16_t y;
 	int16_t z;
-		
+
 public:
 
     magnetic_sensor();
 	//Konstruktor für eigene Einstellungen
-	magnetic_sensor(int mode, int odr, int rng, int osr);
+	magnetic_sensor(magnetic_sensor_defs::MODE mode,
+	        magnetic_sensor_defs::ODR odr,
+	        magnetic_sensor_defs::RNG rng,
+	        magnetic_sensor_defs::OSR osr);
 
 	//Getter für die Daten
 	int getX();

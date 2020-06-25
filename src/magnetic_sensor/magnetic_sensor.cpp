@@ -7,6 +7,17 @@
 #include <util/time_util.h>
 
 #define PI		3.1415926535
+#define sensor_address	0x0d
+#define SET_RESET_REG	0x0b
+#define SETTINGS_REG		0x09
+#define SETTINGS_2_REG 0x0a
+#define X_LSB			0x00
+#define X_MSB			0x01
+#define Y_LSB			0x02
+#define Y_MSB			0x03
+#define Z_LSB			0x04
+#define Z_MSB			0x05
+
 
 magnetic_sensor::magnetic_sensor(){
 	//Setup für den Filehandle für die Funktionen von wiringPiI2C
@@ -21,13 +32,13 @@ magnetic_sensor::magnetic_sensor(){
 		std::cout << "I2CSetup for Magnetic Sensor didn't work" << std::endl;
 	}
 	else {
-        wiringPiI2CWriteReg8(this->fd, 0x0a, 0x80);
+        wiringPiI2CWriteReg8(this->fd, SETTINGS_2_REG, 0x80);
         busy_wait(std::chrono::milliseconds{1});
 		//Testweise einstellen des Sensors für erste Werte
 		//Empfolende Werte für das SET/RESET Register
-		wiringPiI2CWriteReg8(this->fd, 0x0b, 0x01);
+		wiringPiI2CWriteReg8(this->fd, SET_RESET_REG, 0x01);
 		//Hier erstmal ein Beispiel Setup aus dem Datenblatt
-		wiringPiI2CWriteReg8(this->fd, 0x09, 0x1d);
+		wiringPiI2CWriteReg8(this->fd, SETTINGS_REG, 0x1d);
         busy_wait(std::chrono::milliseconds{1});
 	}
 }
@@ -41,7 +52,8 @@ magnetic_sensor::magnetic_sensor(){
  * könnte zu Fehlern in der Gradberechnung führen
  * Bsp. vom Standardkonstruktor (0x1d): mode = 1, odr = 3, rng = 1, osr = 0
  */
-magnetic_sensor::magnetic_sensor(int mode, int odr, int rng, int osr){
+magnetic_sensor::magnetic_sensor(magnetic_sensor_defs::MODE mode, magnetic_sensor_defs::ODR odr,
+                                 magnetic_sensor_defs::RNG rng, magnetic_sensor_defs::OSR osr) {
 	//Setup für den Filehandle für die Funktionen von wiringPiI2C
 	this->fd = wiringPiI2CSetup(sensor_address);
 	
@@ -51,18 +63,21 @@ magnetic_sensor::magnetic_sensor(int mode, int odr, int rng, int osr){
 	this->z = 0;
 	
 	// Settings zusammenfügen
-	int settings = mode | (odr << 2) | (rng << 4) | (osr << 6);
+	int settings = static_cast<uint>(mode) |
+	        (static_cast<uint>(odr) << 2) |
+	        (static_cast<uint>(rng) << 4) |
+	        (static_cast<uint>(osr) << 6);
 	
 	if(this->fd == -1){
 		std::cout << "I2CSetup for Magnetic Sensor didn't work" << std::endl;
 	}
 	else {
-        wiringPiI2CWriteReg8(this->fd, 0x0a, 0x80);
+        wiringPiI2CWriteReg8(this->fd, SETTINGS_2_REG, 0x80);
         busy_wait(std::chrono::milliseconds{1});
 		//Empfolende Werte für das SET/RESET Register
-		wiringPiI2CWriteReg8(this->fd, 0x0b, 0x01);
+		wiringPiI2CWriteReg8(this->fd, SET_RESET_REG, 0x01);
 		//Settings in das Control Register schreiben
-		wiringPiI2CWriteReg8(this->fd, 0x09, settings);
+		wiringPiI2CWriteReg8(this->fd, SETTINGS_REG, settings);
         busy_wait(std::chrono::milliseconds{1});
 	}
 }
@@ -129,9 +144,10 @@ double magnetic_sensor::testDirection(){
 
 int magnetic_sensor::release_resources() {
     if(fd != -1){
-        wiringPiI2CWriteReg8(this->fd, 0x09, 0x00);
+        wiringPiI2CWriteReg8(this->fd, SETTINGS_REG, 0x00);
         return close(fd);
     }
     return 0;
 }
+
 
