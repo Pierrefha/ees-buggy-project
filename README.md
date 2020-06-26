@@ -5,8 +5,16 @@ ncurses:  sudo apt-get install libncurses5-dev libncursesw5-dev
 wiringPi: sudo apt-get install wiringpi
 
 ## Build Command
-in the directory with the CMakeLists.txt
-cmake . && make && ./ees_buggy
+in the directory with the CMakeLists.txt<br>
+```shell
+cmake . && make
+```
+It will build a binary named: "ees_buggy". To start it type:
+```shell script
+./ees_buggy <argument>
+```
+
+
 
 ## Available Commandline Arguments
 GeneralTest - Runs distance measurements after a few seconds. Then drives forwards for 1 second and backwards for 1 second<br>
@@ -36,5 +44,5 @@ Pin 18 (I22) {1}->	ECHO (F17)	::Pin 18 at (I22) connected to GND via a 470 Ohm R
 Pin 27 (I16) {2}->	Trigger (F16)<br>
 VCC 5V (J15)	->	VCC (F15)
 
-Motorhat/PI			LED<br>
+##### Motorhat/PI			LED<br>
 Pin 17 {0}
