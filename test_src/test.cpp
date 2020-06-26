@@ -9,7 +9,7 @@
 #include <wiringPi.h>
 #include <wiringPiI2C.h>
 void run_tests(motor_engine *engine, ultrasonic_sensor *ultrasonic, compass *_compass) {
-    bool ultrasonic_test = false;
+    bool ultrasonic_test = true;
     if(ultrasonic_test){
         //debug time diff
         for(int i=0 ;i<100;i++){
@@ -23,32 +23,30 @@ void run_tests(motor_engine *engine, ultrasonic_sensor *ultrasonic, compass *_co
                 std::cout << "Obstacle in: " << dist->get() << " cm" << std::endl;
             }
         }
-    };
+    }
 
     /*
      * Test code for the motor engine.
      */
-    bool auto_movement = false;
+    bool auto_movement = true;
     if (auto_movement) {
         std::cout << "driving forward" << std::endl;
-        engine->set_speed(850);
+        engine->set_speed(1000);
         engine->forward();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         engine->smooth_stop();
 
         std::cout << "driving backwards" << std::endl;
-        engine->set_speed(850);
+        engine->set_speed(1000);
         engine->backwards();
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         engine->smooth_stop();
-
-        engine->release_engine();
     }
 
     //Test Case for compass: für das drehen des bugg
-    bool test_magnetic_sensor = false;
+    bool test_magnetic_sensor = true;
     if (test_magnetic_sensor) {
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100; i++) {
 //            _compass->check();
 //            std::cout << "x,y regs: " << _compass->x << " " << _compass->y << std::endl;
             std::cout << "rot: " << _compass->get_rotation().value << std::endl;

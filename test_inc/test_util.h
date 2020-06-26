@@ -8,7 +8,7 @@
 #include <iostream>
 void continue_on_click(){
     char c;
-    std::cout << "continue on enter";
+    std::cout << "Type a key and press enter to continue: ";
     std::cin >> c;
 }
 
