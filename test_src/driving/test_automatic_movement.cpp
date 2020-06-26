@@ -20,10 +20,6 @@ void test_turns(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* c
     auto_control.rotate_in_place_by(degree<float>{-45});
     continue_on_click();
 
-    std::cout << "Turning 360 deg" << std::endl;
-    auto_control.rotate_in_place_by(degree<float>{360});
-    continue_on_click();
-
     std::cout << "Turning -180 deg" << std::endl;
     auto_control.rotate_in_place_by(degree<float>{-180});
     continue_on_click();
@@ -99,12 +95,12 @@ void test_move_with_direction_control(motor_engine* engine, ultrasonic_sensor* d
 void test_turn_by(motor_engine* engine, ultrasonic_sensor* dist_sensor, compass* compass){
     automatic_movement auto_control{compass, engine, dist_sensor};
     //distract buggy and check manualy that buggy tries to hold direction
-    auto_control.rotate_by(degree<float>(180), 200);
+    auto_control.rotate_by(degree<float>(180), 400);
     continue_on_click();
-    auto_control.rotate_by(degree<float>(180), 200);
+    auto_control.rotate_by(degree<float>(180), 400);
     continue_on_click();
-    auto_control.rotate_by(degree<float>(-90), 200);
+    auto_control.rotate_by(degree<float>(-90), 400);
     continue_on_click();
-    auto_control.rotate_by(degree<float>(-90), 200);
+    auto_control.rotate_by(degree<float>(-90), 400);
     continue_on_click();
 }
