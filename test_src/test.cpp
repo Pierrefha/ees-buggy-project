@@ -31,15 +31,15 @@ void run_tests(motor_engine *engine, ultrasonic_sensor *ultrasonic, compass *_co
     bool auto_movement = true;
     if (auto_movement) {
         std::cout << "driving forward" << std::endl;
-        engine->set_speed(1000);
         engine->forward();
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        engine->set_speed(1200);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         engine->smooth_stop();
 
         std::cout << "driving backwards" << std::endl;
-        engine->set_speed(1000);
         engine->backwards();
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        engine->set_speed(1200);
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         engine->smooth_stop();
     }
 
