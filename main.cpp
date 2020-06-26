@@ -41,15 +41,19 @@ void release_resources(){
     if(engine){
         engine->emergency_stop();
         engine->release_engine();
+	delete engine;
     }
     if(ultrasonic){
         ultrasonic->release_resources();
+	delete ultrasonic;
     }
     if(_compass){
         _compass->release_resources();
+	delete _compass;
     }
     if(wasd_controller){
         wasd_controller->release_resources();
+	delete wasd_controller;
     }
 }
 void signalHandler(int signum)
@@ -79,9 +83,6 @@ int main (int argc, char** argv) {
 
     //Magnetic Sensor
     _compass = new compass{};
-    /*
-     * Test code for the ultrasonic sensor. 
-     */
 
 #ifdef TEST_ON
     // !!!! processing of command line arguments
@@ -123,7 +124,7 @@ int main (int argc, char** argv) {
 
     // !!!!
 
-    wasd_controller = new wasd_control{};
+    wasd_controller = new wasd_control();
     wasd_controller->run(engine, ultrasonic, _compass);
 
     release_resources();
